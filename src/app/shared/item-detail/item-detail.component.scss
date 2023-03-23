@@ -1,0 +1,74 @@
+.itemImg {
+    width: 400px;
+    height: 300px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+.itemName {
+    color: var(--headings-primary-color);
+    font-size: 2.5rem;
+  span {
+    &:first-child {
+      font-family: poppinsregular;
+    }
+    &:last-child {
+      font-family: poppinsbold;
+    }
+  }
+}
+.itemContent {
+  padding: 0 1rem;
+}
+p {
+  color: var(--headings-primary-color);
+  margin: 0;
+  min-width: 150px;
+}
+.addOnsSection{
+    h6{
+        font-family: poppinsbold;
+        color: var(--headings-primary-color);
+    }
+}
+.addBtn{
+    background-color: #5AF4FE;
+    border: none;
+    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cstmContainer{
+  // height: 80vh;
+  // overflow-y:auto;
+  // overflow-x: hidden;
+    margin-top: 2rem;
+    background: #ffffff17;
+    box-shadow: 0 8px 32px 0 #15ffb305;
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+    border-radius: 10px;
+    border: 1px solid #ffffff03;
+}
+.backBtn{
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.counter label {
+  color: var(--headings-primary-color);
+}
+.counter{
+  button{
+    margin: 10px 20px;
+  }
+}
+.addOnsHeight{
+  // height: 25vh;
+  // overflow-y: auto;
+}

@@ -1,0 +1,2088 @@
+<div *ngIf="opt == 'waiters'">
+  <div class="row cstmHeight">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-3" *ngFor="let item of tables">
+          <button (click)="open(table, item)" class="tableCstmCounterWaiter tableCstmCounter" [ngClass]="{
+              red: item.status == 'In process',
+              yellow: item.status == 'Ending',
+              green: item.status == 'Complete'
+            }">
+            <h3>Table {{ item.no }}</h3>
+            <p [ngClass]="{
+                red: item.status == 'In process',
+                yellow: item.status == 'Ending',
+                green: item.status == 'Complete'
+              }">
+              {{ item.status }}
+            </p>
+          </button>
+        </div>
+      </div>
+      <button class="addTableBtn" (click)="addTable()">
+        <i class="fa fa-plus"></i> Add Table
+      </button>
+    </div>
+    <div *ngIf="tables.length > 0" class="col-sm-12 d-flex justify-content-end align-items-center flex-wrap">
+      <div class="statusBox">
+        <div class="inprocess d-flex justify-content-center align-items-center">
+          <div class="redStatus"></div>
+          <p>In Process</p>
+        </div>
+      </div>
+      <div class="statusBox">
+        <div class="ending d-flex justify-content-center align-items-center">
+          <div class="yellowStatus"></div>
+          <p>Ending</p>
+        </div>
+      </div>
+      <div class="statusBox">
+        <div class="complete d-flex justify-content-center align-items-center">
+          <div class="greenStatus"></div>
+          <p>Complete</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="opt == 'counter currentorders'">
+  <div class="row cstmHeight">
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-4" *ngFor="let item of tables">
+          <button (click)="open(counterTable, item)" class="tableCstmCounter counterTbale">
+            <h3>Table {{ item.no }}</h3>
+          </button>
+          <div class="actionBtnBox d-flex align-items-center flex-wrap ">
+            <button class="actionBtn greenbackground capitalize d-flex justify-content-center align-items-center "> <i
+                class="fa fa-refresh"></i> {{item.action.process}}</button>
+            <button class="actionBtn bluebackground capitalize d-flex justify-content-center align-items-center "
+              (click)="open(newOrder, 'newOrder')"> <i class="fa fa-edit"></i>
+              {{item.action.edit}}</button>
+            <button class="actionBtn redbackground capitalize d-flex justify-content-center align-items-center "
+              (click)="open(cancelconfirmation, 'cancelconfirmation')"> <i class="fa fa-ban"></i>
+              {{item.action.cancel}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="opt == 'counter allorders'">
+  <div class="row align-items-center">
+    <div class="col-sm-12 d-flex justify-content-end cstmDropDown">
+      <ng-select placeholder="View" [(ngModel)]="selectedView">
+        <ng-option *ngFor="let view of views" [value]="view.name">{{view.name}}</ng-option>
+      </ng-select>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <ng-container *ngIf="selectedView =='Grid View'">
+      <div class="col-sm-3" *ngFor="let item of tables | paginate
+      : {
+          itemsPerPage: 10,
+          currentPage: duePage,
+          totalItems: total
+        }">
+        <button (click)="open(counterTable, item)" class="tableCstmCounter counterTbale" [ngClass]="{
+                red: item.status == 'In process',
+                green: item.status == 'Complete'
+              }">
+          <h3>Table {{ item.no }}</h3>
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="selectedView =='List View'">
+      <div class="col-sm-12 mt-3 listView">
+        <div class="table-responsive">
+          <table class="table table-dark table-borderless table-sm align-middle text-center">
+            <thead>
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+                <th scope="row">{{ i }}</th>
+                <td>
+                  {{ item.no ? item.no : "N/A" }}
+                </td>
+                <td>{{ item.status ? item.status : "N/A" }}</td>
+                <td>
+                  <div class="toggle d-flex align-items-center justify-content-center">
+                    <button class="noBg" (click)="open(counterTable, item)"> <i class="fa fa-eye"></i> </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'counter byWaiters'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'counter cancelOrders'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel"></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'master orderStatus'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-1 w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td class="cursorPointer blod" (click)="open(newOrderDetails, 'newOrderDetails')">
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'menu'">
+  <div class="row mt-5 align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-1 w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-end align-items-center">
+      <button class="addMenuBtn" (click)="addMenuMaster()">
+        <i class="fa fa-plus"></i> Add Item
+      </button>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Code</th>
+              <th scope="col">Item Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Price</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{ item.itemName ? item.itemName : "N/A" }}</td>
+              <td>{{ item.category ? item.category : "N/A" }}</td>
+              <td>{{ item.price ? item.price : "N/A" }}</td>
+              <td class="d-flex justify-content-center align-items-center">
+                <button class="actionbtn">
+                  <i class="fa fa-eye mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-trash mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-edit mlicon"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'menuMaster'">
+  <div class="row mt-5 align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-1 w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-end align-items-center">
+      <button class="addMenuBtn" (click)="addMenuMaster()">
+        <i class="fa fa-plus"></i> Add Item
+      </button>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Price</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ item.id }}</th>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ? (item.description | ellipsis:20) : "N/A" }} </span></td>
+              <td>{{ item.category_id ? item.category_id : "N/A" }}</td>
+              <td>{{ item.price ? item.price : "N/A" }}</td>
+              <td>
+                <div class="toggle d-flex align-items-center w-100 justify-content-center">
+                  <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
+                    [id]='"categoryStock"+i' /><label [for]='"categoryStock"+i'></label>
+                </div>
+              </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <button class="actionbtn">
+                  <i class="fa fa-eye mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-trash mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-edit mlicon"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'menuMasterCateogry'">
+  <div class="row mt-5 align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-1 w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-end align-items-center">
+      <button class="addMenuBtn" (click)="addMenuMasterCategory(null)">
+        <i class="fa fa-plus"></i> Add Category
+      </button>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 5,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ item.id }}</th>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ? (item.description | ellipsis:20) : "N/A" }} </span></td>
+              <td>
+                <div class="toggle d-flex align-items-center w-100 justify-content-center">
+                  <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
+                    [id]='"categoryStock"+i' /><label [for]='"categoryStock"+i'></label>
+                </div>
+              </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <!-- <button class="actionbtn">
+                  <i class="fa fa-eye mlicon"></i>
+                </button>  -->
+                <button class="actionbtn" (click)="addMenuMasterCategory(item.id)">
+                  <i class="fa fa-edit mlicon"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'staff'">
+  <div class="row">
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Employee Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Position</th>
+              <th scope="col">Shift</th>
+              <th scope="col">Tables Assigned</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 8,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{ item.Name ? item.Name : "N/A" }}</td>
+              <td>{{ item.position ? item.position : "N/A" }}</td>
+              <td>{{ item.shift ? item.shift : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'masterstaff'">
+  <div class="row">
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.no</th>
+              <th scope="col">Employee Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Position</th>
+              <th scope="col">Shift</th>
+              <th scope="col">Manager</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 8,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{item.EmployeeId ? item.EmployeeId : "N/A"}}</td>
+              <td>{{ item.Name ? item.Name : "N/A" }}</td>
+              <td>{{ item.position ? item.position : "N/A" }}</td>
+              <td>{{ item.shift ? item.shift : "N/A" }}</td>
+              <td>{{ item.manager? item.manager : "N/A" }}</td>
+              <td><i class="fa fa-eye" id="qrCode" (click)="open(qr, 'qr')"></i></td>
+              <!-- <td><i class="fa fa-eye" (click)="addModal"></i></td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'mastercustomerdata'">
+  <div class="row">
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.no</th>
+              <th scope="col">Name</th>
+              <th scope="col">Contact</th>
+              <th scope="col">Email</th>
+              <th scope="col">Last Dine in</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 8,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{ item.Name ? item.Name : "N/A" }}</td>
+              <td>{{ item.contact ? item.contact : "N/A" }}</td>
+              <td>{{ item.email ? item.email : "N/A" }}</td>
+              <td>{{ item.lastdinein? item.lastdinein : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'reports'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'masterreports'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.Nos</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'staffpayrollMaster'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Name</th>
+              <th scope="col">Joining Date</th>
+              <th scope="col">Salary</th>
+              <th scope="col">Allownces</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.joining ? item.joining : "N/A" }}</td>
+              <td>{{ item.salary ? item.salary : "N/A" }}</td>
+              <td>{{ item.allownces ? item.allownces : "N/A" }}</td>
+              <td class="d-flex justify-content-center align-items-center">
+                <button class="actionbtn" (click)="staffDetailView(true)">
+                  <i class="fa fa-eye mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-trash mlicon"></i>
+                </button>
+                <button class="actionbtn">
+                  <i class="fa fa-edit mlicon"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'staffpayrollMasterDetail'">
+  <div class="row align-items-center">
+    <div class="col-sm-12 mt-3">
+      <button class="backBtn mb-3" (click)="staffDetailView(false)">
+        <i class="fa fa-arrow-left"></i>
+      </button>
+    </div>
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Date</th>
+              <th scope="col">Day</th>
+              <th scope="col">Check In</th>
+              <th scope="col">Check Out</th>
+              <th scope="col">Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{item.date ? item.date :"N/A"}}</td>
+              <td>{{ item.day ? item.day : "N/A" }}</td>
+              <td>{{ item.checkin ? item.checkin : "N/A" }}</td>
+              <td>{{ item.checkout ? item.checkout : "N/A" }}</td>
+              <td>{{ item.availability ? item.availability : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'inventoryMaster'">
+  <div class="row align-items-center">
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Date</th>
+              <th scope="col">Day</th>
+              <th scope="col">Check In</th>
+              <th scope="col">Check Out</th>
+              <th scope="col">Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>{{item.date ? item.date :"N/A"}}</td>
+              <td>{{ item.day ? item.day : "N/A" }}</td>
+              <td>{{ item.checkin ? item.checkin : "N/A" }}</td>
+              <td>{{ item.checkout ? item.checkout : "N/A" }}</td>
+              <td>{{ item.availability ? item.availability : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'sale'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S No.</th>
+              <th scope="col">Date</th>
+              <th scope="col">No. Of Items</th>
+              <th scope="col">No. Of Customers</th>
+              <th scope="col">Total Sales</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 7,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <td scope="row">{{ i }}</td>
+              <td>
+                {{ item.date ? item.date : "N/A" }}
+              </td>
+              <td>{{ item.noitems ? item.noitems : "N/A" }}</td>
+              <td>{{ item.nocustomers ? item.nocustomers : "N/A" }}</td>
+              <td>{{ item.totalsales ? (item.totalsales | currency:'USD') : "N/A" }}</td>
+              <td>
+                <button class="actionbtn" (click)="orderView($event)">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'countersale'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S No.</th>
+              <th scope="col">Date</th>
+              <th scope="col">No. Of Items</th>
+              <th scope="col">No. Of Customers</th>
+              <th scope="col">Total Sales</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 7,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <td scope="row">{{ i }}</td>
+              <td>
+                {{ item.date ? item.date : "N/A" }}
+              </td>
+              <td>{{ item.noitems ? item.noitems : "N/A" }}</td>
+              <td>{{ item.nocustomers ? item.nocustomers : "N/A" }}</td>
+              <td>{{ item.totalsales ? (item.totalsales | currency:'USD') : "N/A" }}</td>
+              <td>
+                <button class="actionbtn" (click)="open(saledetail, 'saledetail')">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'saledetails'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S No.</th>
+              <th scope="col">Date</th>
+              <th scope="col">Table</th>
+              <th scope="col">Items</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 7,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <td scope="row">{{ i }}</td>
+              <td>
+                {{ item.date ? item.date : "N/A" }}
+              </td>
+              <td>{{ item.noitems ? item.noitems : "N/A" }}</td>
+              <td>{{ item.nocustomers ? item.nocustomers : "N/A" }}</td>
+              <td>{{ item.totalsales ? (item.totalsales | currency:'USD') : "N/A" }}</td>
+              <td>
+                <button class="actionbtn" (click)="orderView($event)">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative expenseTable" *ngIf="opt == 'expenses'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S No.</th>
+              <th scope="col">Date</th>
+              <th scope="col">Expenses</th>
+              <th scope="col">Description</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: tables
+                    | paginate
+                      : {
+                          itemsPerPage: 3,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.date ? item.date : "N/A" }}
+              </td>
+              <td>{{ item.expenses ? (item.expenses | currency:'USD') : "N/A" }}</td>
+              <td>{{ item.description ? item.description : "N/A" }}</td>
+              <td>{{ item.type ? item.type : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- table preview -->
+<ng-container>
+  <ng-template #table let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="table tableModal" [ngClass]="{
+                red: selectedTable?.status == 'In process',
+                yellow: selectedTable?.status == 'Ending',
+                green: selectedTable?.status == 'Complete'
+              }">
+              <h3 class="orderHead">Table {{ selectedTable?.no }}</h3>
+              <p [ngClass]="{
+                  red: selectedTable?.status == 'In process',
+                  yellow: selectedTable?.status == 'Ending',
+                  green: selectedTable?.status == 'Complete'
+                }">
+                {{ selectedTable?.status }}
+              </p>
+              <h5 class="orderNo mt-3">Order No. 123123</h5>
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <app-cartitem [data]="CartItems"></app-cartitem>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <h5 class="orderNo mt-3">Order No. 658151</h5>
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <app-cartitem [data]="CartItems"></app-cartitem>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex justify-content-center align-items-center flex-column h-100">
+              <h2 class="orderHead">Order Timer</h2>
+              <div>
+                <button class="timerCapsule">20:00</button>
+              </div>
+              <h5 class="mt-3 mb-3 orderStatus">{{ selectedTable?.status }}</h5>
+              <div><button class="btm-btn" (click)="proceed()">Re Order</button></div>
+              <div>
+                <button class="btm-btn bg-dng" (click)="proceed(); open(completeOrder, 'complete')">
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- counter table -->
+<ng-container>
+  <ng-template #counterTable let-modal>
+    <div class="modal-body checkoutModal completed">
+      <div class="container">
+        <button class="backBtn mb-3" (click)="proceed()">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="table tableModal counterTable tablePadd">
+              <h3 class="orderHead zIndexUp">Table {{ selectedTable?.no }}</h3>
+              <h5 class="orderNo mt-3 zIndexUp">Order No. 123123</h5>
+              <div class="container zIndexUp">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <app-cartitem [data]="CartItems"></app-cartitem>
+                  </div>
+                </div>
+              </div>
+              <div class="hr zIndexUp"></div>
+              <div class="totalSection zIndexUp">
+                <div class="subtotal">
+                  <h5>Sub Total</h5>
+                  <h5>$236</h5>
+                </div>
+                <div class="extraCharges">
+                  <h6>GST Tax</h6>
+                  <h6>13%</h6>
+                </div>
+                <div class="extraCharges">
+                  <h6>Discount</h6>
+                  <h6>0%</h6>
+                </div>
+                <div class="grandtotal">
+                  <h5>Grand Total</h5>
+                  <h5>$250</h5>
+                </div>
+              </div>
+              <div class="checkoutBtn zIndexUp text-center">
+                <!-- <button id="checkoutBtn" (click)="open(viewOrder, 'checkout')"> -->
+                <button id="checkoutBtn" (click)="proceed(); open(newOrderDetails, 'newOrderDetails')">
+                  Checkout
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex justify-content-center align-items-center flex-column h-100 detailsSec">
+              <h1 class="orderHead mb-3">Status</h1>
+              <h6 class="orderHead mt-3">Timer</h6>
+              <div>
+                <button class="timerCapsule">20:00</button>
+              </div>
+              <h6 class="orderHead mt-3">Reminder</h6>
+              <div>
+                <button class="timerCapsule bluebackground">05:00</button>
+              </div>
+              <div class="readyServe mt-5 mb-5 position-relative">
+                <h5>Ready to serve</h5>
+                <button>{{selectedTable.status}}</button>
+              </div>
+
+
+              <h6 class="mt-5 orderStatus">Waiter</h6>
+              <h5 class="orderStatus">{{ selectedTable?.waiter }}</h5>
+              <div>
+                <button class="btm-btn pinkbackground" (click)="proceed(); open(newOrder, 'newOrder')">
+                  Edit Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- order complete -->
+<ng-container>
+  <ng-template #completeOrder let-modal>
+    <div class="modal-body checkoutModal d-flex flex-column justify-content-center align-items-center">
+      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <h3 class="subHead mt-3">Your Order Has been Placed</h3>
+      <h5 class="subHead mt-3">Your Order Will be served in</h5>
+      <div>
+        <button class="timerCapsule">20:00</button>
+      </div>
+      <div><button class="btm-btn" (click)="proceed()">Re Order</button></div>
+      <div>
+        <button class="btm-btn bg-success1" (click)="proceed()">
+          Edit Order
+        </button>
+      </div>
+      <button class="scanBtn mt-5 mb-3" (click)="proceed(); open(viewOrder, selectedTable)">
+        View order
+      </button>
+      <button class="timerCapsule completeDine" (click)="proceed();">
+        Complete Dine In
+      </button>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- view order -->
+<ng-template #viewOrder let-modal>
+  <button class="backBtn backModal" (click)="proceed(); open(completeOrder, 'complete')">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="modal-body checkoutModal">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="head mt-3 text-center">Order Preview</h1>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-30 d-flex justify-content-start align-items-center">
+            <h4 class="head mt-3">Order no. 653423</h4>
+          </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-30 d-flex justify-content-center align-items-center">
+            <app-cartitem [data]="CartItems"></app-cartitem>
+          </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-40 d-flex justify-content-center align-items-center">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="hr"></div>
+                  <div class="totalSection">
+                    <div class="subtotal">
+                      <h5>Sub Total</h5>
+                      <h5>$236</h5>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>GST Tax</h6>
+                      <h6>13%</h6>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>Discount</h6>
+                      <h6>0%</h6>
+                    </div>
+                    <div class="grandtotal">
+                      <h5>Grand Total</h5>
+                      <h5>$250</h5>
+                    </div>
+                  </div>
+                  <div class="checkoutBtn d-flex justify-content-center align-items-center">
+                    <button (click)="proceed();">
+                      Go to Main Menu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- order details -->
+<ng-template #orderDetails let-modal>
+  <button class="backBtn backModal" (click)="proceed(); open(counterTable, 'counterTable')">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="modal-body checkoutModal">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="head mt-3 text-center">Order Details</h1>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-30 d-flex justify-content-center align-items-center">
+            <app-cartitem [data]="CartItems"></app-cartitem>
+          </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-40 d-flex justify-content-center align-items-center">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="grandtotal">
+                    <h5>Waiter</h5>
+                    <h5>John Smith</h5>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="grandtotal">
+                    <h5>Table No.</h5>
+                    <h5>50</h5>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="hr"></div>
+                  <div class="totalSection">
+                    <div class="extraCharges">
+                      <h6>GST Tax</h6>
+                      <h6>13%</h6>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>Discount</h6>
+                      <h6>0%</h6>
+                    </div>
+                    <div class="grandtotal">
+                      <h5>Grand Total</h5>
+                      <h5>$250</h5>
+                    </div>
+                  </div>
+                  <div class="hr"></div>
+                  <div class="col-sm-12">
+                    <div class="grandtotal">
+                      <h5>Payment By</h5>
+                      <h5>Cash</h5>
+                    </div>
+                  </div>
+                  <div class="checkoutBtn d-flex justify-content-center align-items-center">
+                    <button (click)="proceed();">
+                      Go to Main Menu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #newOrderDetails let-modal>
+  <button class="backBtn backModal" (click)="proceed(); open(counterTable, 'counterTable')">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="modal-body checkoutModal">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="head mt-3 text-center">Order Details</h1>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-30 d-flex justify-content-center align-items-center">
+            <app-cartitem [data]="CartItems"></app-cartitem>
+          </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-40 d-flex justify-content-center align-items-center">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="grandtotal">
+                    <h5>Waiter</h5>
+                    <h5>John Smith</h5>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="grandtotal">
+                    <h5>Table No.</h5>
+                    <h5>50</h5>
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="hr"></div>
+                  <div class="totalSection">
+                    <div class="extraCharges">
+                      <h6>GST Tax</h6>
+                      <h6>13%</h6>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>Discount</h6>
+                      <h6>0%</h6>
+                    </div>
+                    <div class="grandtotal">
+                      <h5>Grand Total</h5>
+                      <h5>$250</h5>
+                    </div>
+                  </div>
+                  <div class="hr"></div>
+                  <div class="col-sm-12">
+                    <div class="grandtotal align-items-baseline">
+                      <h5>Payment By</h5>
+                      <!-- <h5>Cash</h5> -->
+                      <div class="cstmDropDown">
+                        <ng-select placeholder="Payment by">
+                          <ng-option>Cash</ng-option>
+                          <ng-option>Card</ng-option>
+                        </ng-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="checkoutBtn checkoutBtns d-flex justify-content-center align-items-center">
+                    <button class="me-3" (click)="proceed();">
+                      Go to Main Menu
+                    </button>
+                    <button (click)="proceed();">
+                      Done
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-container>
+  <ng-template #newOrder let-modal>
+    <div class="modal-body checkoutModal completed">
+      <h1 class="heading">Menu</h1>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="checboxes">
+            <div class="checboxesMenu" *ngFor="let item of Menus; let i = index">
+              <div class="d-flex align-items-center">
+                <div class="checkbox">
+                  <input type="checkbox" class="me-3" name="Menu" id="{{i}}" value="{{item?.item}}" />
+                  <label for="{{i}}" class="menuItemLabel">{{item?.item}}</label>
+                </div>
+                <div class="counter">
+                  <button (click)="counter('plus', $event, i)"><i class="fa fa-plus"></i></button>
+                  <label class="value">0</label>
+                  <button (click)="counter('minus', $event, i)"><i class="fa fa-minus"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="add-btn mt-3" (click)="proceed();">
+              Save
+            </button>
+            <button class="cancel-btn mt-3" (click)="proceed();">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- staff -->
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
+      <form action="" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-2">
+            <div class="userImg">
+              <img src="assets/images/user.webp" alt="">
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="userImgText">
+              <h2>John Smith</h2>
+              <p>Username</p>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">John Smith</label>
+              <label for="" class="name">First Name</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">John Smith</label>
+              <label for="" class="name">First Name</label>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">Abc road city 45688 USA</label>
+              <label for="" class="name">Address</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">123-456-789</label>
+              <label for="" class="name">Contact No.</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">754567</label>
+              <label for="" class="name">Zip Code</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">Position</label>
+              <label for="" class="name">Server</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">9 - 5</label>
+              <label for="" class="name">Timing</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">01-01-2022</label>
+              <label for="" class="name">joining Date</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">123-456-789-000</label>
+              <label for="" class="name">Id card No.</label>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="labelDiv">
+              <label for="" class="usersName">25000/=</label>
+              <label for="" class="name">Salary</label>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <div class="labelDiv1">
+              <label for="" class="name">Assigned Tables</label>
+              <div class="d-flex">
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+              </div>
+              <div class="d-flex">
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+                <label for="" class="tableNo">Table No.05</label>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 d-flex justify-content-between">
+            <div>
+              <button  class="btn edit-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- cancel confirmation modal -->
+<ng-container>
+  <ng-template #cancelconfirmation let-modal>
+    <div class="modal-body cancelconfirmation completed">
+      <!-- <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button> -->
+      <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
+      <h3 class="white">Are you sure you want to cancel this?</h3>
+      <div class="d-flex justify-content-end align-items-center">
+        <button class="add-btn mt-3 me-3" (click)="proceed();">
+          Yes
+        </button>
+        <button class="cancel-btn mt-3" (click)="proceed();">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- sale details -->
+<ng-container>
+  <ng-template #saledetail let-modal>
+    <div class="modal-body saledetail completed">
+      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
+      <h3 class="text-center white">Sale details</h3>
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">S.No</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Tables</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+              <th scope="row">{{ i }}</th>
+              <td>
+                {{ item.no ? item.no : "N/A" }}
+              </td>
+              <td>{{ item.name ? item.name : "N/A" }}</td>
+              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.items ? item.items : "N/A" }}</td>
+              <td>{{ item.tables ? item.tables : "N/A" }}</td>
+              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
+              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

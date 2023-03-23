@@ -1,0 +1,117 @@
+
+.orderBox {
+  background-color: #ffffff36;
+  height:fit-content;
+  width: calc(100% / 3 - 2rem);
+  margin-right: .5rem;
+  margin-left: .5rem;
+  border-radius: 10px;
+  position: relative;
+  padding-bottom: 2rem;
+  .orderHeader {
+    border-radius: 10px;
+    color: var(--headings-primary-color);
+    padding: 10px;
+    .orderHeading {
+      font-family: josefinsemiregular;
+      margin: 0;
+    margin-left: 10px;
+
+    }
+    .orderHeadingNo {
+      font-family: josefinbold;
+      font-size: 40px;
+      margin-top: -10px;
+    }
+  }
+  .orderBody {
+    min-height: 400px;
+    max-height: 400px;
+    overflow-y: auto;
+    p {
+      margin: 0;
+    }
+    .orders {
+      font-family: josefinsemiregular;
+      color: var(--headings-primary-color);
+      margin-top: 20px;
+      .orderNo {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      .orderDescription {
+        font-size: 8px;
+      }
+    }
+  }
+  .orderBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -25px;
+    border: none;
+    border-radius: 10px;
+    color: var(--headings-primary-color);
+    font-family: josefinsemiregular;
+    padding: 10px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.heading {
+  color: var(--headings-primary-color);
+  font-family: josefinsemiregular;
+}
+.greenHeader {
+  background-color: #06a160;
+}
+.redHeader {
+  background-color: #e73b3b;
+}
+.yellowHeader {
+  background-color: #e1e36a;
+}
+.backBtn {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.modal-body {
+  .greenHeader {
+    background: linear-gradient(to right, #06a160, #06a160);
+  }
+  .redHeader {
+    background: linear-gradient(to right, #e73b3b, #e73b3b);
+  }
+}
+.actionBtn {
+  box-shadow: 0px 0px 30px 10px rgb(60 60 60 / 48%);
+  -webkit-box-shadow: 0px 0px 30px 10px rgb(60 60 60 / 48%);
+  -moz-box-shadow: 0px 0px 30px 10px rgb(60 60 60 / 48%);
+  padding: 10px 40px;
+  border-radius: 10px;
+  background-color: #DE2929;
+}
+.timerCapsule{
+    max-width: 200px;
+    text-align: center;
+    margin: 0;
+}
+.btnText{
+    color: var(--headings-primary-color);
+    margin: 0;
+    margin-bottom: 5px;
+    margin-top: 25px;
+}
+.timerCapsule{
+    font-size: 18px;
+}
+.widthFit{
+    width: fit-content;
+}
+.modal-body{
+  .orderBox{
+    width: 100%;
+  }
+}

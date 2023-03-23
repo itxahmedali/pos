@@ -1,0 +1,50 @@
+<div class="container overflowScroll">
+  <div class="row">
+    <div class="col-sm-12 d-flex justify-content-between mt-5">
+      <button id="qrCode" (click)="open(qr, 'qr')" class="add-table">
+        <i class="fa fa-plus"></i> Add Inventory
+      </button>
+        <div class="searchField mt-2 me-3">
+          <input type="text" placeholder="Search Item" />
+          <i class="fa fa-search"></i>
+        </div>
+    </div>
+    <div class="col-sm-12">
+      <app-myorder [tables]="Waitertables" [opt]="'inventoryMaster'"></app-myorder>
+    </div>
+  </div>
+</div>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <h5 class="modal-title">Add Inventory / Edit Inventory</h5>
+      <form action="" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-12 mt-3">
+            <input type="text" placeholder="Name" class="text-light" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="text" placeholder="Price" class="text-light" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="text" placeholder="Category" class="text-light" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="tel" placeholder="Quantity" class="text-light" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="email" placeholder="Date" class="text-light" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+      <button  class="btn cancel-btn" aria-label="Close" (click)="proceed()">
+        Cancel
+      </button>
+      <button  class="btn add-btn">Save</button>
+    </div>
+  </ng-template>
+</ng-container>

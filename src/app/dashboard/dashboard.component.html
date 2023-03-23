@@ -1,0 +1,18 @@
+<div *ngIf="!show" [ngClass]="{'cstmContainer': login}">
+  <button *ngIf="login" (click)="expand()" class="navExpandBtn" [ngClass]="{'expand':expanded}">
+   <i class="fa" [ngClass]="{'expand':expanded}"></i>
+  </button>
+    <div [ngClass]="{'cstmRow h-100': login}">
+      <div class="cstmCol2 h-100" *ngIf="login && sidebarEnable" [ngClass]="{'expand':expanded}">
+        <app-sidebar></app-sidebar>
+      </div>
+      <div [ngClass]="{'cstmCol10 h-100': login, 'cstmCol12' : !sidebarEnable, 'expand':expanded}" class="mainBody" >
+        <app-header *ngIf="login"></app-header>
+        <main *ngIf="!cart" [style.height]="login ? windowHeight-70+'px' : windowHeight+'px'" style="overflow-y: auto">
+          <router-outlet></router-outlet>
+        </main>
+        <app-cart @fadeIn *ngIf="cart"></app-cart>
+      </div>
+    </div>
+  </div>
+  <!-- <app-footer *ngIf="login"></app-footer> -->

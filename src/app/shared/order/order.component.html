@@ -1,0 +1,103 @@
+<div class="container d-flex flex-wrap">
+      <div class="orderBox mt-5 mb-5" @fadeIn *ngFor="let item of Orders">
+        <div
+          class="orderHeader"
+          [ngClass]="{
+            yellowHeader: item.status == 'inprocess',
+            redHeader: item.status == 'not-started',
+            greenHeader: item.status == 'completed'
+          }"
+        >
+          <p class="orderHeading">Order No</p>
+          <p class="orderHeading orderHeadingNo">{{ item.orderno }}</p>
+        </div>
+        <div class="orderBody">
+          <div
+            *ngFor="let order of item.item"
+            class="d-flex justify-content-start align-items-center orders"
+          >
+            <p class="orderNo">{{ order.no }}</p>
+            <div class="orderDetails">
+              <p class="orderName">{{ order.name }}</p>
+              <p class="orderDescription">{{ order.description }}</p>
+            </div>
+          </div>
+        </div>
+        <button
+          *ngIf="item.status == 'not-started'"
+          class="orderBtn redHeader"
+          (click)="open(completed, item)"
+        >
+          Start Now
+        </button>
+        <button
+          *ngIf="item.status == 'inprocess'"
+          class="orderBtn yellowHeader"
+          (click)="open(completed, item)"
+        >
+          In Process
+        </button>
+        <button
+          *ngIf="item.status == 'completed'"
+          class="orderBtn greenHeader"
+          (click)="open(completed, item)"
+        >
+          Completed
+        </button>
+      </div>
+</div>
+
+<!-- order details -->
+<!-- completed -->
+<ng-template #completed let-modal>
+  <button class="backBtn backModal" (click)="proceed()">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="modal-body completed">
+    <h3 class="heading mt-3 mb-3">Order Details</h3>
+    <div class="orderBox">
+      <div
+        class="orderHeader d-flex justify-content-between align-items-center"
+        [ngClass]="{
+          greenHeader: OrderDetail.status == 'inprocess',
+          redHeader: OrderDetail.status == 'not-started'
+        }"
+      >
+        <div class="orderheadings">
+          <p class="orderHeading">Order No</p>
+          <p class="orderHeading orderHeadingNo">{{ OrderDetail.orderno }}</p>
+        </div>
+        <div class="orderActionBtn" *ngIf="OrderDetail.status == 'not-started'" (click)="proceed()">
+          <div class="actionBtn">Start Now</div>
+        </div>
+      </div>
+      <div class="orderBody">
+        <div class="row">
+          <div class="col-sm-4" *ngFor="let order of OrderDetail.item">
+            <div class="d-flex justify-content-start align-items-center orders">
+              <p class="orderNo">{{ order.no }}</p>
+              <div class="orderDetails">
+                <p class="orderName">{{ order.name }}</p>
+                <p class="orderDescription">{{ order.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col-sm-6">
+        <div class="widthFit">
+          <p class="btnText text-center">Timer</p>
+          <button class="timerCapsule">20:00</button>
+        </div>
+      </div>
+      <div class="col-sm-6 d-flex flex-column align-items-end">
+        <div class="widthFit" *ngIf="OrderDetail.status == 'inprocess'">
+          <p class="btnText text-center">Press if complete</p>
+          <button class="timerCapsule greenHeader" (click)="proceed()">Complete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

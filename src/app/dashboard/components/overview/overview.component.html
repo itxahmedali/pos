@@ -1,0 +1,58 @@
+<div class="container mt-5 d-flex justify-content-center overflowScroll">
+  <div class="row justify-content-between w-100">
+    <div class="col-sm-2 totalOrder">
+      <h6 class="realOrderText josefinRegular">Realtime Order</h6>
+      <h1 class="realOrderSpan josefinRegular">18</h1>
+      <p class="realOrderPara josefinRegular">06 Items</p>
+    </div>
+    <div class="col-sm-2 totalOrder">
+      <h6 class="realOrderText josefinRegular">Table Occupied</h6>
+      <h1 class="realOrderSpan josefinRegular">09</h1>
+      <p class="realOrderPara josefinRegular">09/27</p>
+    </div>
+    <div class="col-sm-5 totalOrder">
+      <h6 class="realOrderText josefinRegular">Sales Today</h6>
+      <h1 class="realOrderSpan josefinRegular">$550.00</h1>
+      <p class="realOrderPara josefinRegular">40 Orders</p>
+    </div>
+    <div class="col-sm-2 totalOrder">
+      <h6 class="realOrderText josefinRegular">Total Order</h6>
+      <h1 class="realOrderSpan josefinRegular">105</h1>
+      <p class="realOrderPara josefinRegular">09/27</p>
+    </div>
+    <div class="col-lg-12 mt-5">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>Sale</a>
+          <ng-template ngbNavContent>
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+        [dataLabels]="chartOptions.dataLabels"></apx-chart>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>Expense</a>
+          <ng-template ngbNavContent>
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"></apx-chart>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>Revenue</a>
+          <ng-template ngbNavContent>
+            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"></apx-chart>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+    <div class="col-sm-12">
+      <div class="d-flex justify-content-end graph1">
+        <button _ngcontent-uxf-c141=""  class="cancel-btn mt-3 mb-3" (click)="orderStatus()">Veiw Current Orders</button>
+      </div>
+    </div>
+  </div>
+</div>

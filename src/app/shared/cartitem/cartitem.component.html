@@ -1,0 +1,35 @@
+<div class="cartBox" *ngFor="let item of data; let i = index">
+  <!-- <h1>{{item.orderId}}</h1> -->
+  <div class="cartItemPic">
+    <img src="{{item?.details?.img ? item?.details?.img : item?.img}}" alt="">
+  </div>
+  <div class="cartcontent">
+    <div class="d-flex justify-content-between">
+      <h6>{{item?.name ? item?.name : item?.item}}</h6>
+      <h6>{{item?.quantity}}</h6>
+    </div>
+    <span *ngIf="item?.addOns?.length" class="headingAddOns">Add Ons</span>
+    <div *ngFor="let addOnsItem of item?.addOns" class="d-flex justify-content-between align-items-center">
+      <span class="addOnsTitle">
+        {{addOnsItem?.item?.name}}
+      </span>
+      <span class="addOnsTitle">
+        {{addOnsItem?.quantity}}
+      </span>
+    </div>
+    <p>{{item?.details?.description ? item?.details?.description : item?.description}}</p>
+    <div class="cartItemAction" *ngIf="showActions">
+      <div class="cartItemActionbtns">
+        <button class="btn btn-success" (click)="editItem(item)">
+          <i class="fa fa-edit fa-sm"></i>
+        </button>
+        <button class="btn btn-danger" (click)="deleteItem(item)">
+          <i class="fa fa-trash fa-sm"></i>
+        </button>
+      </div>
+      <div class="cartPrice">
+        <h4>{{item?.details?.price | currency:"USD"}}</h4>
+      </div>
+    </div>
+  </div>
+</div>

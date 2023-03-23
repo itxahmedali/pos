@@ -1,0 +1,90 @@
+.totalOrder {
+  height: 150px;
+  border-radius: 10px;
+  text-align: center;
+  color: var(--headings-primary-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+      180deg,
+      var(--body-primary-prop) 0%,
+      var(--body-secondary-prop) 0%,
+      var(--body-secondary-prop) 0%,
+      var(--body-primary-prop) 100%
+    );
+    background-size: 500% 500%;
+    animation: bg 2s ease-in-out infinite;
+    opacity: 0.1;
+  }
+}
+.nav-link.active {
+  border-radius: 100px;
+  color: var(--headings-primary-color);
+  background-color: #272727;
+}
+.nav-link {
+  margin: 0 10px;
+  min-width: 120px;
+  border-radius: 100px;
+  color: var(--headings-primary-color);
+}
+.nav-tabs {
+  border: none;
+}
+.realOrderText {
+  // margin-top: 10px;
+  // font-size: 15px;
+}
+.realOrderSpan {
+  // font-size: 3.5rem;
+  font-weight: 300;
+}
+.josefinRegular {
+  font-family: "josefinsemiregular";
+}
+.realOrderPara{
+  font-family: "josefinsemiregular";
+  color: #A5A5A5;
+}
+.slaesToday {
+  width: 450px;
+  height: 150px;
+  background: #ffffff1c;
+  border-radius: 10px;
+  margin: 10px;
+  text-align: center;
+  color: var(--headings-primary-color);
+}
+.graph {
+  width: 96%;
+  height: 300px;
+  background: #282828;
+  border-radius: 10px;
+  margin: auto;
+}
+// .graph1 {
+//   width: 96%;
+//   margin: auto;
+// }
+// #chart {
+//   max-width: 650px;
+//   margin: 35px auto;
+// }
+// .veiwOrder {
+//   background-color: #bb2b2b;
+//   padding: 12px 30px;
+//   color: #fff;
+//   border-radius: 50px;
+//   font-family: "josefinsemilight";
+// }

@@ -1,0 +1,59 @@
+.centerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 600px;
+  flex-direction: column;
+}
+.form input,
+.form textarea,
+.imgBox {
+  background-color: #3a3a3a;
+  padding: 8px 11px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+}
+
+.createBtn {
+  background-color: #2b98bb;
+  padding: 7px 50px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+  font-family: "josefinsemilight";
+}
+
+.textarea1 {
+font-size:40px;
+  resize: none;
+  text-align: center;
+  &::-webkit-input-placeholder { /* Edge */
+    color: var(--headings-primary-color);
+    font-size:40px;
+  }
+
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--headings-primary-color);
+    font-size:40px;
+  }
+
+  &::placeholder {
+    color: var(--headings-primary-color);
+    font-size:40px;
+  }
+}
+
+.need-help {
+  color: var(--headings-primary-color);
+  font-family: josefinsemiregular;
+}
+.container.overflowScroll{
+  min-height: unset;
+  max-height: unset;
+  overflow-y: auto;
+}

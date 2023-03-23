@@ -1,0 +1,49 @@
+.need-help {
+  margin-top: 3rem;
+}
+.text-area {
+  background-color: #3d3b3d;
+}
+.sendr-btn {
+  background-color: #2b98bb;
+  padding: 5px 40px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+  font-family: "josefinsemilight";
+}
+.support-form textarea {
+  background-color: #3d3b3d;
+  border: none;
+  outline: none;
+  resize: none;
+  border-radius: 10px;
+  font-family: "josefinsemilight";
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
+.contactr-btn {
+  background-color: #bb2b2b;
+  padding: 5px 30px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+  font-family: "josefinsemilight";
+}
+.support-text,.support,
+.support a,
+.need-help {
+  color: var(--headings-primary-color);
+}
+.support-text,
+.support a,
+.need-help{
+  font-family: "josefinsemiregular";
+}
+.support a {
+  text-decoration: none;
+}
+.support {
+  font-family: "josefinsemilight";
+}

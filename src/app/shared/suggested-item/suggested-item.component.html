@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row">
+    <owl-carousel-o [options]="customOptions">
+
+      <ng-container *ngFor="let item of MenuItems">
+        <ng-template carouselSlide let-owlItem>
+          <div class="slide" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
+            <div class="item">
+              <div class="itemPic" @fadeIn>
+                <img src="{{ item.img }}" alt="" />
+              </div>
+              <div class="itemContent" @fadeIn>
+                <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item }}">
+                  <span>{{ item.item }}</span>
+                </h5>
+                <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{ item.description }}</p>
+              </div>
+              <div class="itemPrice" @fadeIn>
+                <p>{{ item.price | currency: "USD" }}</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+
+    </owl-carousel-o>
+    <!-- <div
+      class="cstmCol mt-3 mb-3"
+      *ngFor="let item of MenuItems; let i = index">
+      <div
+        class="item">
+        <div class="itemPic" @fadeIn>
+          <img src="{{ item.img }}" alt="" />
+        </div>
+        <div class="itemContent" @fadeIn>
+          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item }}">
+            <span>{{ item.item }}</span>
+          </h5>
+          <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{ item.description }}</p>
+        </div>
+        <div class="itemPrice" @fadeIn>
+          <p>{{ item.price | currency: "USD" }}</p>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

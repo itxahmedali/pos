@@ -1,0 +1,67 @@
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>Current Orders</a>
+    <ng-template ngbNavContent>
+      <div class="container overflowScroll">
+        <app-myorder *ngIf="!MyOrderView" [tables]="Waitertables" [opt]="'master orderStatus'"></app-myorder>
+      </div>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>Pervious Orders</a>
+    <ng-template ngbNavContent>
+      <div class="container overflowScroll">
+        <app-myorder *ngIf="!MyOrderView" [tables]="Waitertables" [opt]="'master orderStatus'"></app-myorder>
+      </div>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button  class="btn-close" aria-label="Close" (click)="proceed();"></button>
+      <div class="scanButton">
+        <button (click)="scan()">Scan QR Code</button>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<ng-container>
+  <ng-template #newOrder let-modal>
+    <div class="modal-body checkoutModal completed">
+      <h1 class="heading">Menu</h1>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="checboxes">
+            <div class="checboxesMenu" *ngFor="let item of Menus; let i = index">
+              <div class="d-flex align-items-center">
+                <div class="checkbox">
+                  <input type="checkbox" class="me-3" name="Menu" id="{{i}}" value="{{item?.item}}"/>
+                  <label for="{{i}}" class="menuItemLabel"
+                    >{{item?.item}}</label
+                  >
+                </div>
+                <div class="counter">
+                  <button (click)="counter('plus', $event, i)"><i class="fa fa-plus" ></i></button>
+                  <label class="value">0</label>
+                  <button (click)="counter('minus', $event, i)"><i class="fa fa-minus" ></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="add-btn mt-3" (click)="proceed();">
+              Save
+            </button>
+            <button class="cancel-btn mt-3" (click)="proceed();">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

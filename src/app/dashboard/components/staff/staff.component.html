@@ -1,0 +1,91 @@
+<div class="container overflowScroll">
+  <div class="row">
+    <div class="col-sm-12 d-flex justify-content-between mt-5">
+      <button id="qrCode" (click)="open(qr, 'qr')" class="add-table">
+        <i class="fa fa-plus"></i> Add Employee
+      </button>
+        <div class="searchField mt-2 me-3">
+          <input type="text" placeholder="Search Item" />
+          <i class="fa fa-search"></i>
+        </div>
+    </div>
+    <div class="col-sm-12">
+      <app-myorder [tables]="Staff" [opt]="'masterstaff'"></app-myorder>
+    </div>
+  </div>
+</div>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button
+
+      class="btn-close"
+      id="checkoutClose"
+      aria-label="Close"
+      (click)="proceed()"
+    ></button>
+      <h5 class="modal-title">Add Employee / Edit Employee</h5>
+      <form action="" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-6 mt-3">
+            <input type="text" placeholder="Username" class="text-light w-100" />
+          </div>
+          <div class="col-lg-6 mt-3">
+            <ng-select placeholder="Select">
+              <ng-option>Fast food</ng-option>
+              <ng-option>BBQ</ng-option>
+            </ng-select>
+            <!-- <input type="text" placeholder="Father Name" class="text-light w-100" /> -->
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input type="text" placeholder="Name" class="text-light w-100" />
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input type="text" placeholder="Father Name" class="text-light w-100" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="text" placeholder="Address" class="text-light w-100" />
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input type="text" placeholder="Contact No." class="text-light w-100" />
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="passwordBox">
+              <input
+                type="password"
+                placeholder="Password"
+                class="text-light w-100"
+              />
+              <i class="fa fa-eye"></i>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <div class="imgBox">
+              <label
+                for="imageUpload"
+                *ngIf="!image"
+                class="d-flex justify-content-center align-items-center"
+              >
+                <span class="addImage">+</span>
+                <input id="imageUpload" type="file" hidden />
+              </label>
+            </div>
+            <label class="addProfileLabel mt-3">Add Profile Picture </label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-start">
+      <button  class="btn add-btn">Save</button>
+      <button
+
+        class="btn cancel-btn"
+        aria-label="Close"
+        (click)="proceed()"
+      >
+        Cancel
+      </button>
+    </div>
+  </ng-template>
+</ng-container>

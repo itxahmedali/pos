@@ -1,0 +1,112 @@
+<div class="container overflowScroll">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="'w-100" *ngIf="!orderDetailView">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>Sale Records</a>
+            <ng-template ngbNavContent>
+                <div class="">
+                    <app-myorder [tables]="Sales" [opt]="'sale'"></app-myorder>
+                </div>
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>Expense Sheet</a>
+            <ng-template ngbNavContent>
+                <div class="">
+                  <div class="d-flex justify-content-end ">
+                    <div class="modalbtn add-table-width">
+                      <button id="qrCode" (click)="open(qr, 'qr')" class="add-table"><i class="fa fa-plus"></i> Add Expense</button>
+                    </div>
+                  </div>
+                    <app-myorder [tables]="Expenses" [opt]="'expenses'"></app-myorder>
+                </div>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+      </div>
+      <div class="'w-100" *ngIf="orderDetailView">
+        <button class="backBtn mt-3" (click)="overDetailView()"><i class="fa fa-arrow-left"></i></button>
+        <div><h4 class="date">01-jan-2022</h4></div>
+        <div class="col-lg-12 mt-5">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a ngbNavLink>Sale</a>
+              <ng-template ngbNavContent>
+                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"></apx-chart>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a ngbNavLink>Expense</a>
+              <ng-template ngbNavContent>
+                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                [dataLabels]="chartOptions.dataLabels"></apx-chart>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a ngbNavLink>Revenue</a>
+              <ng-template ngbNavContent>
+                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                [dataLabels]="chartOptions.dataLabels"></apx-chart>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+
+
+        <div class="">
+          <app-myorder [tables]="Sales" [opt]="'saledetails'"></app-myorder>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button
+
+    class="btn-close"
+    id="checkoutClose"
+    aria-label="Close"
+   (click)="proceed()"
+  ></button>
+      <h5 class="modal-title">Add Expense</h5>
+      <form action="" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-6">
+            <input type="text" placeholder="Type" class="text-light" />
+          </div>
+          <div class="col-lg-6">
+            <input type="text" placeholder="Amount" class="text-light" />
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input type="text" placeholder="Date" class="text-light" />
+          </div>
+          <div class="col-lg-12 mt-3">
+            <textarea type="text" placeholder="Description" class="text-light w-100" rows="10"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-start">
+      <button
+
+        class="btn cancel-btn"
+        aria-label="Close"
+        (click)="proceed()"
+      >
+        Cancel
+      </button>
+      <button  class="btn add-btn">Add</button>
+    </div>
+  </ng-template>
+</ng-container>

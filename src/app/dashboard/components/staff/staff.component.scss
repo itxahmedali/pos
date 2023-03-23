@@ -1,0 +1,56 @@
+// modal Css
+.modal-title {
+  color: var(--headings-primary-color);
+}
+.modal-footer {
+  border-top: none;
+}
+
+.form input,
+.form textarea,
+.imgBox {
+  background-color: #3a3a3a;
+  padding: 8px 11px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+.cancel-btn {
+  background-color: #bb2b2b;
+  color: var(--headings-primary-color);
+  padding: 5px 40px;
+  border-radius: 50px;
+}
+.add-btn {
+  background-color: #2b98bb;
+  padding: 5px 40px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+}
+.add-table {
+  color: var(--headings-primary-color);
+  padding: 5px 20px;
+  background: transparent;
+  border: none;
+}
+.addImage{
+    color: var(--headings-primary-color);
+    font-size: 2rem
+}
+.imgBox{
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.addProfileLabel{
+    font-family: josefinsemilight;
+    color: var(--headings-primary-color);
+}
+
+::ng-deep.ng-select .ng-select-container{
+  background-color: #3a3a3a !important;
+  border-radius: 10px !important;
+  border: none !important;
+  min-height: 40px !important;
+}

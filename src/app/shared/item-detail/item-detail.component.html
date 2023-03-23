@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="cstmContainer">
+        <button class="backBtn" (click)="back()">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+        <div class="container">
+          <div class="row" [ngClass]="cartItem || data?.addOns ? '' :'align-items-center'">
+            <div class="col-sm-6">
+              <div class="itemContent">
+                <h5 class="itemName mt-5 mb-3">
+                  <span @fadeIn>{{ firstName ? firstName :data?.name?.split(' ')[0] }}</span>
+                  <span @fadeIn> {{ lastName? lastName :data?.name?.split(' ')[1] }}</span>
+                </h5>
+                <p class="itemDescription mt-3 mb-5" @fadeIn>{{ data?.description ? data?.description
+                  :data?.details?.description }}</p>
+              </div>
+              <div class="container mt-5 mb-3 addOnsHeight" *ngIf="cartItem || data?.addOns">
+                <div class="row mt-3 mb-3">
+                  <div class="col-sm-6">
+                    <div class="addOnsSection">
+                      <h6 @fadeIn>Add Ons</h6>
+                      <div class="options mt-3 mb-3 d-flex justify-content-between align-items-center"
+                        *ngFor="let item of addOns; let i = index">
+                        <p @fadeIn>{{item?.name}}</p>
+                        <div class="counter d-flex align-items-center">
+                          <button class="addBtn"
+                            (click)="increment(i, countersAdd, item,data?.item ? data?.item :data?.name, 'addOn')"><i
+                              class="fa fa-plus"></i></button>
+                          <label class="value">{{countersAdd[i]}}</label>
+                          <button class="addBtn"
+                            (click)="decrement(i, countersAdd, item,data?.item ? data?.item :data?.name, 'addOn')"><i
+                              class="fa fa-minus"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-3 mb-3">
+                  <div class="col-sm-6">
+                    <div class="addOnsSection">
+                      <h6 @fadeIn>Drinks</h6>
+                      <div class="options mt-3 mb-3 d-flex justify-content-between align-items-center"
+                        *ngFor="let item of drinks; let i = index">
+                        <p @fadeIn>{{item?.name}}</p>
+                        <div class="counter d-flex align-items-center">
+                          <button class="addBtn" (click)="decrement(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
+                            class="fa fa-minus"></i></button>
+                            <label class="value">{{countersDrinks[i]}}</label>
+                            <button class="addBtn" (click)="increment(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
+                                class="fa fa-plus"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="w-100 d-flex justify-content-center align-items-center">
+                <div class="itemImg mt-5" @fadeIn>
+                  <img src="{{ data?.img ? data?.img : data?.details?.img }}" alt="" />
+                </div>
+              </div>
+              <div class="checkoutBtn d-flex justify-content-center w-100 mb-3">
+                <button (click)="back()">Done</button>
+              </div>
+            <app-suggested-item *ngIf="cartItem || data?.addOns" [data]="suggestedItems"></app-suggested-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

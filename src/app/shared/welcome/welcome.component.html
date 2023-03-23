@@ -1,0 +1,29 @@
+<div class="mainBg position-relative">
+    <div class="container h-100">
+      <div class="row h-100">
+        <div class="col-md-6 position-relative h-100 firstCol">
+          <div class="img-container">
+            <img src="assets/welcome/splashLogo.png" alt="">
+          </div>
+          <h1 class="title">Taste the Best that Surprise you</h1>
+        </div>
+        <div class="col-md-6">
+          <div class="welcomeForm">
+            <h1 class="formTitle">Welcome</h1>
+            <div class="formInputs">
+              <div *ngIf="!skip">
+                <app-form [fields]="['Name', 'Email', 'Phone']" [fieldTypes]="['text', 'text', 'text']" [error]="true"></app-form>
+              </div>
+              <div *ngIf="skip">
+                <app-form [fields]="['Email', 'Password']" [fieldTypes]="['text', 'password']" [error]="true"></app-form>
+              </div>
+            </div>
+            <button class="orderBtn" *ngIf="!skip" (click)="signin('signin', !skip? true : false )">Make an order</button>
+            <button class="orderBtn" *ngIf="skip" (click)="signin('signin', skip? true : false )">Sign In</button>
+            <button *ngIf="!skip" class="skipBtn" (click)="signin('skip', !skip? true : false )">Skip</button>
+          </div>
+          <h5 class="poweredBy">Powered by <strong>Company Name</strong></h5>
+        </div>
+      </div>
+    </div>
+</div>

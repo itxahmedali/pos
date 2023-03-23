@@ -1,0 +1,118 @@
+.container {
+  overflow-y: auto;
+  min-height: 70vh;
+  max-height: 80vh;
+}
+
+.form {
+  width: 70%;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+}
+
+.form input,
+.form textarea,
+.imgBox {
+  background-color: #3a3a3a;
+  padding: 8px 11px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  color: var(--headings-primary-color);
+}
+.imgBoxUpload{
+  min-height: 120px;
+}
+.need-help {
+  color: var(--headings-primary-color);
+}
+
+.btn1{
+  background-color: #3a3a3a;
+  color: var(--headings-primary-color);
+  font-family: josefinsemilight;
+  border-radius: 10px;
+  padding: 7px;
+  border: none;
+}
+#uploadLogo,
+#uploadBanner,
+#uploadImage {
+  display: none;
+  background-color: var(--headings-primary-color);
+}
+
+.theme-text {
+  color: var(--headings-primary-color);
+  font-family: "josefinsemiregular";
+}
+
+.themesColor1 {
+  background-color: #3a3a3a;
+}
+
+#theme,
+#theme1,
+#theme2,
+#theme3,
+#theme4 {
+  border-radius: 10px;
+  margin: 6px;
+  height: 70px;
+  width: 75px;
+}
+.btn1 {
+  border-radius: 10px;
+  margin: 6px;
+  height: 70px;
+  width: 75px;
+  // background-color: linerar;
+  // background: linear-gradient(red, black);
+}
+// .color1{
+//   background: linear-gradient(black, red);
+// }
+// .color2{
+//   background: linear-gradient(#20968E, #FA15AC);
+// }
+// .color3{
+//   background: linear-gradient(#FAFF00, #037178);
+// }
+.saveBtn {
+  background-color: #2b98bb;
+  padding: 7px 50px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+  font-family: "josefinsemilight";
+}
+
+.logoUpload,
+.pictureUpload {
+  height: 100px;
+  width: 150px;
+  background-color: #3a3a3a;
+  margin: 8px;
+  border-radius: 10px;
+  color: var(--headings-primary-color);
+}
+
+.bannerUpload {
+  height: 100px;
+  width: 300px;
+  background-color: #3a3a3a;
+  color: var(--headings-primary-color);
+  margin: 8px;
+  border-radius: 10px;
+}
+
+.uploadLogo,
+.uploadImage {
+  padding: 23px;
+}
+
+.uploadBanner {
+  padding: 35px;
+}

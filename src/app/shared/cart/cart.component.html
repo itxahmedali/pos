@@ -1,0 +1,186 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="cartBox">
+        <button class="backBtn" (click)="cartshow()">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+        <div class="cstmContainer">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="header">
+                  <h1 class="heading">Cart</h1>
+                  <div class="addItemBtnBox">
+                    <button class="addItemBtn" (click)="cartshow()">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                    <label>Add items</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h1 *ngIf="CartItems?.length < 1" class="heading text-center">No Items Yet</h1>
+          <div class="w-100">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12" *ngIf="CartItems?.length > 0">
+                  <!-- <h3 class="white">Order No: 01</h3> -->
+                  <h3 class="white">Order {{ currentOrderNo }}</h3>
+                </div>
+                <div class="col-sm-6">
+                  <app-cartitem [data]='CartItems'></app-cartitem>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-100">
+            <div class="container" *ngIf="CartItems?.length > 0">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="hr"></div>
+                  <div class="totalSection">
+                    <div class="subtotal">
+                      <h5>Sub Total</h5>
+                      <h5>{{sum | currency:"USD"}}</h5>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>GST Tax</h6>
+                      <h6>13%</h6>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>Discount</h6>
+                      <h6>0%</h6>
+                    </div>
+                    <div class="grandtotal">
+                      <h5>Grand Total</h5>
+                      <h5>{{grandTotal | currency:"USD"}}</h5>
+                    </div>
+                  </div>
+                  <div class="checkoutBtn">
+                    <button id="checkoutBtn" (click)="open(checkout, 'checkout')">
+                      Checkout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="proceedModal" hidden (click)="open(thanks, 'thanks')"></button>
+<button id="viewOrder" hidden (click)="open(viewOrder, 'viewOrder')"></button>
+<button id="completed" hidden (click)="open(completed, 'completed')"></button>
+
+<!-- order modals -->
+<ng-template #checkout let-modal>
+  <button  class="btn-close" id="checkoutClose" aria-label="Close"
+    (click)="modal.dismiss('Cross click'); modalClose()"></button>
+  <div class="modal-body checkoutModal">
+    <h3 class="modalHead">Checkout</h3>
+    <div class="modalActions">
+      <button class="scanBtn">Scan QR Code</button>
+      <button class="btm-btn" (click)="proceed(); open(thanks, 'thanks')">
+        Proceed To Checkout
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- proceed to checkout -->
+<ng-template #thanks let-modal>
+  <!-- <button  class="btn-close" aria-label="Close"
+    (click)="modal.dismiss('Cross click'); modalClose()"></button> -->
+  <div class="modal-body checkoutModal">
+    <h1 class="head mt-3">Thank You!</h1>
+    <h3 class="subHead mt-3">Your Order Has been Placed</h3>
+    <h5 class="subHead mt-3">Your Order Will be served in</h5>
+    <div>
+      <button class="timerCapsule">20:00</button>
+    </div>
+    <div><button class="btm-btn" (click)="proceed(); modalClose(); cartshow()">Re Order</button></div>
+    <div><button class="btm-btn bg-success1" (click)="proceed(); modalClose(); cartshow()">Edit Order</button></div>
+    <div><button class="btm-btn bg-dng" *ngIf="role != 'waiters'">Call Waiter</button></div>
+    <button class="scanBtn mt-5 mb-3" (click)="proceed(); open(viewOrder, 'viewOrder')">
+      View order
+    </button>
+    <button class="timerCapsule completeDine" (click)="proceed(); open(completed, 'completed');complete()">
+      Complete Dine In
+    </button>
+  </div>
+</ng-template>
+
+<!-- view order -->
+<ng-template #viewOrder let-modal>
+  <button class="backBtn backModal" (click)="proceed(); open(thanks, 'thanks')">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="modal-body checkoutModal">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="head mt-3 text-center">Order Preview</h1>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+            <app-cartitem [data]="CartItems" [showActions]="false"></app-cartitem>
+          </div>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="w-100 d-flex justify-content-center align-items-center">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="hr"></div>
+                  <div class="totalSection">
+                    <div class="subtotal">
+                      <h5>Sub Total</h5>
+                      <h5>$236</h5>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>GST Tax</h6>
+                      <h6>13%</h6>
+                    </div>
+                    <div class="extraCharges">
+                      <h6>Discount</h6>
+                      <h6>0%</h6>
+                    </div>
+                    <div class="grandtotal">
+                      <h5>Grand Total</h5>
+                      <h5>$250</h5>
+                    </div>
+                  </div>
+                  <div class="checkoutBtn">
+                    <button (click)="proceed(); modalClose();cartshow()">
+                      Go to Main Menu
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- completed -->
+<ng-template #completed let-modal>
+  <button  class="btn-close" id="checkoutClose" aria-label="Close"
+    (click)="modalClose(); proceed(); complete();"></button>
+  <div class="modal-body checkoutModal completed">
+    <div class="waiterIcon">
+      <img src="assets/images/billWaiter.png" alt="" />
+    </div>
+    <h5 class="subHead mt-5 text-center">
+      Kindly Wait for a While Your Waiter is Coming to collect your bill.
+    </h5>
+    <h4 class="subHead mt-3 text-center w-80">THANKS FOR YOUR SUPPORT!</h4>
+    <div class="exclamationMark">
+      <img src="assets/images/tahnkYouExclamation.webp" alt="">
+    </div>
+  </div>
+</ng-template>
