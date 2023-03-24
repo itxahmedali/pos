@@ -2,7 +2,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UniversalService } from './../../services/universal.service';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { FilterPipe } from 'src/app/pipes/filter.pipe'
 @Component({
   selector: 'app-myorder',
   templateUrl: './myorder.component.html',
@@ -18,6 +18,7 @@ export class MyorderComponent implements OnInit {
   total: any;
   selectedCategory: any;
   selectedCategoryName: any;
+  public searchInput:any;
   public CartItems:any =[{img: 'assets/menu items/soup.webp', item: 'Chicken Soup', description: 'Soup is a primarily liquid food, generally served …of meat or vegetables with stock, milk, or water.', price: 80}]
 
   constructor(private modalService: NgbModal, private router: Router, private cd: ChangeDetectorRef) { }
@@ -846,24 +847,28 @@ export class MyorderComponent implements OnInit {
     UniversalService.TableModal.next(true);
   }
   addMenu(){
-    let beforeHead:any = localStorage.getItem('lastVisitheadingPage')
-    localStorage.setItem('beforeAddMenu', beforeHead)
     UniversalService.headerHeading.next('Add Item')
   }
   addMenuMaster(){
-    let beforeHead:any = localStorage.getItem('lastVisitheadingPage')
-    localStorage.setItem('beforeAddMenu', beforeHead)
     UniversalService.headerHeading.next('Add Item')
   }
-  addMenuMasterCategory(id:any){
-    let beforeHead:any = localStorage.getItem('lastVisitheadingPage')
-    localStorage.setItem('beforeAddMenu', beforeHead)
-    if(id){
-      this.id.emit(id);
-      UniversalService.headerHeading.next('Edit Category')
+  addMenuMasterCategory(data:any){
+    if(data.condition == 'add'){
+      this.id.emit({id:data.id,state:'add'});
+    }
+    else if(data.condition == 'edit'){
+      this.id.emit({id:data.id,state:'edit'});
     }
     else{
-      UniversalService.headerHeading.next('Add Category')
+      this.id.emit({id:data.id,state:'delete'});
+    }
+  }
+  change(event:any,id:any){
+    if(event.target.checked == true){
+      this.id.emit({id:id,state:'change',value:1})
+    }
+    else{
+      this.id.emit({id:id,state:'change',value:0})
     }
   }
   back() {

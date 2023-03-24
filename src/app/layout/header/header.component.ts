@@ -16,9 +16,7 @@ import { CartState } from 'src/app/store/reducers/cart.reducer';
   animations: [headerAnimation],
 })
 export class HeaderComponent implements OnInit {
-  public heading: any = localStorage.getItem('lastVisitheadingPage')
-    ? localStorage.getItem('lastVisitheadingPage')
-    : 'Starters';
+  public heading: any;
   public href: string = 'null';
   public cartButton: boolean = false;
   public cartButtonShow: boolean = true;
@@ -26,15 +24,24 @@ export class HeaderComponent implements OnInit {
   public waiter: any = false;
   public modalReference: any;
   public CartItemsLength: any;
-  public sidebarEnable:boolean= true;
+  public sidebarEnable: boolean = true;
   constructor(
     private modalService: NgbModal,
     private cd: ChangeDetectorRef,
     private authService: AuthService,
     private helper: HelperService,
     private location: Location,
+    private router: Router,
     private store: Store<{ cart: CartState }>
   ) {
+    router.events.subscribe((val) => {
+      this.text = this.helper.addSpaces(router?.url
+        ?.split('/')
+        ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' '));
+    });
+      this.heading = router?.url
+      ?.split('/')
+      ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ');
     this.store
       .select((state) => state.cart.items)
       .subscribe((items) => {
@@ -42,28 +49,21 @@ export class HeaderComponent implements OnInit {
         this.CartItemsLength = qunatity;
       });
   }
-  text: any = localStorage.getItem('lastVisitheadingPage')
-    ? localStorage.getItem('lastVisitheadingPage')
-    : 'Starters';
-    public expanded:boolean
+  text: any;
+  public expanded: boolean;
   ngOnInit(): void {
-    if(window.innerWidth < 415){
-      this.expanded = false
+    if (window.innerWidth < 415) {
+      this.expanded = false;
+    } else {
+      this.expanded = true;
     }
-    else{
-      this.expanded = true
-    }
-    this.text = localStorage.getItem('lastVisitheadingPage')
-      ? localStorage.getItem('lastVisitheadingPage')
-      : 'Starters';
-    this.heading = localStorage.getItem('lastVisitheadingPage')
-      ? localStorage.getItem('lastVisitheadingPage')
-      : 'Starters';
+
     this.checkUrl();
     this.observe();
     if (
       localStorage.getItem('role') == 'counter' ||
-      localStorage.getItem('role') == 'kitchen'
+      localStorage.getItem('role') == 'kitchen' ||
+      localStorage.getItem('role') == 'master'
     ) {
       this.cartButtonShow = false;
     }
@@ -79,11 +79,11 @@ export class HeaderComponent implements OnInit {
     } else this.sidebarEnable = true;
   }
   async observe() {
-    UniversalService.headerHeading.subscribe((res: string) => {
-      this.changeText();
-      this.heading = res;
-      this.cd.detectChanges();
-    });
+    // UniversalService.headerHeading.subscribe((res: string) => {
+    //   this.changeText();
+    //   this.heading = res;
+    //   this.cd.detectChanges();
+    // });
     UniversalService.cartShow.subscribe((res: boolean) => {
       if (res) {
         this.headingShow = false;
@@ -138,7 +138,7 @@ export class HeaderComponent implements OnInit {
     }
   }
   logout() {
-    this.authService.logout()
+    this.authService.logout();
   }
   checkUrl() {
     this.href = this.location.path();
@@ -147,7 +147,7 @@ export class HeaderComponent implements OnInit {
   myOrders() {
     UniversalService.cartShow.next(false);
     UniversalService.Orders.next(true);
-    UniversalService.SideBar.next(false)
+    UniversalService.SideBar.next(false);
   }
   open(content: any, modal: any) {
     this.modalReference = this.modalService.open(content, {
@@ -160,7 +160,7 @@ export class HeaderComponent implements OnInit {
   proceed() {
     this.modalReference.close();
   }
-  sumQunatityOfItems(array:Array<any>) {
+  sumQunatityOfItems(array: Array<any>) {
     let sum = 0;
     for (let i = 0; i < array.length; i += 1) {
       sum += array[i]?.quantity;

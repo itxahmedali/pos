@@ -54,11 +54,13 @@ const routes: Routes = [
         (m) => m.DashboardModule
       ),
     data: { title: 'dashboard', roles: 'dashboard' },
+    canActivate: [InnerGuard],
   }
 ];
 
 @NgModule({
-  imports: [BrowserAnimationsModule, RouterModule.forRoot(routes)],
+  imports: [BrowserAnimationsModule, RouterModule.forRoot(routes,
+    { enableTracing: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

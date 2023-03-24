@@ -42,6 +42,9 @@ h3 {
 .dropdown-toggle::after {
   content: unset;
 }
+.headingOfHeader{
+  text-transform: capitalize;
+}
 .form input{
   background-color: #3a3a3a;
   padding: 8px 11px;

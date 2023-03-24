@@ -143,13 +143,6 @@ export class StaffComponent implements OnInit {
         },
   ];
   ngOnInit(): void {
-    // const lastPage = localStorage.getItem('lastVisitheadingPage')
-    // if(lastPage){
-    //   this.observe(lastPage?.toLowerCase());
-    // }
-    // else{
-    //   this.observe('staff');
-    // }
   }
   async observe(path: string) {
     if (path) {

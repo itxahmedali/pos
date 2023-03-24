@@ -47,41 +47,14 @@ export class HelperService {
     return !!email.match(emailRegex);
   }
   myData() {
-    LoaderService.loader.next(true);
-    this.http.get('my-data', true).subscribe((res:any)=>{
+    this.http.loaderGet('my-data', true).subscribe((res:any)=>{
       localStorage.setItem('my_data', JSON.stringify(res));
-      LoaderService.loader.next(false);
     })
-    // return this.http.get('my-data', true).pipe(
-    //   map((res) => {
-    //     localStorage.setItem('my_data', JSON.stringify(res));
-    //     LoaderService.loader.next(false);
-    //     return res;
-    //   })
-    // );
   }
-  getData() {
-    // let my_data;
-    // if (!localStorage.getItem('my_data')) {
-    //   this.myData().subscribe((res: any) => {
-    //     my_data = res;
-    //   });
-    // } else {
-    //   my_data = JSON.parse(localStorage.getItem('my_data'));
-    // }
-    // return my_data;
-  }
-  getCategory(id: string) {
-    // LoaderService.loader.next(true);
-    // this.http.post('get-category', { domain_id: id }, true).subscribe(res=>{
-    //     LoaderService.loader.next(false);
-    //   return res
-    // })
-    // return this.http.post('get-category', { domain_id: id }, true).pipe(
-    //   map((res) => {
-    //     LoaderService.loader.next(false);
-    //     return res;
-    //   })
-    // );
+  addSpaces(str: string): string {
+    let result = str.replace(/([a-z])([A-Z])/g, '$1 $2'); // add space between lowercase and uppercase letters
+    result = result.replace(/&/, ' & '); // add spaces around "&" character
+    result = result.replace(/(creatediscount|staffpayroll)/, '$1 '); // add space after specific words
+    return result;
   }
 }

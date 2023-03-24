@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit {
       icon: 'assets/sidebarIcons/maincourse.webp',
       active: false,
       children: [
-        { path: 'fast-food', title: 'Fast Food', type: 'link' },
+        { path: 'fastFood', title: 'Fast Food', type: 'link' },
         { path: 'bbq', title: 'BBQ', type: 'link' },
       ],
     },
@@ -79,15 +79,15 @@ export class SidebarComponent implements OnInit {
       active: false,
       children: [
         {
-          path: 'fast-food',
+          path: 'fastFood',
           title: 'Fast Food',
           type: 'link',
           icon: 'fa-minus',
         },
         { path: 'bbq', title: 'BBQ', type: 'link', icon: 'fa-minus' },
-        { path: 'additem', title: 'Add Item', type: 'link', icon: 'fa-plus' },
+        { path: 'addItem', title: 'Add Item', type: 'link', icon: 'fa-plus' },
         {
-          path: 'addcategory',
+          path: 'addCategory',
           title: 'Category',
           type: 'link',
           icon: 'fa-plus',
@@ -138,7 +138,7 @@ export class SidebarComponent implements OnInit {
       icon: 'assets/sidebarIcons/maincourse.webp',
       active: false,
       children: [
-        { path: 'fooditems', title: 'Food Items', type: 'link' },
+        { path: 'foodItems', title: 'Food Items', type: 'link' },
         { path: 'category', title: 'Category', type: 'link' },
       ],
     },
@@ -161,26 +161,26 @@ export class SidebarComponent implements OnInit {
       type: 'link',
     },
     {
-      path: 'orderstatus',
+      path: 'orderStatus',
       title: 'Order Status',
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
     },
     {
-      path: 'customerdata',
+      path: 'customerData',
       title: 'Customer Data',
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
     },
     {
-      path: 'creatediscount',
+      path: 'createDiscount',
       title: 'Create Discount',
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
     },
 
     {
-      path: 'staffpayroll',
+      path: 'staffPayroll',
       title: 'Staff Payroll',
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
@@ -206,8 +206,7 @@ export class SidebarComponent implements OnInit {
   ];
   constructor(
     private location: Location,
-    private cd: ChangeDetectorRef,
-    private helper: HelperService
+    private cd: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
     this.href = this.location.path();
@@ -215,9 +214,6 @@ export class SidebarComponent implements OnInit {
       this.href == '/welcome-counter' ||
       this.href.split('/')[1] == 'counter'
     ) {
-      if (!localStorage.hasOwnProperty('lastVisitheadingPage')) {
-        localStorage.setItem('lastVisitheadingPage', 'Orders');
-      }
       UniversalService.headerHeading.next('Orders');
       this.role = localStorage.getItem('role');
     }
@@ -233,17 +229,10 @@ export class SidebarComponent implements OnInit {
       this.href == '/welcome-kitchen' ||
       this.href.split('/')[1] == 'kitchen'
     ) {
-      if (!localStorage.hasOwnProperty('lastVisitheadingPage')) {
-        localStorage.setItem('lastVisitheadingPage', 'Orders');
-      }
       UniversalService.headerHeading.next('Orders');
       this.role = localStorage.getItem('role');
     }
     if (this.href == '/welcome-master' || this.href.split('/')[1] == 'master') {
-      if (!localStorage.hasOwnProperty('lastVisitheadingPage')) {
-        localStorage.setItem('lastVisitheadingPage', 'Overview');
-      }
-      // UniversalService.headerHeading.next('Overview');
       this.role = localStorage.getItem('role');
     }
     this.role = localStorage.getItem('role');
@@ -268,12 +257,6 @@ export class SidebarComponent implements OnInit {
     if (this.role == 'master') {
       this.menuItems = this.masterItem;
     }
-    let vistHead = localStorage.getItem('lastVisitheadingPage');
-    if (localStorage.getItem('lastVisitheadingPage') != null) {
-      this.routerHead(null, vistHead);
-    } else {
-      this.routerHead(null, 'Starters');
-    }
     if (localStorage.hasOwnProperty('orderview')) {
       if (
         localStorage.getItem('orderview') == 'true' ||
@@ -284,19 +267,11 @@ export class SidebarComponent implements OnInit {
         this.sidebarEnable = true;
       }
     } else this.sidebarEnable = true;
-    this.menuItems?.map((e: any) => {
-      if (e.title == localStorage.getItem('lastVisitheadingPage')) {
-        e['active'] = true;
-      } else {
-        e['active'] = false;
-      }
-    });
     this.observe();
   }
 
   // Click Toggle menu
   toggletNavActive(item: any) {
-    localStorage.setItem('lastActive', JSON.stringify(item));
     if (!item.active) {
       this.menuItems.forEach((a: any) => {
         if (this.menuItems.includes(item)) {
@@ -334,7 +309,6 @@ export class SidebarComponent implements OnInit {
         localStorage.removeItem('specialMenu');
       }
     });
-    localStorage.setItem('lastVisitheadingPage', heading);
     UniversalService.itemDetailView.next(false);
     localStorage.setItem('heading', heading);
     if (

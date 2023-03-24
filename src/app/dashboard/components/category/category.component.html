@@ -1,1 +1,36 @@
-<app-myorder [tables]="MenuSelected" [opt]="'menuMasterCateogry'" (id)="handleID($event)"></app-myorder>
+<app-myorder *ngIf="!addCategory" [tables]="MenuSelected" [opt]="'menuMasterCateogry'"
+  (id)="handleID($event)"></app-myorder>
+<ng-container *ngIf="addCategory">
+  <div class="container pt-3">
+    <div class="row">
+      <div class="col-sm-12">
+        <button class="backBtn" (click)="addCategory = false">
+          <i class="fa fa-arrow-left"></i>
+        </button>
+      </div>
+      <div class="col-lg-12">
+        <h3 class="heading mt-5 mb-3">Add Category / Edit Category</h3>
+        <form action="" class="form" [formGroup]="categoryForm">
+          <div class="row mt-4">
+            <div class="col-lg-7 mt-3">
+              <input type="text" placeholder="Name" formControlName="name" class="text-light" />
+              <ng-container *ngIf="categoryForm.get('name')?.errors && categoryForm.get('name')?.touched">
+                <p class="error">Name is required</p>
+              </ng-container>
+            </div>
+            <div class="col-lg-7 mt-3">
+              <textarea type="text" placeholder="Description" formControlName="description" class="text-light w-100"
+                rows="5"></textarea>
+                <ng-container *ngIf="categoryForm.get('description')?.errors && categoryForm.get('description')?.touched">
+                  <p class="error">Description is required</p>
+                </ng-container>
+            </div>
+            <div class="col-lg-7 mt-3 d-flex justify-content-between align-items-center">
+              <button class="btn add-btn" [disabled]="!categoryForm.valid" (click)="saveCategory()">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>

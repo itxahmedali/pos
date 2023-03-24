@@ -475,8 +475,8 @@
       </ng-select>
     </div>
     <div class="col-sm-6 d-flex justify-content-end align-items-center">
-      <button class="addMenuBtn" (click)="addMenuMaster()">
-        <i class="fa fa-plus"></i> Add Item
+      <button class="addMenuBtn" (click)="addMenuMasterCategory({id:null,condition:'add'})">
+        <i class="fa fa-plus"></i> Add Itemssss
       </button>
     </div>
     <div class="col-sm-12 mt-1 listView">
@@ -494,38 +494,49 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
                   let i = index;
                   let item;
                   of: tables
+                  | filter: searchInput
                     | paginate
                       : {
-                          itemsPerPage: 5,
+                          itemsPerPage: 10,
                           currentPage: duePage,
                           totalItems: total
                         }
                 ">
-              <th scope="row">{{ item.id }}</th>
-              <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ? (item.description | ellipsis:20) : "N/A" }} </span></td>
-              <td>{{ item.category_id ? item.category_id : "N/A" }}</td>
-              <td>{{ item.price ? item.price : "N/A" }}</td>
-              <td>
-                <div class="toggle d-flex align-items-center w-100 justify-content-center">
-                  <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
-                    [id]='"categoryStock"+i' /><label [for]='"categoryStock"+i'></label>
-                </div>
-              </td>
-              <td class="d-flex justify-content-center align-items-center">
-                <button class="actionbtn">
-                  <i class="fa fa-eye mlicon"></i>
-                </button>
-                <button class="actionbtn">
-                  <i class="fa fa-trash mlicon"></i>
-                </button>
-                <button class="actionbtn">
-                  <i class="fa fa-edit mlicon"></i>
-                </button>
+                <th scope="row">{{ item?.item?.id }}</th>
+                <td>{{ item?.item?.name ? item?.item?.name : "N/A" }}</td>
+                <td> <span class="pointer" placement="top" [ngbTooltip]="item?.item?.description"> {{ item?.item?.description ?
+                  (item?.item?.description | ellipsis:20) : "N/A" }} </span></td>
+                  <td>{{ item?.item?.category ? item?.item?.category : "N/A" }}</td>
+                  <td>{{ item?.item?.price ? item?.item?.price : "N/A" }}</td>
+                  <td>
+                  <div class="toggle d-flex align-items-center w-100 justify-content-center">
+                    <input class="checkBox" type="checkbox" [checked]="item?.item?.out_of_stock =='0' ? false: true"
+                      [id]='"categoryStock"+i' (change)="change($event,item?.item?.id)"/><label [for]='"categoryStock"+i'></label>
+                  </div>
+                </td>
+                <td class="d-flex justify-content-center align-items-center">
+                  <button class="actionbtn" (click)="addMenuMasterCategory({id:item?.item?.id,condition:'edit'})">
+                    <i class="fa fa-edit mlicon"></i>
+                  </button>
+                  <button class="actionbtn" (click)="addMenuMasterCategory({id:item?.item?.id,condition:'delete'})">
+                    <i class="fa fa-trash mlicon"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr *ngIf="tables?.length">
+                <td colspan="7" class="text-center white">No Matching Data Available</td>
+              </tr>
+            </ng-template>
+            <tr *ngIf="!tables?.length">
+              <td class="text-center white" colspan="7">
+                No data available
               </td>
             </tr>
           </tbody>
@@ -550,7 +561,7 @@
   <div class="row mt-5 align-items-center">
     <div class="col-sm-4 d-flex justify-content-start align-items-center">
       <div class="searchField mt-1 w-100">
-        <input type="text" placeholder="Search Item" class="w-100" />
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100 white" />
         <i class="fa fa-search"></i>
       </div>
     </div>
@@ -560,7 +571,7 @@
       </ng-select>
     </div>
     <div class="col-sm-6 d-flex justify-content-end align-items-center">
-      <button class="addMenuBtn" (click)="addMenuMasterCategory(null)">
+      <button class="addMenuBtn" (click)="addMenuMasterCategory({id:null,condition:'add'})">
         <i class="fa fa-plus"></i> Add Category
       </button>
     </div>
@@ -577,33 +588,47 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
                   let i = index;
                   let item;
                   of: tables
+                  | filter: searchInput
                     | paginate
                       : {
-                          itemsPerPage: 5,
+                          itemsPerPage: 10,
                           currentPage: duePage,
                           totalItems: total
                         }
                 ">
-              <th scope="row">{{ item.id }}</th>
-              <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ? (item.description | ellipsis:20) : "N/A" }} </span></td>
-              <td>
-                <div class="toggle d-flex align-items-center w-100 justify-content-center">
-                  <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
-                    [id]='"categoryStock"+i' /><label [for]='"categoryStock"+i'></label>
-                </div>
-              </td>
-              <td class="d-flex justify-content-center align-items-center">
-                <!-- <button class="actionbtn">
-                  <i class="fa fa-eye mlicon"></i>
-                </button>  -->
-                <button class="actionbtn" (click)="addMenuMasterCategory(item.id)">
-                  <i class="fa fa-edit mlicon"></i>
-                </button>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.name ? item.name : "N/A" }}</td>
+                <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ?
+                    (item.description | ellipsis:20) : "N/A" }} </span></td>
+                <td>
+                  <div class="toggle d-flex align-items-center w-100 justify-content-center">
+                    <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
+                      [id]='"categoryStock"+i' (change)="change($event,item.id)"/><label [for]='"categoryStock"+i'></label>
+                  </div>
+                </td>
+                <td class="d-flex justify-content-center align-items-center">
+                  <button class="actionbtn" (click)="addMenuMasterCategory({id:item.id,condition:'edit'})">
+                    <i class="fa fa-edit mlicon"></i>
+                  </button>
+                  <button class="actionbtn" (click)="addMenuMasterCategory({id:item.id,condition:'delete'})">
+                    <i class="fa fa-trash mlicon"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr *ngIf="tables?.length">
+                <td colspan="5" class="text-center white">No Matching Data Available</td>
+              </tr>
+            </ng-template>
+            <tr *ngIf="!tables?.length">
+              <td class="text-center white" colspan="5">
+                No data available
               </td>
             </tr>
           </tbody>
@@ -1513,7 +1538,7 @@
 <ng-container>
   <ng-template #table let-modal>
     <div class="modal-body checkoutModal completed">
-      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
       <div class="container">
         <div class="row">
           <div class="col-sm-6">
@@ -1651,7 +1676,7 @@
 <ng-container>
   <ng-template #completeOrder let-modal>
     <div class="modal-body checkoutModal d-flex flex-column justify-content-center align-items-center">
-      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
       <h3 class="subHead mt-3">Your Order Has been Placed</h3>
       <h5 class="subHead mt-3">Your Order Will be served in</h5>
       <div>
@@ -1916,7 +1941,7 @@
 <ng-container>
   <ng-template #qr let-modal>
     <div class="modal-body checkoutModal completed">
-      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
       <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
       <form action="" class="form">
         <div class="row mt-4">
@@ -2010,7 +2035,7 @@
           </div>
           <div class="mt-4 d-flex justify-content-between">
             <div>
-              <button  class="btn edit-btn">Edit</button>
+              <button class="btn edit-btn">Edit</button>
             </div>
           </div>
         </div>
@@ -2040,7 +2065,7 @@
 <ng-container>
   <ng-template #saledetail let-modal>
     <div class="modal-body saledetail completed">
-      <button  class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
       <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
       <h3 class="text-center white">Sale details</h3>
       <div class="table-responsive">

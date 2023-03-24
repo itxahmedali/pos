@@ -15,10 +15,13 @@ export class InnerGuard implements CanActivate {
       return false;
     }
     let role = this.AuthGuardService.getRole();
+    let url = localStorage.getItem('url');
+    console.log(url,"hellourl");
+
     if(role){
       setTimeout(() => {
-        if(this.router.url !== `dashboard/${role?.toLowerCase()}`){
-          this.router.navigateByUrl(`dashboard/${role?.toLowerCase()}`);
+        if(this.router.url !== `dashboard/${url}`){
+          this.router.navigateByUrl(`dashboard/${url}`);
           return false;
         }
         else {

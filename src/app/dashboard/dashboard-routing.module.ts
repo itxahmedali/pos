@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RoleGuard } from '../guards/role.guard';
 import { CategoryComponent } from './components/category/category.component';
 import { CreatedDiscountComponent } from './components/created-discount/created-discount.component';
 import { CustomerDataComponent } from './components/customer-data/customer-data.component';
@@ -23,27 +24,102 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
-        path: 'master',
+        path: '',
         redirectTo: 'overview',
         pathMatch: 'full',
       },
-      { path: 'orderstatus', component: OrdersComponent },
-      { path: 'items', component: ItemsComponent },
-      { path: 'creatediscount', component: CreatedDiscountComponent },
-      { path: 'staff', component: StaffComponent },
-      { path: 'sale&expenses', component: SaleComponent },
-      { path: 'staffpayroll', component: StaffPayRollComponent },
-      { path: 'support', component: SupportComponent },
-      { path: 'overview', component: OverviewComponent },
-      { path: 'inventory', component: InventoryComponent },
-      { path: 'customerdata', component: CustomerDataComponent },
-      { path: 'setting', component: SettingComponent },
-      { path: 'menu', component: MenuComponent },
-      { path: 'reporting', component: ReportingComponent },
-      { path: 'fooditems', component: FooditemsComponent },
-      { path: 'category', component: CategoryComponent },
+      {
+        path: 'orderStatus',
+        component: OrdersComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'items',
+        component: ItemsComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'createDiscount',
+        component: CreatedDiscountComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'staff',
+        component: StaffComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'sale&expenses',
+        component: SaleComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'staffPayroll',
+        component: StaffPayRollComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'support',
+        component: SupportComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'overview',
+        component: OverviewComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'inventory',
+        component: InventoryComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'customerData',
+        component: CustomerDataComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'setting',
+        component: SettingComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'menu',
+        component: MenuComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'reporting',
+        component: ReportingComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'foodItems',
+        component: FooditemsComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'category',
+        component: CategoryComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
     ],
-  },
+  }
 ];
 
 @NgModule({

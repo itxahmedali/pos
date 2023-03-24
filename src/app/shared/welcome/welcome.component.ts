@@ -67,38 +67,35 @@ export class WelcomeComponent implements OnInit {
       event == 'signin' &&
       this.auth
     ) {
-      LoaderService.loader.next(true)
       this.http.post('login', loginData, false).subscribe((res: any) => {
         if (res) {
           if (res?.hasOwnProperty('errors')) {
             for (const key in res?.errors) {
               this.toaster.error(res?.errors[key]);
             }
-            LoaderService.loader.next(false)
           } else {
             this.toaster.success(res?.message);
             localStorage.setItem('access_token', res?.token);
             if (this.helper.urlSplit(this.href) == 'welcome-waiters') {
-              this.router.navigate(['/waiters']);
+              this.router.navigate(['/dashboard']);
               this.authGuardService.login('waiters');
               localStorage.setItem('orderview', 'true');
               UniversalService.SideBar.next(false);
             }
             if (this.helper.urlSplit(this.href) == 'welcome-kitchen') {
-              this.router.navigate(['/kitchen']);
+              this.router.navigate(['/dashboard']);
               this.authGuardService.login('kitchen');
             }
             if (this.helper.urlSplit(this.href) == 'welcome-counter') {
-              this.router.navigate(['/counter']);
+              this.router.navigate(['/dashboard']);
               this.authGuardService.login('counter');
             }
             if (this.helper.urlSplit(this.href) == 'welcome-master') {
-              this.router.navigate(['/master']);
+              this.router.navigate(['/dashboard']);
               this.authGuardService.login('master');
             }
             AuthService.signin.next(true);
             UniversalService.modules.next(true);
-            LoaderService.loader.next(false)
           }
         }
       });

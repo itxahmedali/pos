@@ -28,7 +28,6 @@ export class AppComponent {
     private store:Store) {}
 
   ngOnInit(): void {
-    localStorage.setItem('url',this.location.path().split('-')[1])
     this.getSubDomain()
     if (window.innerWidth < 415) {
       this.expanded = false;

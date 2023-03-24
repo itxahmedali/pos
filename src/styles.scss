@@ -2,8 +2,8 @@
 @import "bootstrap/scss/bootstrap";
 /* You can add global styles to this file, and also import other style files */
 // ng select
-@import "~@ng-select/ng-select/themes/material.theme.css";
-// carousel
+@import "@ng-select/ng-select/themes/default.theme.css";
+// carusel
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
 @import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
 // fontawesome icons
@@ -524,4 +524,7 @@ button:disabled{
     z-index: 0;
     background: #0000000f;
   }
+}
+.error{
+  color: red;
 }

@@ -21,10 +21,14 @@ export class DashboardComponent {
   public expandedBody!: boolean;
   public show: boolean = false;
   constructor(@Inject(DOCUMENT) private document: Document, private cd: ChangeDetectorRef, private router: Router, private location:Location, private helper:HelperService,
-    private store:Store) {}
+    private store:Store) {
+      helper.myData()
+      router.events.subscribe((val) => {
+        localStorage.setItem('url',this.location.path().split('/')[2])
+      })
+    }
 
   ngOnInit(): void {
-    localStorage.setItem('url',this.location.path().split('-')[1])
     this.getSubDomain()
     if (window.innerWidth < 415) {
       this.expanded = false;

@@ -49,7 +49,7 @@ export class HttpService {
         catchError((error: HttpErrorResponse) => {
           LoaderService.loader.next(false);
           console.log(error);
-          if (error.status === 403) {
+          if (error.status === 401) {
             this.authService.logout();
           } else {
             this.toastr.error(error?.error?.message);
@@ -64,7 +64,23 @@ export class HttpService {
       .get(environment.baseUrl + url, token ? this.headerToken : this.header)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 403) {
+          if (error.status === 401) {
+            this.authService.logout();
+          } else {
+            this.toastr.error(error.message);
+          }
+          return throwError(error.message || 'Server error');
+        })
+      );
+  }
+  loaderGet(url: string, token: boolean) {
+    LoaderService.loader.next(true);
+    return this.http
+      .get(environment.baseUrl + url, token ? this.headerToken : this.header)
+      .pipe(
+        finalize(() => LoaderService.loader.next(false)),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
             this.authService.logout();
           } else {
             this.toastr.error(error.message);
@@ -85,7 +101,7 @@ export class HttpService {
         finalize(() => LoaderService.loader.next(false)),
         catchError((error: HttpErrorResponse) => {
           console.log(error);
-          if (error.status === 403) {
+          if (error.status === 401) {
             this.authService.logout();
           } else {
             this.toastr.error(error?.error?.message);

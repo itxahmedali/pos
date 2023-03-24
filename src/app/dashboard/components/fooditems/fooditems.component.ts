@@ -1,93 +1,49 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
 
 @Component({
   selector: 'app-fooditems',
   templateUrl: './fooditems.component.html',
-  styleUrls: ['./fooditems.component.scss']
+  styleUrls: ['./fooditems.component.scss'],
 })
 export class FooditemsComponent {
   public Menus: any;
   public MenuSelected: any;
-  public addCategory: boolean = false;
   public addMenu: boolean = false;
-  public itemDetailView: boolean = false;
-  public itemDetail: any;
   public modalReference: any;
   public image: any;
-  public categoryScreen: boolean = false;
-  public selectedId: number;
-  public category!: any;
   public data!: any;
-  public categoryForm: any = this.fb.group({
-    id:[null],
+  public itemForm: any = this.fb.group({
     name: [null],
     description: [null],
     image: [null],
-    domain_id: [null],
-    active_status: [null],
+    price: [null],
+    category: [null],
   });
   constructor(
-    private cd: ChangeDetectorRef,
-    private router: Router,
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
+    private toastr: ToastrService
   ) {
-    this.categoryForm = this.fb.group({
-      id:[null, [Validators.required, Validators.email]],
-      name: [null, [Validators.required, Validators.email]],
-      description: [null, [Validators.required, Validators.email]],
-      image: ['null'],
-      domain_id: [null],
-      active_status: [null],
+    this.itemForm = this.fb.group({
+      name: [null, [Validators.required]],
+      description: [null, [Validators.required]],
+      image: [null, [Validators.required]],
+      price: [null, [Validators.required]],
+      category: [null, [Validators.required]],
     });
   }
   ngOnInit(): void {
-      this.observe();
-      this.getData();
-    }
-  backMenu() {
-    UniversalService.headerHeading.next(localStorage.getItem('beforeAddMenu'));
+    this.getData();
   }
-  async observe() {
-    UniversalService.cartShow.subscribe((res) => {
-      if (res) {
-        const word = JSON.stringify(localStorage.getItem('heading')).replace(
-          / /g,
-          '_'
-        );
-        this.Menus.map((e: any) => {
-          if (e.hasOwnProperty(word)) {
-            this.MenuSelected = e[word];
-          }
-        });
-      }
-      this.cd.detectChanges();
-    }),
-      (err: any) => console.log(err);
-    UniversalService.itemDetailView.subscribe((res) => {
-      if (res) {
-        this.itemDetailView = true;
-      } else {
-        this.itemDetailView = false;
-      }
-      this.cd.detectChanges();
-    }),
-      (err: any) => console.log(err);
-    UniversalService.itemDetail.subscribe((res) => {
-      if (res) {
-        this.itemDetail = res;
-      } else {
-        this.itemDetail = res;
-      }
-      this.cd.detectChanges();
-    }),
-      (err: any) => console.log(err);
+  backMenu() {
+    this.addMenu = false;
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -105,38 +61,108 @@ export class FooditemsComponent {
       await this.getCategory(JSON.parse(data)?.id);
     } else return;
   }
-  handleID(id: number) {
-    this.selectedId = id;
-    this.MenuSelected?.map((e:any)=>{
-      if(e?.id == id){
-        this.categoryForm.patchValue({
-          id:e.id,
-          name: e?.name,
-          description: e?.description,
-          domain_id:e?.domain_id,
-          active_status:e?.active_status
+  handleID(data: any) {
+    let domainId: any = localStorage.getItem('my_data');
+    this.addMenu = true;
+    this.itemForm.removeControl('id');
+    this.itemForm.removeControl('domain_id');
+    this.itemForm.removeControl('active_status');
+    this.itemForm.removeControl('out_of_stock');
+    const selectedMenu = this.MenuSelected?.find((e: any) => e?.item?.id == data.id)
+    if (data.state == 'edit') {
+      if (selectedMenu) {
+        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
+        this.itemForm.addControl(
+          'domain_id',
+          new FormControl(JSON.parse(domainId)?.domain_id)
+        );
+        this.itemForm.addControl(
+          'active_status',
+          new FormControl(selectedMenu?.item?.active_status)
+        );
+        this.itemForm.patchValue({
+          name: selectedMenu?.item?.name,
+          description: selectedMenu?.item?.description,
+          price: selectedMenu?.item?.price,
+          category: selectedMenu?.item?.category,
         });
       }
-    })
+    } else if (data.state == 'add') {
+      this.itemForm = this.fb.group({
+        name: [null, [Validators.required]],
+        description: [null, [Validators.required]],
+        image: ['null'],
+      });
+      this.itemForm.addControl(
+        'domain_id',
+        new FormControl(JSON.parse(domainId)?.domain_id)
+      );
+    } else if (data.state == 'change') {
+      this.addMenu = false;
+      if (selectedMenu) {
+        this.itemForm.patchValue({
+          name: selectedMenu?.item?.name,
+          description: selectedMenu?.item?.description,
+        });
+        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
+        this.itemForm.addControl('out_of_stock', new FormControl(data.value));
+      }
+      this.saveCategory();
+    } else if (data.state == 'delete') {
+      this.addMenu = false;
+      if (selectedMenu) {
+        this.itemForm.patchValue({
+          name: selectedMenu?.item?.name,
+          description: selectedMenu?.item?.description,
+        });
+        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
+        this.itemForm.addControl('active_status', new FormControl(0));
+        this.saveCategory();
+      }
+    }
   }
-  async saveCategory(){
-    await this.http.post('add-category',this.categoryForm.value, true).subscribe((res:any)=>{
-      console.log(res);
-      this.getData()
-      this.addCategory = false
-      this.categoryScreen = true
-    })
+  async saveCategory() {
+    await this.http
+      .loaderPost('add-category', this.itemForm.value, true)
+      .subscribe((res: any) => {
+        if (res?.status != 400) {
+          this.toastr.success(res?.message);
+        } else {
+          this.toastr.error(res?.message);
+        }
+        this.getData();
+        this.addMenu = false;
+      });
   }
   async getCategory(id: number) {
-    let foodItems:any = []
+    let foodItems: any = [];
     await this.http
-    .loaderPost('get-category', { domain_id: id }, true)
-    .subscribe((res: any) => {
-      res?.data?.map((e:any)=>{
-        foodItems.push(e?.items)
-      })
-      this.MenuSelected = foodItems.flat();
-      console.log(id, this.MenuSelected);
+      .loaderPost('get-category', { domain_id: id }, true)
+      .subscribe((res: any) => {
+        res?.data?.map((item: any) => {
+          foodItems.push({ item: item.items, category: item?.name });
+        });
+        foodItems = this.reduceArray(foodItems);
+        this.MenuSelected = foodItems
       });
+  }
+  reduceArray(originalArray: any) {
+    const newArray = originalArray.reduce(
+      (accumulator: any, currentValue: any) => {
+        return [
+          ...accumulator,
+          ...currentValue.item.map((item: any) => ({
+            category: currentValue.category,
+            item,
+          })),
+        ];
+      },
+      []
+    );
+    newArray.forEach((obj: any) => {
+      obj.item.category = obj.category;
+      delete obj.category;
+    });
+    return newArray;
   }
 }

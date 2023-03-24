@@ -13,7 +13,8 @@
           <!-- Submenu -->
           <a href="javascript:void(0)" class="sidebar-link sidebar-title" [class.link-nav]="!menuItem.children"
              *ngIf="menuItem.type === 'sub'"
-            (click)="toggletNavActive(menuItem)">
+            (click)="toggletNavActive(menuItem)"
+            >
             <div class="menuIcon">
               <img [src]="menuItem.icon" />
             </div>

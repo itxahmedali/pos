@@ -4,6 +4,7 @@
       <div class="d-flex justify-content-center align-items-center">
         <main role="main">
           <h3
+            class="headingOfHeader"
             [@animateText]="currentState"
             (@animateText.done)="animationFinished($event)"
             *ngIf="headingShow"
