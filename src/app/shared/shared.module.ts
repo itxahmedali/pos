@@ -57,7 +57,8 @@ import { FilterPipe } from '../pipes/filter.pipe';
     OrderComponent,
     NgSelectModule,
     SuggestedItemComponent,
-    FormComponent
+    FormComponent,
+    TableComponent
   ]
 })
 export class SharedModule { }

@@ -26,6 +26,7 @@ import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditComponent } from './components/edit/edit.component';
 import { AddOnComponent } from './components/add-on/add-on.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 // import { EllipsisPipe } from '../pipes/ellipses.pipe';
 // import { FilterPipe } from '../pipes/filter.pipe';
 
@@ -61,7 +62,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgbNavModule,
     NgApexchartsModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    CarouselModule
   ]
 })
 export class DashboardModule { }

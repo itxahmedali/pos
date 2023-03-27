@@ -53,7 +53,6 @@ export class WelcomeComponent implements OnInit {
       this.skip = false;
       this.auth = false;
     }
-    console.log(this.auth);
   }
   signin(event: string, customer: any) {
     LoaderService.loader.next(true)

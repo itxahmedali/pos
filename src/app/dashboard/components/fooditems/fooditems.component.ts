@@ -1,8 +1,11 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 import { ToastrService } from 'ngx-toastr';
+import { fadeIn } from 'src/animations/itemCardAnimation';
 import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
@@ -11,15 +14,33 @@ import { UniversalService } from 'src/app/services/universal.service';
   selector: 'app-fooditems',
   templateUrl: './fooditems.component.html',
   styleUrls: ['./fooditems.component.scss'],
+  animations:[fadeIn,
+    trigger('activeSlide', [
+      state('active', style({
+        transform: 'scale(1)',
+        opacity: 1,
+      })),
+      state('inActive', style({
+        transform: 'scale(0.7)',
+        opacity: 0.8,
+      })),
+      transition('active => inActive', [
+        animate('0.5s')
+      ]),
+      transition('inActive => active', [
+        animate('0.5s')
+      ])
+    ])]
 })
 export class FooditemsComponent {
   public Menus: any;
   public MenuSelected: any;
-  public Categories: any=[];
+  public Categories: any = [];
   public addMenu: boolean = false;
   public modalReference: any;
   public image: any;
   public data!: any;
+  public addOns!: any;
   public itemForm: any = this.fb.group({
     name: [null],
     description: [null],
@@ -27,6 +48,34 @@ export class FooditemsComponent {
     price: [null],
     category_id: [null],
   });
+  customOptions: OwlOptions = {
+    loop: true,
+    autoWidth: true,
+    mouseDrag: false,
+    touchDrag: false,
+    pullDrag: false,
+    dots: false,
+    navSpeed: 700,
+    navText: ['', ''],
+    slideTransition:'fade',
+    autoplay:true,
+    center: true,
+    responsive: {
+      0: {
+        items: 1
+      },
+      400: {
+        items: 1
+      },
+      740: {
+        items: 1
+      },
+      940: {
+        items: 1
+      }
+    },
+    nav: true
+  }
   constructor(
     private modalService: NgbModal,
     private http: HttpService,
@@ -39,7 +88,7 @@ export class FooditemsComponent {
       description: [null, [Validators.required]],
       image: [null, [Validators.required]],
       price: [null, [Validators.required]],
-      category_id: [null, [Validators.required]]
+      category_id: [null, [Validators.required]],
     });
   }
   ngOnInit(): void {
@@ -69,7 +118,7 @@ export class FooditemsComponent {
     this.itemForm.removeControl('id');
     this.itemForm.removeControl('active_status');
     this.itemForm.removeControl('out_of_stock');
-    this.image = null
+    this.image = null;
     const selectedMenu = this.MenuSelected?.find(
       (e: any) => e?.item?.id == data.id
     );
@@ -85,9 +134,9 @@ export class FooditemsComponent {
           description: selectedMenu?.item?.description,
           price: selectedMenu?.item?.price,
           category_id: null,
-          image: selectedMenu?.item?.image
+          image: selectedMenu?.item?.image,
         });
-        this.image = selectedMenu?.item?.image
+        this.image = selectedMenu?.item?.image;
       }
     } else if (data.state == 'add') {
       this.itemForm = this.fb.group({
@@ -95,7 +144,7 @@ export class FooditemsComponent {
         description: [null, [Validators.required]],
         image: [null, [Validators.required]],
         price: [null, [Validators.required]],
-        category_id: [null, [Validators.required]]
+        category_id: [null, [Validators.required]],
       });
     } else if (data.state == 'change') {
       this.addMenu = false;
@@ -105,7 +154,7 @@ export class FooditemsComponent {
           description: selectedMenu?.item?.description,
           price: selectedMenu?.item?.price,
           category_id: selectedMenu?.item?.category_id,
-          image: selectedMenu?.item?.image
+          image: selectedMenu?.item?.image,
         });
         this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
         this.itemForm.addControl('out_of_stock', new FormControl(data.value));
@@ -119,7 +168,7 @@ export class FooditemsComponent {
           description: selectedMenu?.item?.description,
           price: selectedMenu?.item?.price,
           category_id: selectedMenu?.item?.category_id,
-          image: selectedMenu?.item?.image
+          image: selectedMenu?.item?.image,
         });
         this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
         this.itemForm.addControl('active_status', new FormControl(0));
@@ -146,16 +195,18 @@ export class FooditemsComponent {
     await this.http
       .loaderPost('get-category', { domain_id: id }, true)
       .subscribe((res: any) => {
-        res?.data?.map((item: any, index:any) => {
-          categories.push({name:item?.name, id:res?.data?.[index]?.id});
+        res?.data?.map((item: any, index: any) => {
+          categories.push({ name: item?.name, id: res?.data?.[index]?.id });
           foodItems.push({ item: item.items, category: item?.name });
         });
         foodItems = this.combineArray(foodItems);
         this.Categories = categories;
-        console.log('====================================');
-        console.log(this.itemForm.value);
-        console.log('====================================');
         this.MenuSelected = foodItems;
+      });
+      await this.http
+      .loaderPost('get-addon', { domain_id: id }, true)
+      .subscribe((res: any) => {
+        this.addOns = res?.data
       });
   }
   combineArray(originalArray: any) {
@@ -183,7 +234,7 @@ export class FooditemsComponent {
       .then((result: any) => {
         this.image = result.data.image_url;
         this.itemForm.patchValue({
-          image: result.data.image_url
+          image: result.data.image_url,
         });
       })
       .catch((error) => {

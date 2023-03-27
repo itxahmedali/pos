@@ -1,7 +1,7 @@
 <app-myorder *ngIf="!addMenu" [tables]="MenuSelected" [opt]="'menuMaster'" (id)="handleID($event)"></app-myorder>
 <ng-container *ngIf="addMenu">
   <div class="container pt-3">
-    <div class="row" >
+    <div class="row">
       <div class="col-sm-12">
         <button class="backBtn" (click)="addMenu = false">
           <i class="fa fa-arrow-left"></i>
@@ -36,9 +36,9 @@
             <div class="col-lg-7 mt-3">
               <textarea type="text" formControlName="description" placeholder="Description" class="text-light w-100"
                 rows="5"></textarea>
-                <ng-container *ngIf="itemForm.get('description')?.errors && itemForm.get('description')?.touched">
-                  <p class="error">Description is required</p>
-                </ng-container>
+              <ng-container *ngIf="itemForm.get('description')?.errors && itemForm.get('description')?.touched">
+                <p class="error">Description is required</p>
+              </ng-container>
             </div>
             <div class="col-lg-7 mt-3">
               <input type="text" formControlName="price" placeholder="Price" class="text-light w-100" />
@@ -47,7 +47,7 @@
               </ng-container>
             </div>
             <div class="col-lg-7 mt-3 cstmDropDown">
-              <ng-select placeholder="Select Category" formControlName="category_id" >
+              <ng-select placeholder="Select Category" formControlName="category_id">
                 <ng-option *ngFor="let item of Categories" [value]="item?.id">{{item?.name}}
                 </ng-option>
               </ng-select>
@@ -55,7 +55,65 @@
                 <p class="error">Category is required</p>
               </ng-container>
             </div>
-            <div class="col-lg-7 mt-3 d-flex justify-content-between align-items-center">
+            <div class="col-sm-6 mt-5 mb-3">
+              <h3 class="white">Suggested AddOns</h3>
+              <owl-carousel-o [options]="customOptions">
+                <ng-container *ngFor="let item of addOns">
+                  <ng-template carouselSlide let-owlItem>
+                    <div class="slide" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
+                      <div class="item">
+                        <div class="itemPic" @fadeIn>
+                          <img src="{{ item.image }}" alt="" />
+                        </div>
+                        <div class="itemContent" @fadeIn>
+                          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
+                            <span>{{ item.name }}</span>
+                          </h5>
+                          <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{
+                            item.description }}</p>
+                        </div>
+                        <div class="itemPrice" @fadeIn>
+                          <p>{{ item.price | currency: "USD" }}</p>
+                        </div>
+                        <button class="addItemBtn">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+            <div class="col-sm-6 mt-5 mb-3">
+              <h3 class="white">Suggested Items</h3>
+              <owl-carousel-o [options]="customOptions">
+                <ng-container *ngFor="let item of MenuSelected">
+                  <ng-template carouselSlide let-owlItem>
+                    <div class="slide" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
+                      <div class="item">
+                        <div class="itemPic" @fadeIn>
+                          <img src="{{ item.item.image }}" alt="" />
+                        </div>
+                        <div class="itemContent" @fadeIn>
+                          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item.name }}">
+                            <span>{{ item.item.name }}</span>
+                          </h5>
+                          <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.item.description }}">{{
+                            item.item.description }}</p>
+                        </div>
+                        <div class="itemPrice" @fadeIn>
+                          <p>{{ item.item.price | currency: "USD" }}</p>
+                        </div>
+                        <button class="addItemBtn">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+            </div>
+            <div class="col-lg-7 mt-3 mb-3 d-flex justify-content-between align-items-center">
               <button class="btn add-btn" [disabled]="!itemForm.valid" (click)="saveCategory()">Save</button>
             </div>
           </div>

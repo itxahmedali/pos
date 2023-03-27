@@ -16,8 +16,6 @@ export class InnerGuard implements CanActivate {
     }
     let role = this.AuthGuardService.getRole();
     let url = localStorage.getItem('url');
-    console.log(url,"hellourl");
-
     if(role){
       setTimeout(() => {
         if(this.router.url !== `dashboard/${url}`){

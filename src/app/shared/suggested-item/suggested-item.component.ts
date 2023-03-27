@@ -64,7 +64,6 @@ export class SuggestedItemComponent implements OnInit {
     nav: true
   }
   ngOnInit(): void {
-    console.log(this.data,"heloda");
     this.MenuItems = this.data
     this.MenuItems.map(e=>{
       console.log(e,"heloda");

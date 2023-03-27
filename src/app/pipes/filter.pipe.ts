@@ -18,7 +18,6 @@ import { Pipe, PipeTransform } from '@angular/core';
           else filteredItem = item
           return (filteredItem?.name?.toLowerCase()?.includes(searchText) || JSON?.stringify(filteredItem?.description)?.toLowerCase()?.includes(searchText) || JSON?.stringify(filteredItem?.id)?.toLowerCase()?.includes(searchText));
         });
-        console.log(filteredRows);
         if (filteredRows?.length == 0) {
             return [];
           }

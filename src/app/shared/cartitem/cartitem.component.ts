@@ -16,9 +16,6 @@ export class CartitemComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef, private store: Store<{ cart: CartState }>) { }
 
   ngOnInit(): void {
-    console.log('====================================');
-    console.log(this.data,'data');
-    console.log('====================================');
   }
   editItem(item: any) {
     this.cartshow()

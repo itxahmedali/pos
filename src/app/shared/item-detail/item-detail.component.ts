@@ -155,8 +155,6 @@ export class ItemDetailComponent implements OnInit {
     if(this.cartPreviouseState){
       UniversalService.cartShow.next(true);
     }
-    console.log(this.cartPreviouseState,"please");
-
   }
   async observe() {
     UniversalService.cartPreviousState.subscribe((res: boolean) => {

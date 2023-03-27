@@ -1,0 +1,87 @@
+.cstmPadding {
+  padding: 0 3rem;
+}
+.heading,
+.stockStatus {
+  font-family: josefinsemiregular;
+  color: var(--headings-primary-color);
+}
+
+.form input,
+.form textarea,
+.imgBox,
+.ng-select {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+.form input,
+.form textarea,
+.imgBox {
+  padding: 8px 11px;
+}
+.add-table {
+  color: var(--headings-primary-color);
+  padding: 5px 38px;
+  background: transparent;
+  border: none;
+}
+
+.addImage {
+  color: var(--headings-primary-color);
+  font-size: 2rem;
+}
+.imgBox {
+  min-height: 200px;
+  max-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+  }
+}
+
+.addProfileLabel {
+  font-family: josefinsemilight;
+  color: var(--headings-primary-color);
+}
+.cancel-btn {
+  background-color: #bb2b2b;
+  color: var(--headings-primary-color);
+  padding: 5px 40px;
+  border-radius: 50px;
+}
+.add-btn {
+  background-color: #2b98bb;
+  padding: 5px 40px;
+  color: var(--headings-primary-color);
+  border-radius: 50px;
+}
+.checkBox {
+  width: unset !important;
+}
+.stockStatus {
+  margin: 0;
+  span {
+    color: #04ad5c;
+  }
+}
+.checkoutModal.completed {
+  justify-content: center;
+}
+.exclamationMark {
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 200px;
+  height: 150px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
