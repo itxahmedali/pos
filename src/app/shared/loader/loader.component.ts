@@ -5,36 +5,31 @@ import { LoaderService } from 'src/app/services/loader.service';
 @Component({
   selector: 'app-loader',
   templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss']
+  styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent implements OnInit {
-
   public show: boolean = false;
 
   constructor(
-    private cd:ChangeDetectorRef,
+    private cd: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
-    this.observe()
-   }
+    this.observe();
+  }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 
-  async observe(){
-    LoaderService.loader.subscribe((res:any)=>{
+  async observe() {
+    LoaderService.loader.subscribe((res: any) => {
       this.show = res;
-      if(this.show == true){
-              this.document.body.classList.add('bodyLoader');
-      }
-      else{
+      if (this.show == true) {
+        this.document.body.classList.add('bodyLoader');
+      } else {
         this.document.body.classList.remove('bodyLoader');
       }
       this.cd.detectChanges();
-    })
+    });
   }
-
 }

@@ -56,6 +56,7 @@ export class WelcomeComponent implements OnInit {
     console.log(this.auth);
   }
   signin(event: string, customer: any) {
+    LoaderService.loader.next(true)
     const formData = this.formComponent.formGroup.value;
     let loginData = {
       email: formData.Email,

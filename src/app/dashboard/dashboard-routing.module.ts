@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../guards/role.guard';
+import { AddOnComponent } from './components/add-on/add-on.component';
 import { CategoryComponent } from './components/category/category.component';
 import { CreatedDiscountComponent } from './components/created-discount/created-discount.component';
 import { CustomerDataComponent } from './components/customer-data/customer-data.component';
+import { EditComponent } from './components/edit/edit.component';
 import { FooditemsComponent } from './components/fooditems/fooditems.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { ItemsComponent } from './components/items/items.component';
@@ -115,6 +117,36 @@ const routes: Routes = [
       {
         path: 'category',
         component: CategoryComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'add-ons',
+        component: AddOnComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'edit-category',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'add-category',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'edit-item',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'add-item',
+        component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },

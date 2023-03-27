@@ -11,7 +11,12 @@ import { Pipe, PipeTransform } from '@angular/core';
         searchText = searchText?.toLowerCase();
 
         const filteredRows = value?.filter(item => {
-          return (item?.name?.toLowerCase()?.includes(searchText) || JSON?.stringify(item?.description)?.toLowerCase()?.includes(searchText) || JSON?.stringify(item?.id)?.toLowerCase()?.includes(searchText));
+          let filteredItem;
+          if(item?.hasOwnProperty('item')){
+            filteredItem = item?.item
+          }
+          else filteredItem = item
+          return (filteredItem?.name?.toLowerCase()?.includes(searchText) || JSON?.stringify(filteredItem?.description)?.toLowerCase()?.includes(searchText) || JSON?.stringify(filteredItem?.id)?.toLowerCase()?.includes(searchText));
         });
         console.log(filteredRows);
         if (filteredRows?.length == 0) {

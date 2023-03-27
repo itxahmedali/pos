@@ -140,6 +140,7 @@ export class SidebarComponent implements OnInit {
       children: [
         { path: 'foodItems', title: 'Food Items', type: 'link' },
         { path: 'category', title: 'Category', type: 'link' },
+        { path: 'add-ons', title: 'Add Ons', type: 'link' },
       ],
     },
     {

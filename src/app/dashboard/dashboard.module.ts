@@ -23,7 +23,11 @@ import { CategoryComponent } from './components/category/category.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { EditComponent } from './components/edit/edit.component';
+import { AddOnComponent } from './components/add-on/add-on.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+// import { EllipsisPipe } from '../pipes/ellipses.pipe';
+// import { FilterPipe } from '../pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,10 @@ import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     SupportComponent,
     FooditemsComponent,
     CategoryComponent,
+    EditComponent,
+    AddOnComponent,
+    // EllipsisPipe,
+    // FilterPipe
   ],
   imports: [
     CommonModule,
@@ -52,7 +60,8 @@ import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule,
     NgbNavModule,
     NgApexchartsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class DashboardModule { }

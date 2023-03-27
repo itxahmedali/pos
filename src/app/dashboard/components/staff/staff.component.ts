@@ -2,6 +2,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/services/universal.service';
+import { HttpService } from 'src/app/services/http.service';
 
 @Component({
   selector: 'app-staff',
@@ -11,148 +12,11 @@ import { UniversalService } from 'src/app/services/universal.service';
 export class StaffComponent implements OnInit {
   modalReference: any;
   public image:File
-  constructor(private router:Router, private cd:ChangeDetectorRef, private modalService: NgbModal) { }
-  public Staff: any = [
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Manager',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John Sandwich',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Manager',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John Sandwich',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Manager',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John Sandwich',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Manager',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John Sandwich',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'T1,T2,T3,T4',
-        },
-        {
-          id: 1,
-          Name: 'John',
-          EmployeeId :'00012',
-          position: 'Waiter',
-          shift: 'Morning',
-          manager: 'Paul Walker',
-        },
-  ];
+  constructor(private router:Router, private cd:ChangeDetectorRef, private modalService: NgbModal,
+    private http:HttpService) { }
+  public Staff: any
   ngOnInit(): void {
-  }
-  async observe(path: string) {
-    if (path) {
-      this.router.navigate([`master/${path}`]);
-    }
-    UniversalService.routePath.subscribe((res: string) => {
-      let path = res.toLowerCase();
-      this.router.navigate([`master/${path}`]);
-      this.cd.detectChanges();
-    });
+    this.getData()
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -163,5 +27,16 @@ export class StaffComponent implements OnInit {
   }
   proceed() {
     this.modalReference.close();
+  }
+  async getData() {
+    let data = localStorage.getItem('my_data');
+    if (data) {
+      await this.getStaff(JSON.parse(data)?.id);
+    } else return;
+  }
+  getStaff(id:any){
+    this.http.loaderPost('get-employee',{domain_id:id},true).subscribe((res:any)=>{
+      this.Staff = res?.data
+    })
   }
 }

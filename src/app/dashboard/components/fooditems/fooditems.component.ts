@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
 
@@ -14,6 +15,7 @@ import { UniversalService } from 'src/app/services/universal.service';
 export class FooditemsComponent {
   public Menus: any;
   public MenuSelected: any;
+  public Categories: any=[];
   public addMenu: boolean = false;
   public modalReference: any;
   public image: any;
@@ -23,20 +25,21 @@ export class FooditemsComponent {
     description: [null],
     image: [null],
     price: [null],
-    category: [null],
+    category_id: [null],
   });
   constructor(
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private helper: HelperService
   ) {
     this.itemForm = this.fb.group({
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
       image: [null, [Validators.required]],
       price: [null, [Validators.required]],
-      category: [null, [Validators.required]],
+      category_id: [null, [Validators.required]]
     });
   }
   ngOnInit(): void {
@@ -62,20 +65,17 @@ export class FooditemsComponent {
     } else return;
   }
   handleID(data: any) {
-    let domainId: any = localStorage.getItem('my_data');
     this.addMenu = true;
     this.itemForm.removeControl('id');
-    this.itemForm.removeControl('domain_id');
     this.itemForm.removeControl('active_status');
     this.itemForm.removeControl('out_of_stock');
-    const selectedMenu = this.MenuSelected?.find((e: any) => e?.item?.id == data.id)
+    this.image = null
+    const selectedMenu = this.MenuSelected?.find(
+      (e: any) => e?.item?.id == data.id
+    );
     if (data.state == 'edit') {
       if (selectedMenu) {
         this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
-        this.itemForm.addControl(
-          'domain_id',
-          new FormControl(JSON.parse(domainId)?.domain_id)
-        );
         this.itemForm.addControl(
           'active_status',
           new FormControl(selectedMenu?.item?.active_status)
@@ -84,25 +84,28 @@ export class FooditemsComponent {
           name: selectedMenu?.item?.name,
           description: selectedMenu?.item?.description,
           price: selectedMenu?.item?.price,
-          category: selectedMenu?.item?.category,
+          category_id: null,
+          image: selectedMenu?.item?.image
         });
+        this.image = selectedMenu?.item?.image
       }
     } else if (data.state == 'add') {
       this.itemForm = this.fb.group({
         name: [null, [Validators.required]],
         description: [null, [Validators.required]],
-        image: ['null'],
+        image: [null, [Validators.required]],
+        price: [null, [Validators.required]],
+        category_id: [null, [Validators.required]]
       });
-      this.itemForm.addControl(
-        'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
-      );
     } else if (data.state == 'change') {
       this.addMenu = false;
       if (selectedMenu) {
         this.itemForm.patchValue({
           name: selectedMenu?.item?.name,
           description: selectedMenu?.item?.description,
+          price: selectedMenu?.item?.price,
+          category_id: selectedMenu?.item?.category_id,
+          image: selectedMenu?.item?.image
         });
         this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
         this.itemForm.addControl('out_of_stock', new FormControl(data.value));
@@ -114,6 +117,9 @@ export class FooditemsComponent {
         this.itemForm.patchValue({
           name: selectedMenu?.item?.name,
           description: selectedMenu?.item?.description,
+          price: selectedMenu?.item?.price,
+          category_id: selectedMenu?.item?.category_id,
+          image: selectedMenu?.item?.image
         });
         this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
         this.itemForm.addControl('active_status', new FormControl(0));
@@ -123,7 +129,7 @@ export class FooditemsComponent {
   }
   async saveCategory() {
     await this.http
-      .loaderPost('add-category', this.itemForm.value, true)
+      .loaderPost('add-item', this.itemForm.value, true)
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
@@ -136,17 +142,23 @@ export class FooditemsComponent {
   }
   async getCategory(id: number) {
     let foodItems: any = [];
+    let categories: any = [];
     await this.http
       .loaderPost('get-category', { domain_id: id }, true)
       .subscribe((res: any) => {
-        res?.data?.map((item: any) => {
+        res?.data?.map((item: any, index:any) => {
+          categories.push({name:item?.name, id:res?.data?.[index]?.id});
           foodItems.push({ item: item.items, category: item?.name });
         });
-        foodItems = this.reduceArray(foodItems);
-        this.MenuSelected = foodItems
+        foodItems = this.combineArray(foodItems);
+        this.Categories = categories;
+        console.log('====================================');
+        console.log(this.itemForm.value);
+        console.log('====================================');
+        this.MenuSelected = foodItems;
       });
   }
-  reduceArray(originalArray: any) {
+  combineArray(originalArray: any) {
     const newArray = originalArray.reduce(
       (accumulator: any, currentValue: any) => {
         return [
@@ -164,5 +176,18 @@ export class FooditemsComponent {
       delete obj.category;
     });
     return newArray;
+  }
+  upload(event: any) {
+    this.helper
+      .fileUploadHttp(event)
+      .then((result: any) => {
+        this.image = result.data.image_url;
+        this.itemForm.patchValue({
+          image: result.data.image_url
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }

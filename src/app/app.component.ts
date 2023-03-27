@@ -8,6 +8,7 @@ import { DOCUMENT, Location } from '@angular/common';
 import { HelperService } from './services/helper.service';
 import { Store } from '@ngrx/store';
 import { LoaderService } from './services/loader.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,11 +25,17 @@ export class AppComponent {
   public expanded!: boolean;
   public expandedBody!: boolean;
   public show: boolean = false;
-  constructor(@Inject(DOCUMENT) private document: Document, private cd: ChangeDetectorRef, private router: Router, private location:Location, private helper:HelperService,
-    private store:Store) {}
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private cd: ChangeDetectorRef,
+    private router: Router,
+    private location: Location,
+    private helper: HelperService,
+    private store: Store
+  ) {}
 
   ngOnInit(): void {
-    this.getSubDomain()
+    this.getSubDomain();
     if (window.innerWidth < 415) {
       this.expanded = false;
       this.expandedBody = false;
@@ -64,7 +71,6 @@ export class AppComponent {
       }
     } else this.sidebarEnable = true;
     this.observe();
-
   }
   async observe() {
     AuthService.signin.subscribe((res: boolean) => {
@@ -103,15 +109,15 @@ export class AppComponent {
       },
       (err: any) => console.log(err)
     );
-      LoaderService.loader.subscribe((res: any) => {
-        this.show = res;
-        if (this.show == true) {
-          this.document.body.classList.add('bodyLoader');
-        } else {
-          this.document.body.classList.remove('bodyLoader');
-        }
-        this.cd.detectChanges();
-      });
+    LoaderService.loader.subscribe((res: any) => {
+      this.show = res;
+      if (this.show == true) {
+        this.document.body.classList.add('bodyLoader');
+      } else {
+        this.document.body.classList.remove('bodyLoader');
+      }
+      this.cd.detectChanges();
+    });
   }
   colorTheme(color: any) {
     const colors = JSON.parse(color);
@@ -154,8 +160,8 @@ export class AppComponent {
     }
     UniversalService.expand.next(this.expanded);
   }
-  getSubDomain(){
-    localStorage.removeItem('subDomain')
+  getSubDomain() {
+    localStorage.removeItem('subDomain');
     const domain = window.location.hostname;
     if (
       domain.indexOf('.') < 0 ||
@@ -163,10 +169,22 @@ export class AppComponent {
       domain.split('.')[0] === 'lvh' ||
       domain.split('.')[0] === 'www'
     ) {
-      localStorage.removeItem('subDomain')
+      localStorage.removeItem('subDomain');
+      Swal.fire({
+        title: 'No domain detected try again with proper url',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonText: 'Reload',
+        cancelButtonText: 'Cancel',
+      }).then((result) => {
+        if (result.value) {
+          window.location.reload();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          window.close();
+        }
+      });
     } else {
       localStorage.setItem('subDomain', domain.split('.')[0]);
-
     }
   }
 }
