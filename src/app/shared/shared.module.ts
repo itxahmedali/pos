@@ -17,8 +17,8 @@ import { SuggestedItemComponent } from './suggested-item/suggested-item.componen
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { FormComponent } from './form/form.component';
 import { ToastrModule } from 'ngx-toastr';
-import { EllipsisPipe } from '../pipes/ellipses.pipe';
-import { FilterPipe } from '../pipes/filter.pipe';
+// import { EllipsisPipe } from '../pipes/ellipses.pipe';
+// import { FilterPipe } from '../pipes/filter.pipe';
 @NgModule({
   declarations: [
     ItemComponent,
@@ -31,8 +31,8 @@ import { FilterPipe } from '../pipes/filter.pipe';
     OrderComponent,
     SuggestedItemComponent,
     FormComponent,
-    EllipsisPipe,
-    FilterPipe
+    // EllipsisPipe,
+    // FilterPipe
   ],
   imports: [
     CommonModule,

@@ -494,12 +494,11 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+            <ng-container >
               <tr *ngFor="
                   let i = index;
                   let item;
                   of: tables
-                  | filter: searchInput
                     | paginate
                       : {
                           itemsPerPage: 10,
@@ -510,7 +509,7 @@
                 <th scope="row">{{ item?.item?.id }}</th>
                 <td>{{ item?.item?.name ? item?.item?.name : "N/A" }}</td>
                 <td> <span class="pointer" placement="top" [ngbTooltip]="item?.item?.description"> {{ item?.item?.description ?
-                  (item?.item?.description | ellipsis:20) : "N/A" }} </span></td>
+                  (item?.item?.description) : "N/A" }} </span></td>
                   <td>{{ item?.item?.category ? item?.item?.category : "N/A" }}</td>
                   <td>{{ item?.item?.price ? item?.item?.price : "N/A" }}</td>
                   <td>
@@ -589,12 +588,11 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+            <ng-container>
               <tr *ngFor="
                   let i = index;
                   let item;
                   of: tables
-                  | filter: searchInput
                     | paginate
                       : {
                           itemsPerPage: 10,
@@ -605,7 +603,7 @@
                 <th scope="row">{{ item?.id }}</th>
                 <td>{{ item?.name ? item?.name : "N/A" }}</td>
                 <td> <span class="pointer" placement="top" [ngbTooltip]="item?.description"> {{ item?.description ?
-                  (item?.description | ellipsis:20) : "N/A" }} </span></td>
+                  (item?.description) : "N/A" }} </span></td>
                   <td>{{ item?.price ? item?.price : "N/A" }}</td>
                   <td>
                   <div class="toggle d-flex align-items-center w-100 justify-content-center">
@@ -682,12 +680,11 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+            <ng-container>
               <tr *ngFor="
                   let i = index;
                   let item;
                   of: tables
-                  | filter: searchInput
                     | paginate
                       : {
                           itemsPerPage: 10,
@@ -698,7 +695,7 @@
                 <th scope="row">{{ item.id }}</th>
                 <td>{{ item.name ? item.name : "N/A" }}</td>
                 <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ?
-                    (item.description | ellipsis:20) : "N/A" }} </span></td>
+                    (item.description) : "N/A" }} </span></td>
                 <td>
                   <div class="toggle d-flex align-items-center w-100 justify-content-center">
                     <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"

@@ -1,4 +1,10 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,23 +20,27 @@ import { UniversalService } from 'src/app/services/universal.service';
   selector: 'app-fooditems',
   templateUrl: './fooditems.component.html',
   styleUrls: ['./fooditems.component.scss'],
-  animations:[fadeIn,
+  animations: [
+    fadeIn,
     trigger('activeSlide', [
-      state('active', style({
-        transform: 'scale(1)',
-        opacity: 1,
-      })),
-      state('inActive', style({
-        transform: 'scale(0.7)',
-        opacity: 0.8,
-      })),
-      transition('active => inActive', [
-        animate('0.5s')
-      ]),
-      transition('inActive => active', [
-        animate('0.5s')
-      ])
-    ])]
+      state(
+        'active',
+        style({
+          transform: 'scale(1)',
+          opacity: 1,
+        })
+      ),
+      state(
+        'inActive',
+        style({
+          transform: 'scale(0.7)',
+          opacity: 0.8,
+        })
+      ),
+      transition('active => inActive', [animate('0.5s')]),
+      transition('inActive => active', [animate('0.5s')]),
+    ]),
+  ],
 })
 export class FooditemsComponent {
   public Menus: any;
@@ -41,6 +51,14 @@ export class FooditemsComponent {
   public image: any;
   public data!: any;
   public addOns!: any;
+  public duePage!: any;
+  public total!: any;
+  public searchInput!: any;
+  public selectedSort!: any;
+  public sorts = [
+    { id: 1, name: 'Sort By Name' },
+    { id: 2, name: 'Sort By Date' },
+  ];
   public itemForm: any = this.fb.group({
     name: [null],
     description: [null],
@@ -48,6 +66,7 @@ export class FooditemsComponent {
     price: [null],
     category_id: [null],
   });
+  public selectedMenu: any;
   customOptions: OwlOptions = {
     loop: true,
     autoWidth: true,
@@ -57,45 +76,34 @@ export class FooditemsComponent {
     dots: false,
     navSpeed: 700,
     navText: ['', ''],
-    slideTransition:'fade',
-    autoplay:true,
+    slideTransition: 'fade',
+    autoplay: true,
     center: true,
     responsive: {
       0: {
-        items: 1
+        items: 1,
       },
       400: {
-        items: 1
+        items: 1,
       },
       740: {
-        items: 1
+        items: 1,
       },
       940: {
-        items: 1
-      }
+        items: 1,
+      },
     },
-    nav: true
-  }
+    nav: true,
+  };
   constructor(
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private helper: HelperService
-  ) {
-    this.itemForm = this.fb.group({
-      name: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      image: [null, [Validators.required]],
-      price: [null, [Validators.required]],
-      category_id: [null, [Validators.required]],
-    });
-  }
+  ) {}
   ngOnInit(): void {
     this.getData();
-  }
-  backMenu() {
-    this.addMenu = false;
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -113,81 +121,70 @@ export class FooditemsComponent {
       await this.getCategory(JSON.parse(data)?.id);
     } else return;
   }
-  handleID(data: any) {
-    this.addMenu = true;
-    this.itemForm.removeControl('id');
-    this.itemForm.removeControl('active_status');
-    this.itemForm.removeControl('out_of_stock');
-    this.image = null;
-    const selectedMenu = this.MenuSelected?.find(
-      (e: any) => e?.item?.id == data.id
+  async stateItem(event: any, state: string, data: any) {
+    this.selectedMenu = this.MenuSelected?.find(
+      (e: any) => e?.item?.id == event.id
     );
-    if (data.state == 'edit') {
-      if (selectedMenu) {
-        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
+    if (this.selectedMenu) {
+      if (state == 'delete') {
+        this.itemForm.patchValue({
+          name: this.selectedMenu?.item?.name,
+          description: this.selectedMenu?.item?.description,
+          price: this.selectedMenu?.item?.price,
+          category_id: this.selectedMenu?.item?.category_id,
+          image: this.selectedMenu?.item?.image,
+        });
         this.itemForm.addControl(
-          'active_status',
-          new FormControl(selectedMenu?.item?.active_status)
+          'id',
+          new FormControl(this.selectedMenu?.item?.id)
         );
+        this.itemForm.addControl('active_status', new FormControl(0));
+      } else {
         this.itemForm.patchValue({
-          name: selectedMenu?.item?.name,
-          description: selectedMenu?.item?.description,
-          price: selectedMenu?.item?.price,
-          category_id: null,
-          image: selectedMenu?.item?.image,
+          name: this.selectedMenu?.item?.name,
+          description: this.selectedMenu?.item?.description,
+          price: this.selectedMenu?.item?.price,
+          category_id: this.selectedMenu?.item?.category_id,
+          image: this.selectedMenu?.item?.image,
         });
-        this.image = selectedMenu?.item?.image;
-      }
-    } else if (data.state == 'add') {
-      this.itemForm = this.fb.group({
-        name: [null, [Validators.required]],
-        description: [null, [Validators.required]],
-        image: [null, [Validators.required]],
-        price: [null, [Validators.required]],
-        category_id: [null, [Validators.required]],
-      });
-    } else if (data.state == 'change') {
-      this.addMenu = false;
-      if (selectedMenu) {
-        this.itemForm.patchValue({
-          name: selectedMenu?.item?.name,
-          description: selectedMenu?.item?.description,
-          price: selectedMenu?.item?.price,
-          category_id: selectedMenu?.item?.category_id,
-          image: selectedMenu?.item?.image,
-        });
-        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
-        this.itemForm.addControl('out_of_stock', new FormControl(data.value));
+        this.itemForm.addControl(
+          'id',
+          new FormControl(this.selectedMenu?.item?.id)
+        );
+        this.itemForm.addControl(
+          'out_of_stock',
+          new FormControl(data.target.checked ? 1 : 0)
+        );
       }
       this.saveCategory();
-    } else if (data.state == 'delete') {
-      this.addMenu = false;
-      if (selectedMenu) {
-        this.itemForm.patchValue({
-          name: selectedMenu?.item?.name,
-          description: selectedMenu?.item?.description,
-          price: selectedMenu?.item?.price,
-          category_id: selectedMenu?.item?.category_id,
-          image: selectedMenu?.item?.image,
-        });
-        this.itemForm.addControl('id', new FormControl(selectedMenu?.item?.id));
-        this.itemForm.addControl('active_status', new FormControl(0));
-        this.saveCategory();
-      }
     }
   }
   async saveCategory() {
+    let addOn = this.returnIds(this.addOns);
+    let item = this.returnIds(this.MenuSelected);
+    if (addOn) {
+      this.itemForm.addControl('addons_id', new FormControl(addOn));
+    }
+    if (item) {
+      this.itemForm.addControl('suggested', new FormControl(item));
+    }
     await this.http
       .loaderPost('add-item', this.itemForm.value, true)
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
+          this.getData();
         } else {
           this.toastr.error(res?.message);
         }
-        this.getData();
+        this.itemForm.removeControl('id');
+        this.itemForm.removeControl('active_status');
+        this.itemForm.removeControl('out_of_stock');
         this.addMenu = false;
       });
+  }
+  async add(item: any, val: boolean) {
+    item['selected'] = val;
   }
   async getCategory(id: number) {
     let foodItems: any = [];
@@ -203,10 +200,10 @@ export class FooditemsComponent {
         this.Categories = categories;
         this.MenuSelected = foodItems;
       });
-      await this.http
+    await this.http
       .loaderPost('get-addon', { domain_id: id }, true)
       .subscribe((res: any) => {
-        this.addOns = res?.data
+        this.addOns = res?.data;
       });
   }
   combineArray(originalArray: any) {
@@ -240,5 +237,26 @@ export class FooditemsComponent {
       .catch((error) => {
         console.error(error);
       });
+  }
+  returnIds(array: []) {
+    this.itemForm.removeControl('suggested');
+    this.itemForm.removeControl('addons_id');
+    let ids: any = [];
+    array?.map((e: any) => {
+      if (!e?.hasOwnProperty('item')) {
+        if (e?.hasOwnProperty('selected')) {
+          if (e?.selected) {
+            ids.push(e?.id);
+          }
+        }
+      } else {
+        if (e?.item?.hasOwnProperty('selected')) {
+          if (e?.item?.selected) {
+            ids.push(e?.item?.id);
+          }
+        }
+      }
+    });
+    return ids;
   }
 }

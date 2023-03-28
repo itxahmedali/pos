@@ -35,13 +35,31 @@ export class HeaderComponent implements OnInit {
     private store: Store<{ cart: CartState }>
   ) {
     router.events.subscribe((val) => {
-      this.text = this.helper.addSpaces(router?.url
-        ?.split('/')
-        ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' '));
+      this.text = this.helper.addSpaces(
+        Number(
+          router?.url
+            ?.split('/')
+            ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+        )
+          ? router?.url
+              ?.split('/')
+              ?.[router?.url?.split('/')?.length - 2]?.replace(/-/g, ' ')
+          : router?.url
+              ?.split('/')
+              ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+      );
     });
-      this.heading = router?.url
-      ?.split('/')
-      ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ');
+    this.heading = Number(
+      router?.url
+        ?.split('/')
+        ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+    )
+      ? router?.url
+          ?.split('/')
+          ?.[router?.url?.split('/')?.length - 2]?.replace(/-/g, ' ')
+      : router?.url
+          ?.split('/')
+          ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ');
     this.store
       .select((state) => state.cart.items)
       .subscribe((items) => {

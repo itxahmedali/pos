@@ -24,7 +24,7 @@ export class DashboardComponent {
     private store:Store) {
       helper.myData()
       router.events.subscribe((val) => {
-        localStorage.setItem('url',this.location.path().split('/')[2])
+        localStorage.setItem('url',this.location.path().replace('/dashboard',''))
       })
     }
 

@@ -18,8 +18,8 @@ export class InnerGuard implements CanActivate {
     let url = localStorage.getItem('url');
     if(role){
       setTimeout(() => {
-        if(this.router.url !== `dashboard/${url}`){
-          this.router.navigateByUrl(`dashboard/${url}`);
+        if(this.router.url !== `dashboard${url}`){
+          this.router.navigateByUrl(`dashboard${url}`);
           return false;
         }
         else {

@@ -20,15 +20,15 @@ import { StaffPayRollComponent } from './components/staff-pay-roll/staff-pay-rol
 import { SupportComponent } from './components/support/support.component';
 import { FooditemsComponent } from './components/fooditems/fooditems.component';
 import { CategoryComponent } from './components/category/category.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditComponent } from './components/edit/edit.component';
 import { AddOnComponent } from './components/add-on/add-on.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CarouselModule } from 'ngx-owl-carousel-o';
-// import { EllipsisPipe } from '../pipes/ellipses.pipe';
-// import { FilterPipe } from '../pipes/filter.pipe';
+import { EllipsisPipe } from '../pipes/ellipses.pipe';
+import { FilterPipe } from '../pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -50,8 +50,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     CategoryComponent,
     EditComponent,
     AddOnComponent,
-    // EllipsisPipe,
-    // FilterPipe
+    EllipsisPipe,
+    FilterPipe
   ],
   imports: [
     CommonModule,
@@ -62,6 +62,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     NgbNavModule,
     NgApexchartsModule,
     ReactiveFormsModule,
+    FormsModule,
     NgxPaginationModule,
     CarouselModule
   ]

@@ -127,29 +127,41 @@ const routes: Routes = [
         data: { allowedRoles: ['master'] },
       },
       {
-        path: 'edit-category',
+        path: 'foodItems/edit/:id',
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },
       {
-        path: 'add-category',
+        path: 'foodItems/add',
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },
       {
-        path: 'edit-item',
+        path: 'category/edit/:id',
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },
       {
-        path: 'add-item',
+        path: 'category/add',
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },
+      {
+        path: 'add-ons/edit/:id',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'add-ons/add',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      }
     ],
   }
 ];

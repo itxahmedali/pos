@@ -1,36 +1,91 @@
-<app-myorder *ngIf="!addCategory" [tables]="MenuSelected" [opt]="'menuMasterCateogry'"
-  (id)="handleID($event)"></app-myorder>
-<ng-container *ngIf="addCategory">
-  <div class="container pt-3">
-    <div class="row">
-      <div class="col-sm-12">
-        <button class="backBtn" (click)="addCategory = false">
-          <i class="fa fa-arrow-left"></i>
-        </button>
+<div class="container">
+  <div class="row mt-5 align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-1 w-100">
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100 white" />
+        <i class="fa fa-search"></i>
       </div>
-      <div class="col-lg-12">
-        <h3 class="heading mt-5 mb-3">Add Category / Edit Category</h3>
-        <form action="" class="form" [formGroup]="categoryForm">
-          <div class="row mt-4">
-            <div class="col-lg-7 mt-3">
-              <input type="text" placeholder="Name" formControlName="name" class="text-light" />
-              <ng-container *ngIf="categoryForm.get('name')?.errors && categoryForm.get('name')?.touched">
-                <p class="error">Name is required</p>
-              </ng-container>
-            </div>
-            <div class="col-lg-7 mt-3">
-              <textarea type="text" placeholder="Description" formControlName="description" class="text-light w-100"
-                rows="5"></textarea>
-                <ng-container *ngIf="categoryForm.get('description')?.errors && categoryForm.get('description')?.touched">
-                  <p class="error">Description is required</p>
-                </ng-container>
-            </div>
-            <div class="col-lg-7 mt-3 d-flex justify-content-between align-items-center">
-              <button class="btn add-btn" [disabled]="!categoryForm.valid" (click)="saveCategory()">Save</button>
-            </div>
-          </div>
-        </form>
+    </div>
+    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-end align-items-center">
+      <button class="addMenuBtn" [routerLink]="['add']">
+        <i class="fa fa-plus"></i> Add Category
+      </button>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Stock</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container  *ngIf="(MenuSelected | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                  let i = index;
+                  let item;
+                  of: MenuSelected | filter: searchInput
+                    | paginate
+                      : {
+                          itemsPerPage: 10,
+                          currentPage: duePage,
+                          totalItems: total
+                        }
+                ">
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.name ? item.name : "N/A" }}</td>
+                <td> <span class="pointer" placement="top" [ngbTooltip]="item.description"> {{ item.description ?
+                    (item.description  | ellipsis:20) : "N/A" }} </span></td>
+                <td>
+                  <div class="toggle d-flex align-items-center w-100 justify-content-center">
+                    <input class="checkBox" type="checkbox" [checked]="item.out_of_stock =='0' ? false: true"
+                      [id]='"categoryStock"+i' (change)="stateItem(item,'edit',$event)"/><label [for]='"categoryStock"+i'></label>
+                  </div>
+                </td>
+                <td class="d-flex justify-content-center align-items-center">
+                  <button class="actionbtn" [routerLink]="['edit/'+item?.id]">
+                    <i class="fa fa-edit mlicon"></i>
+                  </button>
+                  <button class="actionbtn" (click)="stateItem(item,'delete',null)">
+                    <i class="fa fa-trash mlicon"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr *ngIf="MenuSelected?.length">
+                <td colspan="5" class="text-center white">No Matching Data Available</td>
+              </tr>
+            </ng-template>
+            <tr *ngIf="!MenuSelected?.length">
+              <td class="text-center white" colspan="5">
+                No data available
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
       </div>
     </div>
   </div>
-</ng-container>
+</div>

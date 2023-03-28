@@ -8,12 +8,17 @@ import { HttpService } from 'src/app/services/http.service';
 @Component({
   selector: 'app-add-on',
   templateUrl: './add-on.component.html',
-  styleUrls: ['./add-on.component.scss']
+  styleUrls: ['./add-on.component.scss'],
 })
 export class AddOnComponent {
+  public selectedMenu: any;
   public Menus: any;
+  public duePage!: any;
+  public total!: any;
+  public searchInput!: any;
+  public selectedSort!: any;
   public MenuSelected: any;
-  public Categories: any=[];
+  public Categories: any = [];
   public addMenu: boolean = false;
   public modalReference: any;
   public image: any;
@@ -22,20 +27,24 @@ export class AddOnComponent {
     name: [null],
     description: [null],
     image: [null],
-    price: [null]
+    price: [null],
   });
+  public sorts = [
+    { id: 1, name: 'Sort By Name' },
+    { id: 2, name: 'Sort By Date' },
+  ];
   constructor(
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private helper: HelperService,
+    private helper: HelperService
   ) {
     this.addOnForm = this.fb.group({
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
       image: [null, [Validators.required]],
-      price: [null, [Validators.required]]
+      price: [null, [Validators.required]],
     });
   }
   ngOnInit(): void {
@@ -54,6 +63,31 @@ export class AddOnComponent {
   proceed() {
     this.modalReference.close();
   }
+  async stateItem(event: any, state: string, data: any) {
+    this.selectedMenu = this.MenuSelected?.find((e: any) => e?.id == event.id);
+    if (this.selectedMenu) {
+      if (state == 'delete') {
+        this.addOnForm.patchValue({
+          name: this.selectedMenu?.name,
+          description: this.selectedMenu?.description,
+          price: this.selectedMenu?.price,
+          image: this.selectedMenu?.image,
+        });
+        this.addOnForm.addControl('id', new FormControl(this.selectedMenu?.id));
+        this.addOnForm.addControl('active_status', new FormControl(0));
+      } else {
+        this.addOnForm.patchValue({
+          name: this.selectedMenu?.name,
+          description: this.selectedMenu?.description,
+          price: this.selectedMenu?.price,
+          image: this.selectedMenu?.image,
+        });
+        this.addOnForm.addControl('id', new FormControl(this.selectedMenu?.id));
+        this.addOnForm.addControl('out_of_stock', new FormControl(data.target.checked ? 1 : 0));
+      }
+      this.saveCategory();
+    }
+  }
   async getData() {
     let data = localStorage.getItem('my_data');
     if (data) {
@@ -66,10 +100,8 @@ export class AddOnComponent {
     this.addOnForm.removeControl('id');
     this.addOnForm.removeControl('active_status');
     this.addOnForm.removeControl('out_of_stock');
-    this.image = null
-    const selectedMenu = this.MenuSelected?.find(
-      (e: any) => e?.id == data.id
-    );
+    this.image = null;
+    const selectedMenu = this.MenuSelected?.find((e: any) => e?.id == data.id);
     if (data.state == 'edit') {
       if (selectedMenu) {
         this.addOnForm.addControl('id', new FormControl(selectedMenu?.id));
@@ -81,54 +113,9 @@ export class AddOnComponent {
           name: selectedMenu?.name,
           description: selectedMenu?.description,
           price: selectedMenu?.price,
-          image: selectedMenu?.image
+          image: selectedMenu?.image,
         });
-        this.image = selectedMenu?.image
-      }
-    } else if (data.state == 'add') {
-      this.addOnForm = this.fb.group({
-        name: [null, [Validators.required]],
-        description: [null, [Validators.required]],
-        image: [null, [Validators.required]],
-        price: [null, [Validators.required]],
-      });
-      this.addOnForm.addControl(
-        'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
-      );
-      this.addOnForm.addControl(
-        'active_status',
-        new FormControl(1)
-      );
-      this.addOnForm.addControl(
-        'out_of_stock',
-        new FormControl(0)
-      );
-    } else if (data.state == 'change') {
-      this.addMenu = false;
-      if (selectedMenu) {
-        this.addOnForm.patchValue({
-          name: selectedMenu?.name,
-          description: selectedMenu?.description,
-          price: selectedMenu?.price,
-          image: selectedMenu?.image
-        });
-        this.addOnForm.addControl('id', new FormControl(selectedMenu?.id));
-        this.addOnForm.addControl('out_of_stock', new FormControl(data.value));
-      }
-      this.saveCategory();
-    } else if (data.state == 'delete') {
-      this.addMenu = false;
-      if (selectedMenu) {
-        this.addOnForm.patchValue({
-          name: selectedMenu?.name,
-          description: selectedMenu?.description,
-          price: selectedMenu?.price,
-          image: selectedMenu?.image
-        });
-        this.addOnForm.addControl('id', new FormControl(selectedMenu?.id));
-        this.addOnForm.addControl('active_status', new FormControl(0));
-        this.saveCategory();
+        this.image = selectedMenu?.image;
       }
     }
   }
@@ -151,7 +138,7 @@ export class AddOnComponent {
     await this.http
       .loaderPost('get-addon', { domain_id: id }, true)
       .subscribe((res: any) => {
-        this.MenuSelected = res?.data
+        this.MenuSelected = res?.data;
       });
   }
   combineArray(originalArray: any) {
@@ -179,7 +166,7 @@ export class AddOnComponent {
       .then((result: any) => {
         this.image = result.data.image_url;
         this.addOnForm.patchValue({
-          image: result.data.image_url
+          image: result.data.image_url,
         });
       })
       .catch((error) => {

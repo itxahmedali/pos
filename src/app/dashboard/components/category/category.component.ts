@@ -13,7 +13,11 @@ import { UniversalService } from 'src/app/services/universal.service';
 })
 export class CategoryComponent {
   public Menus: any;
+  public duePage: any;
+  public searchInput: any;
+  public selectedSort: any;
   public MenuSelected: any;
+  public selectedMenu: any;
   public addCategory: boolean = false;
   public addMenu: boolean = false;
   public itemDetailView: boolean = false;
@@ -24,10 +28,15 @@ export class CategoryComponent {
   public selectedId: number;
   public category!: any;
   public data!: any;
+  public total!: any;
+  public sorts = [
+    { id: 1, name: 'Sort By Name' },
+    { id: 2, name: 'Sort By Date' },
+  ];
   public categoryForm: any = this.fb.group({
     name: [null],
     description: [null],
-    image: [null],
+    image: ['null'],
   });
   constructor(
     private modalService: NgbModal,
@@ -35,17 +44,9 @@ export class CategoryComponent {
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
-    this.categoryForm = this.fb.group({
-      name: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      image: ['null'],
-    });
   }
   ngOnInit(): void {
     this.getData();
-  }
-  backMenu() {
-    UniversalService.headerHeading.next(localStorage.getItem('beforeAddMenu'));
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -63,68 +64,30 @@ export class CategoryComponent {
       await this.getCategory(JSON.parse(data)?.id);
     } else return;
   }
-  handleID(data: any) {
-    let domainId: any = localStorage.getItem('my_data');
-    this.addCategory = true;
-    this.categoryForm.removeControl('id');
-    this.categoryForm.removeControl('domain_id');
-    this.categoryForm.removeControl('active_status');
-    this.categoryForm.removeControl('out_of_stock');
-    const selectedMenu = this.MenuSelected?.find((e: any) => e?.id == data.id);
-    if (data.state == 'edit') {
-      if (selectedMenu) {
-        this.categoryForm.addControl('id', new FormControl(selectedMenu.id));
-        this.categoryForm.addControl(
-          'domain_id',
-          new FormControl(JSON.parse(domainId)?.domain_id)
-        );
-        this.categoryForm.addControl(
-          'active_status',
-          new FormControl(selectedMenu.active_status)
-        );
+  async stateItem(event: any, state: string, data: any) {
+    this.selectedMenu = this.MenuSelected?.find(
+      (e: any) => e?.id == event.id
+    );
+    if (this.selectedMenu) {
+      if (state == 'delete') {
         this.categoryForm.patchValue({
-          name: selectedMenu.name,
-          description: selectedMenu.description,
+          name: this.selectedMenu.name,
+          description: this.selectedMenu.description,
         });
-      }
-    } else if (data.state == 'add') {
-      this.categoryForm = this.fb.group({
-        name: [null, [Validators.required]],
-        description: [null, [Validators.required]],
-        image: ['null'],
-      });
-      this.categoryForm.addControl(
-        'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
-      );
-    } else if (data.state == 'change') {
-    this.addCategory = false;
-      if (selectedMenu) {
+        this.categoryForm.addControl('id', new FormControl(this.selectedMenu.id));
+        this.categoryForm.addControl('active_status', new FormControl(0));
+      } else {
         this.categoryForm.patchValue({
-          name: selectedMenu.name,
-          description: selectedMenu.description,
+          name: this.selectedMenu.name,
+          description: this.selectedMenu.description,
         });
-        this.categoryForm.addControl('id', new FormControl(selectedMenu.id));
+        this.categoryForm.addControl('id', new FormControl(this.selectedMenu.id));
         this.categoryForm.addControl(
           'out_of_stock',
-          new FormControl(data.value)
+          new FormControl(data.target.checked ? 1 : 0)
         );
       }
       this.saveCategory();
-    } else if (data.state == 'delete') {
-    this.addCategory = false;
-      if (selectedMenu) {
-        this.categoryForm.patchValue({
-          name: selectedMenu.name,
-          description: selectedMenu.description,
-        });
-        this.categoryForm.addControl('id', new FormControl(selectedMenu.id));
-        this.categoryForm.addControl(
-          'active_status',
-          new FormControl(0)
-        );
-        this.saveCategory();
-      }
     }
   }
   async saveCategory() {
@@ -133,11 +96,14 @@ export class CategoryComponent {
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
+          this.getData()
         } else {
           this.toastr.error(res?.message);
         }
-        this.getData();
-        this.addCategory = false;
+        this.categoryForm.removeControl('id');
+        this.categoryForm.removeControl('domain_id');
+        this.categoryForm.removeControl('active_status');
+        this.categoryForm.removeControl('out_of_stock');
       });
   }
   async getCategory(id: number) {
