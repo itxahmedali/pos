@@ -75,7 +75,10 @@ export class EditComponent {
     pullDrag: false,
     dots: false,
     navSpeed: 700,
-    navText: ['', ''],
+    navText: [
+      `<i class="fa fa-chevron-left"></i>`,
+      `<i class="fa fa-chevron-right"></i>`,
+    ],
     slideTransition: 'fade',
     autoplay: true,
     center: true,
@@ -129,7 +132,7 @@ export class EditComponent {
   async getData() {
     let data = localStorage.getItem('my_data');
     if (data) {
-      await this.getCategory(JSON.parse(data)?.id);
+      await this.getCategory(JSON.parse(data).id);
     } else return;
   }
   async saveCategory(event: string) {
@@ -137,27 +140,27 @@ export class EditComponent {
       let addOn = this.returnIds(this.addOns);
       let item = this.returnIds(this.MenuSelected);
       if (addOn) {
-        this.itemForm.addControl('addons_id', new FormControl(addOn));
+        this.itemForm.addControl(
+          'addons_id',
+          new FormControl(JSON.parse(addOn))
+        );
       }
       if (item) {
-        this.itemForm.addControl('suggested', new FormControl(item));
+        this.itemForm.addControl(
+          'suggested',
+          new FormControl(JSON.parse(item))
+        );
       }
-      this.itemForm.addControl(
-        'active_status',
-        new FormControl(1)
-      );
-      this.itemForm.addControl(
-        'out_of_stock',
-        new FormControl(0)
-      );
+      this.itemForm.addControl('active_status', new FormControl(1));
+      this.itemForm.addControl('out_of_stock', new FormControl(0));
       await this.http
         .loaderPost('add-item', this.itemForm.value, true)
         .subscribe((res: any) => {
-          if (res?.status != 400) {
-            this.toastr.success(res?.message);
+          if (res.status != 400) {
+            this.toastr.success(res.message);
             this.router.navigate(['/dashboard/foodItems']);
           } else {
-            this.toastr.error(res?.message);
+            this.toastr.error(res.message);
           }
           this.itemForm.removeControl('id');
           this.itemForm.removeControl('active_status');
@@ -168,51 +171,39 @@ export class EditComponent {
       let domainId: any = localStorage.getItem('my_data');
       this.addOnForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
+        new FormControl(JSON.parse(domainId).domain_id)
       );
-      this.addOnForm.addControl(
-        'active_status',
-        new FormControl(1)
-      );
-      this.addOnForm.addControl(
-        'out_of_stock',
-        new FormControl(0)
-      );
+      this.addOnForm.addControl('active_status', new FormControl(1));
+      this.addOnForm.addControl('out_of_stock', new FormControl(0));
       await this.http
         .loaderPost('add-addon', this.addOnForm.value, true)
         .subscribe((res: any) => {
-          if (res?.status != 400) {
-            this.toastr.success(res?.message);
+          if (res.status != 400) {
+            this.toastr.success(res.message);
             this.router.navigate(['/dashboard/add-ons']);
           } else {
-            this.toastr.error(res?.message);
+            this.toastr.error(res.message);
           }
           this.addOnForm.removeControl('id');
           this.addOnForm.removeControl('active_status');
           this.addOnForm.removeControl('out_of_stock');
         });
-    } else {
+    } else if (event == 'category') {
       let domainId: any = localStorage.getItem('my_data');
       this.categoryForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
+        new FormControl(JSON.parse(domainId).domain_id)
       );
-      this.categoryForm.addControl(
-        'active_status',
-        new FormControl(1)
-      );
-      this.categoryForm.addControl(
-        'out_of_stock',
-        new FormControl(0)
-      );
+      this.categoryForm.addControl('active_status', new FormControl(1));
+      this.categoryForm.addControl('out_of_stock', new FormControl(0));
       await this.http
         .loaderPost('add-category', this.categoryForm.value, true)
         .subscribe((res: any) => {
-          if (res?.status != 400) {
-            this.toastr.success(res?.message);
+          if (res.status != 400) {
+            this.toastr.success(res.message);
             this.router.navigate(['/dashboard/category']);
           } else {
-            this.toastr.error(res?.message);
+            this.toastr.error(res.message);
           }
           this.categoryForm.removeControl('id');
           this.categoryForm.removeControl('domain_id');
@@ -231,90 +222,118 @@ export class EditComponent {
       await this.http
         .loaderPost('get-category', { domain_id: id }, true)
         .subscribe((res: any) => {
-          res?.data?.map((item: any, index: any) => {
-            categories.push({ name: item?.name, id: res?.data?.[index]?.id });
-            foodItems.push({ item: item.items, category: item?.name });
+          res.data.map((item: any, index: any) => {
+            categories.push({ name: item.name, id: res.data?.[index].id });
+            foodItems.push({ item: item.items, category: item.name });
           });
           foodItems = this.combineArray(foodItems);
           this.Categories = categories;
-          if (this.pageCondition == 'edit') {
+          if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
             if (this.url == 'foodItems') {
               this.MenuSelected = foodItems;
-              this.handleID(this.id, 'foodItem');
+              if (this.id) {
+                this.handleID(this.id, 'foodItem');
+              }
             } else {
-              this.MenuSelected = res?.data;
-              this.handleID(this.id, 'category');
+              this.MenuSelected = res.data;
+              if (this.id) {
+                this.handleID(this.id, 'category');
+              }
             }
           }
         });
-    } else {
       await this.http
         .loaderPost('get-addon', { domain_id: id }, true)
-        .subscribe((res: any) => {
-          if (this.pageCondition == 'edit') {
-            if (this.url == 'add-ons') {
-              this.addOns = res?.data;
-              this.handleID(this.id, 'add-ons');
-            }
-          }
+        .subscribe(async (res: any) => {
+          await this.handleResponse(res);
         });
+    } else if (this.url == 'add-ons') {
+      await this.http
+        .loaderPost('get-addon', { domain_id: id }, true)
+        .subscribe(async (res: any) => {
+          await this.handleResponse(res);
+        });
+    }
+  }
+  async handleResponse(res: any) {
+    if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
+      if (this.url == 'add-ons') {
+        this.addOns = res.data;
+        await this.handleID(this.id, 'add-ons');
+      }
     }
   }
   handleID(id: any, event: string) {
     if (event == 'foodItem') {
       this.image = null;
-      this.selectedMenu = this.MenuSelected?.find(
-        (e: any) => e?.item?.id == id
-      );
+      this.selectedMenu = this.MenuSelected.find((e: any) => e.item.id == id);
       if (this.selectedMenu) {
+        this.image = this.selectedMenu.item.image;
         this.itemForm.addControl(
           'id',
-          new FormControl(this.selectedMenu?.item?.id)
+          new FormControl(this.selectedMenu.item.id)
         );
         this.itemForm.addControl(
           'active_status',
-          new FormControl(this.selectedMenu?.item?.active_status)
+          new FormControl(this.selectedMenu.item.active_status)
+        );
+        this.addOnForm.addControl(
+          'out_of_stock',
+          new FormControl(this.selectedMenu.item.out_of_stock)
         );
         this.itemForm.patchValue({
-          name: this.selectedMenu?.item?.name,
-          description: this.selectedMenu?.item?.description,
-          price: this.selectedMenu?.item?.price,
+          name: this.selectedMenu.item.name,
+          description: this.selectedMenu.item.description,
+          price: this.selectedMenu.item.price,
           category_id: null,
-          image: this.selectedMenu?.item?.image,
+          image: this.selectedMenu.item.image,
         });
-        this.image = this.selectedMenu?.item?.image;
       }
-    }
-    if (event == 'add-ons') {
-      this.selectedMenu = this.addOns?.find((e: any) => e?.id == id);
-      this.addOnForm.addControl('id', new FormControl(this.selectedMenu?.id));
-      this.addOnForm.addControl(
-        'active_status',
-        new FormControl(this.selectedMenu?.active_status)
-      );
-      this.addOnForm.patchValue({
-        name: this.selectedMenu?.name,
-        description: this.selectedMenu?.description,
-        price: this.selectedMenu?.price,
-        image: this.selectedMenu?.image,
-      });
-      this.image = this.selectedMenu?.image;
-    } else {
+    } else if (event == 'add-ons' && this.url == 'add-ons') {
+      this.selectedMenu = this.addOns.find((e: any) => e.id == id);
+      if (this.selectedMenu) {
+        this.addOnForm.addControl('id', new FormControl(this.selectedMenu.id));
+        this.addOnForm.addControl(
+          'active_status',
+          new FormControl(this.selectedMenu.active_status)
+        );
+        this.addOnForm.addControl(
+          'out_of_stock',
+          new FormControl(this.selectedMenu.out_of_stock)
+        );
+        this.addOnForm.patchValue({
+          name: this.selectedMenu.name,
+          description: this.selectedMenu.description,
+          price: this.selectedMenu.price,
+          image: this.selectedMenu.image,
+        });
+        this.image = this.selectedMenu.image;
+      }
+    } else if (event == 'category' && this.url == 'category') {
       let domainId: any = localStorage.getItem('my_data');
-      this.selectedMenu = this.MenuSelected?.find((e: any) => e?.id == id);
-      this.categoryForm.addControl('id', new FormControl(this.selectedMenu.id));
-      this.categoryForm.addControl(
-        'domain_id',
-        new FormControl(JSON.parse(domainId)?.domain_id)
-      );
-      this.categoryForm.addControl(
-        'active_status',
-        new FormControl(this.selectedMenu.active_status)
-      );
-      this.categoryForm.patchValue({
-        name: this.selectedMenu.name,
-        description: this.selectedMenu.description,
-      });
+      this.selectedMenu = this.MenuSelected.find((e: any) => e.id == id);
+      if (this.selectedMenu) {
+        this.categoryForm.addControl(
+          'id',
+          new FormControl(this.selectedMenu.id)
+        );
+        this.categoryForm.addControl(
+          'domain_id',
+          new FormControl(JSON.parse(domainId).domain_id)
+        );
+        this.categoryForm.addControl(
+          'active_status',
+          new FormControl(this.selectedMenu.active_status)
+        );
+        this.addOnForm.addControl(
+          'out_of_stock',
+          new FormControl(this.selectedMenu.out_of_stock)
+        );
+        this.categoryForm.patchValue({
+          name: this.selectedMenu.name,
+          description: this.selectedMenu.description,
+        });
+      }
     }
   }
   combineArray(originalArray: any) {
@@ -359,21 +378,23 @@ export class EditComponent {
     this.itemForm.removeControl('suggested');
     this.itemForm.removeControl('addons_id');
     let ids: any = [];
-    array?.map((e: any) => {
-      if (!e?.hasOwnProperty('item')) {
-        if (e?.hasOwnProperty('selected')) {
-          if (e?.selected) {
-            ids.push(e?.id);
+    array.map((e: any) => {
+      if (!e.hasOwnProperty('item')) {
+        if (e.hasOwnProperty('selected')) {
+          if (e.selected) {
+            ids.push(e.id);
           }
         }
       } else {
-        if (e?.item?.hasOwnProperty('selected')) {
-          if (e?.item?.selected) {
-            ids.push(e?.item?.id);
+        if (e.item.hasOwnProperty('selected')) {
+          if (e.item.selected) {
+            ids.push(e.item.id);
           }
         }
       }
     });
-    return ids;
+    const str = JSON.stringify(ids);
+    const result = str.replace(/\[|\]/g, '"');
+    return result;
   }
 }

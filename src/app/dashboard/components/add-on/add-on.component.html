@@ -49,7 +49,7 @@
                   <td>{{ item?.price ? item?.price : "N/A" }}</td>
                   <td>
                   <div class="toggle d-flex align-items-center w-100 justify-content-center">
-                    <input class="checkBox" type="checkbox" [checked]="item?.out_of_stock =='0' ? false: true"
+                    <input class="checkBox" type="checkbox" [checked]="item?.out_of_stock =='1' ? true: false"
                       [id]='"categoryStock"+i' (change)="stateItem(item,'edit',$event)"/><label [for]='"categoryStock"+i'></label>
                   </div>
                 </td>

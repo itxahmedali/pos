@@ -11,7 +11,7 @@
           <div class="row mt-4">
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
-                <label for="imageUpload" class="d-flex justify-content-center align-items-center">
+                <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
                   <img width="100%" height="100%" [src]="image" alt="">
                 </label>
               </div>
@@ -74,7 +74,7 @@
                           <p>{{ item.price | currency: "USD" }}</p>
                           <button class="addItemBtn" (click)="add(item,item?.selected ? false :true)">
                             <i
-                              class="fa {{item?.selected || addOns?.[i]?.addons_id_list?.[i] == item?.id? 'fa-minus' :'fa-plus' }}"></i>
+                              class="fa {{item?.selected? 'fa-minus' :'fa-plus' }}"></i>
                           </button>
                         </div>
                       </div>
@@ -87,7 +87,7 @@
               <h3 class="white mb-3">Suggested Items</h3>
               <owl-carousel-o [options]="customOptions">
                 <ng-container *ngFor="let item of MenuSelected; let i = index">
-                  <ng-template *ngIf="item?.item?.id != selectedMenu?.item?.id" carouselSlide let-owlItem>
+                  <ng-template *ngIf="item?.item.id != id" carouselSlide let-owlItem>
                     <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
                       <div class="item">
                         <div class="itemPic" @fadeIn>
@@ -104,7 +104,7 @@
                           <p>{{ item.item.price | currency: "USD" }}</p>
                           <button class="addItemBtn" (click)="add(item.item,item?.item?.selected ? false :true)">
                             <i
-                              class="fa {{item?.item?.selected || MenuSelected?.[i]?.item?.suggested_list?.[i] == item?.item?.id ? 'fa-minus' :'fa-plus' }}"></i>
+                              class="fa {{item?.item?.selected  ? 'fa-minus' :'fa-plus' }}"></i>
                           </button>
                         </div>
                       </div>

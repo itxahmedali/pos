@@ -274,6 +274,11 @@ body {
     font-family: poppinsbold;
   }
 }
+.imgUploadedBox{
+  width: 200px;
+  height: 100%;
+  overflow: hidden;
+}
 @keyframes pulse {
   from {
     transform: scale(1);
