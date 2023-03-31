@@ -116,7 +116,7 @@ export class FooditemsComponent {
     this.modalReference.close();
   }
   async getData() {
-    let data = localStorage.getItem('my_data');
+    let data = localStorage.getItem('domainId');
     if (data) {
       await this.getCategory(JSON.parse(data)?.id);
     } else return;

@@ -104,7 +104,7 @@ export class WelcomeComponent implements OnInit {
     else if (event == 'signin' && !this.auth) {
       localStorage.setItem('access_token', 'hellotoken');
       if (this.helper.urlSplit(this.href) == 'welcome-customers') {
-        this.router.navigate(['/customers']);
+        this.router.navigate(['/dashboard']);
         this.authGuardService.login('customers');
         AuthService.signin.next(true);
         UniversalService.modules.next(true);
@@ -112,8 +112,8 @@ export class WelcomeComponent implements OnInit {
     } else if (event == 'skip') {
       localStorage.setItem('access_token', 'hellotoken');
       if (this.helper.urlSplit(this.href) == 'welcome-customers') {
-        this.router.navigate(['/customers']);
         this.authGuardService.login('customers');
+        this.router.navigate(['/dashboard']);
       }
       AuthService.signin.next(true);
       UniversalService.modules.next(true);

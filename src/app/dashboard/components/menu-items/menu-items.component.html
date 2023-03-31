@@ -1,0 +1,6 @@
+<div class="container ">
+  <div class="row">
+          <app-item *ngIf="!itemDetailView" [data]="MenuSelected"></app-item>
+          <app-item-detail *ngIf="itemDetailView" [data]="itemDetail"></app-item-detail>
+  </div>
+</div>

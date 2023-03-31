@@ -25,6 +25,191 @@ export class AppComponent {
   public expanded!: boolean;
   public expandedBody!: boolean;
   public show: boolean = false;
+  public menuItems:any;
+  public menuItem = [
+    {
+      path: 'starters',
+      title: 'Starters',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      title: 'Main Course',
+      type: 'sub',
+      icon: 'assets/sidebarIcons/maincourse.webp',
+      active: false,
+      children: [
+        { path: 'fastFood', title: 'Fast Food', type: 'link' },
+        { path: 'bbq', title: 'BBQ', type: 'link' },
+      ],
+    },
+    {
+      path: 'beverages',
+      title: 'Beverages',
+      icon: 'assets/sidebarIcons/beverages.webp',
+      type: 'link',
+    },
+    {
+      path: 'desserts',
+      title: 'Desserts',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+  ];
+  public kitchenItem = [
+    {
+      path: 'orders',
+      title: 'Orders',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'menu',
+      title: 'Menu',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+  ];
+  public counterItem = [
+    {
+      path: 'orders',
+      title: 'Orders',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      title: 'Menu',
+      type: 'sub',
+      icon: 'assets/sidebarIcons/maincourse.webp',
+      active: false,
+      children: [
+        {
+          path: 'fastFood',
+          title: 'Fast Food',
+          type: 'link',
+          icon: 'fa-minus',
+        },
+        { path: 'bbq', title: 'BBQ', type: 'link', icon: 'fa-minus' },
+        { path: 'addItem', title: 'Add Item', type: 'link', icon: 'fa-plus' },
+        {
+          path: 'addCategory',
+          title: 'Category',
+          type: 'link',
+          icon: 'fa-plus',
+        },
+      ],
+    },
+    {
+      path: 'staff',
+      title: 'Staff',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'sale&expenses',
+      title: 'Sale & Expenses',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'reportings',
+      title: 'Reportings',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'bookings',
+      title: 'Bookings',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'support',
+      title: 'Support',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+  ];
+  public masterItem = [
+    {
+      path: 'overview',
+      title: 'Overview',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      title: 'items',
+      type: 'sub',
+      icon: 'assets/sidebarIcons/maincourse.webp',
+      active: false,
+      children: [
+        { path: 'foodItems', title: 'Food Items', type: 'link' },
+        { path: 'category', title: 'Category', type: 'link' },
+        { path: 'add-ons', title: 'Add Ons', type: 'link' },
+      ],
+    },
+    {
+      path: 'staff',
+      title: 'Staff',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'sale&expenses',
+      title: 'Sale & Expenses',
+      icon: 'assets/sidebarIcons/starter.webp',
+      type: 'link',
+    },
+    {
+      path: 'setting',
+      title: 'Setting',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'orderStatus',
+      title: 'Order Status',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'customerData',
+      title: 'Customer Data',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'createDiscount',
+      title: 'Create Discount',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+
+    {
+      path: 'staffPayroll',
+      title: 'Staff Payroll',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'inventory',
+      title: 'Inventory',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'support',
+      title: 'Support',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+    {
+      path: 'reporting',
+      title: 'Reporting',
+      icon: 'assets/sidebarIcons/dessert.webp',
+      type: 'link',
+    },
+  ];
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private cd: ChangeDetectorRef,
@@ -32,7 +217,13 @@ export class AppComponent {
     private location: Location,
     private helper: HelperService,
     private store: Store
-  ) {}
+  ) {
+    router.events.subscribe(()=>{
+      if(localStorage.getItem('loginstate')){
+        this.setMenu()
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.getSubDomain();
@@ -186,5 +377,30 @@ export class AppComponent {
     } else {
       localStorage.setItem('subDomain', domain.split('.')[0]);
     }
+  }
+  setMenu(){
+    this.role = localStorage.getItem('role');
+    if (this.role == 'customers') this.menuItems = this.menuItem;
+    if (this.role == 'waiters') {
+      this.menuItems = this.menuItem;
+      if (!localStorage.hasOwnProperty('orderview')) {
+        localStorage.setItem('orderview', 'true');
+      }
+    }
+    if (this.role != 'waiters') {
+      if (!localStorage.hasOwnProperty('orderview')) {
+        localStorage.setItem('orderview', 'false');
+      }
+    }
+    if (this.role == 'kitchen') {
+      this.menuItems = this.kitchenItem;
+    }
+    if (this.role == 'counter') {
+      this.menuItems = this.counterItem;
+    }
+    if (this.role == 'master') {
+      this.menuItems = this.masterItem;
+    }
+    localStorage.setItem('routes', JSON.stringify(this.menuItems));
   }
 }

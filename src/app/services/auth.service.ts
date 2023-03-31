@@ -19,7 +19,7 @@ export class AuthService {
     localStorage.setItem('theme', themcolor);
     AuthService.signin.next(false);
     UniversalService.cartShow.next(false);
-    window.location.reload();
-    this.router.navigate([`welcome-${localStorage.getItem('previousRole')}`]);
+    // window.location.reload();
+    this.router.navigate(['/']);
   }
 }

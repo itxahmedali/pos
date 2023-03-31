@@ -84,6 +84,11 @@ export class HelperService {
       localStorage.setItem('my_data', JSON.stringify(res));
     });
   }
+  getDomainId() {
+    this.http.loaderPost('get-domain-id', {name:localStorage.getItem('subDomain')} ,false).subscribe((res: any) => {
+      localStorage.setItem('domainId', JSON.stringify(res?.data));
+    });
+  }
   addSpaces(str: string): string {
     let result = str.replace(/([a-z])([A-Z])/g, '$1 $2'); // add space between lowercase and uppercase letters
     result = result.replace(/&/, ' & '); // add spaces around "&" character

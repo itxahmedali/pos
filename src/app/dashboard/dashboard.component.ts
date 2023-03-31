@@ -24,8 +24,10 @@ export class DashboardComponent {
     private store:Store) {
       helper.myData()
       router.events.subscribe((val) => {
-        localStorage.setItem('url',this.location.path().replace('/dashboard',''))
+        const url = this.location.path().replace('/dashboard','')
+        localStorage.setItem('url',url)
       })
+      router.navigateByUrl('/dashboard/starters')
     }
 
   ngOnInit(): void {

@@ -89,13 +89,12 @@ export class AddOnComponent {
     }
   }
   async getData() {
-    let data = localStorage.getItem('my_data');
+    let data = localStorage.getItem('domainId');
     if (data) {
       await this.getCategory(JSON.parse(data)?.id);
     } else return;
   }
   handleID(data: any) {
-    let domainId: any = localStorage.getItem('my_data');
     this.addMenu = true;
     this.addOnForm.removeControl('id');
     this.addOnForm.removeControl('active_status');

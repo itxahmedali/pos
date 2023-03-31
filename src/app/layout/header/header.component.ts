@@ -97,11 +97,6 @@ export class HeaderComponent implements OnInit {
     } else this.sidebarEnable = true;
   }
   async observe() {
-    // UniversalService.headerHeading.subscribe((res: string) => {
-    //   this.changeText();
-    //   this.heading = res;
-    //   this.cd.detectChanges();
-    // });
     UniversalService.cartShow.subscribe((res: boolean) => {
       if (res) {
         this.headingShow = false;

@@ -29,7 +29,7 @@ export class StaffComponent implements OnInit {
     this.modalReference.close();
   }
   async getData() {
-    let data = localStorage.getItem('my_data');
+    let data = localStorage.getItem('domainId');
     if (data) {
       await this.getStaff(JSON.parse(data)?.id);
     } else return;

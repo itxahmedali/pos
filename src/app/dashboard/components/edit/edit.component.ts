@@ -130,7 +130,7 @@ export class EditComponent {
     this.getData();
   }
   async getData() {
-    let data = localStorage.getItem('my_data');
+    let data = localStorage.getItem('domainId');
     if (data) {
       await this.getCategory(JSON.parse(data).id);
     } else return;
@@ -168,10 +168,10 @@ export class EditComponent {
         });
     }
     if (event == 'addOn') {
-      let domainId: any = localStorage.getItem('my_data');
+      let domainId: any = localStorage.getItem('domainId');
       this.addOnForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId).domain_id)
+        new FormControl(JSON.parse(domainId).id)
       );
       this.addOnForm.addControl('active_status', new FormControl(1));
       this.addOnForm.addControl('out_of_stock', new FormControl(0));
@@ -189,10 +189,10 @@ export class EditComponent {
           this.addOnForm.removeControl('out_of_stock');
         });
     } else if (event == 'category') {
-      let domainId: any = localStorage.getItem('my_data');
+      let domainId: any = localStorage.getItem('domainId');
       this.categoryForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId).domain_id)
+        new FormControl(JSON.parse(domainId).id)
       );
       this.categoryForm.addControl('active_status', new FormControl(1));
       this.categoryForm.addControl('out_of_stock', new FormControl(0));
@@ -310,7 +310,7 @@ export class EditComponent {
         this.image = this.selectedMenu.image;
       }
     } else if (event == 'category' && this.url == 'category') {
-      let domainId: any = localStorage.getItem('my_data');
+      let domainId: any = localStorage.getItem('domainId');
       this.selectedMenu = this.MenuSelected.find((e: any) => e.id == id);
       if (this.selectedMenu) {
         this.categoryForm.addControl(
@@ -319,7 +319,7 @@ export class EditComponent {
         );
         this.categoryForm.addControl(
           'domain_id',
-          new FormControl(JSON.parse(domainId).domain_id)
+          new FormControl(JSON.parse(domainId).id)
         );
         this.categoryForm.addControl(
           'active_status',

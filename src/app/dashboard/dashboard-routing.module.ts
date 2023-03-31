@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Route, RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../guards/role.guard';
 import { AddOnComponent } from './components/add-on/add-on.component';
 import { CategoryComponent } from './components/category/category.component';
@@ -9,6 +9,7 @@ import { EditComponent } from './components/edit/edit.component';
 import { FooditemsComponent } from './components/fooditems/fooditems.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { ItemsComponent } from './components/items/items.component';
+import { MenuItemsComponent } from './components/menu-items/menu-items.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { OverviewComponent } from './components/overview/overview.component';
@@ -19,9 +20,11 @@ import { StaffPayRollComponent } from './components/staff-pay-roll/staff-pay-rol
 import { StaffComponent } from './components/staff/staff.component';
 import { SupportComponent } from './components/support/support.component';
 import { DashboardComponent } from './dashboard.component';
-
-const routes: Routes = [
-  {
+let menuItem: any = localStorage.getItem('routes');
+let role = localStorage.getItem('role')
+let routes: Routes = [];
+if(role == 'master'){
+  routes.push({
     path: '',
     component: DashboardComponent,
     children: [
@@ -161,11 +164,67 @@ const routes: Routes = [
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
-      }
+      },
     ],
+  },)
+}
+else if(role == 'customers'){
+  const route:any = generateRoutes(JSON.parse(menuItem))
+  routes.push({
+    path: '',
+    component: DashboardComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: route?.[0]?.path,
+        pathMatch: 'full',
+      },
+      ...generateRoutes(JSON.parse(menuItem))
+    ],
+  },)
+}
+function generateRoutes(menuItems: any): Route[] {
+  const routes: Route[] = [];
+  if (menuItem) {
+    for (const menuItem of menuItems) {
+      if (menuItem.type === 'link') {
+        routes.push({
+          path: menuItem.path,
+          component: MenuItemsComponent,
+          canActivate: [RoleGuard],
+          data: { allowedRoles: ['customers'] },
+          // component: getMenuComponent(menuItem.title),
+        });
+      } else if (menuItem.type === 'sub') {
+        console.log(menuItem.type, menuItem, 'hellomenyuu');
+        for (const child of menuItem.children) {
+          routes.push({
+            path: `${child.path}`,
+            component: MenuItemsComponent,
+            canActivate: [RoleGuard],
+            data: { allowedRoles: ['customers'] },
+            // component: getMenuComponent(child.title),
+          });
+        }
+      }
+    }
   }
-];
-
+  return routes;
+}
+// optional if want to put differten components we can use switch
+function getMenuComponent(title: string): any {
+  switch (title) {
+    case 'Starters':
+      return MenuItemsComponent;
+    case 'Fast Food':
+      return MenuItemsComponent;
+    case 'BBQ':
+      return MenuItemsComponent;
+    // etc.
+    default:
+      return MenuItemsComponent;
+  }
+}
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],

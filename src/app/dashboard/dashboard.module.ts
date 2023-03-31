@@ -29,6 +29,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { EllipsisPipe } from '../pipes/ellipses.pipe';
 import { FilterPipe } from '../pipes/filter.pipe';
+import { MenuItemsComponent } from './components/menu-items/menu-items.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { FilterPipe } from '../pipes/filter.pipe';
     EditComponent,
     AddOnComponent,
     EllipsisPipe,
-    FilterPipe
+    FilterPipe,
+    MenuItemsComponent
   ],
   imports: [
     CommonModule,

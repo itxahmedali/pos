@@ -50,7 +50,7 @@ export class HttpService {
           LoaderService.loader.next(false);
           console.log(error);
           if (error.status === 401) {
-            this.authService.logout();
+            // this.authService.logout();
           } else {
             this.toastr.error(error?.error?.message);
           }
@@ -65,7 +65,7 @@ export class HttpService {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            this.authService.logout();
+            // this.authService.logout();
           } else {
             this.toastr.error(error.message);
           }
@@ -81,7 +81,7 @@ export class HttpService {
         finalize(() => LoaderService.loader.next(false)),
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            this.authService.logout();
+            // this.authService.logout();
           } else {
             this.toastr.error(error.message);
           }
@@ -102,7 +102,7 @@ export class HttpService {
         catchError((error: HttpErrorResponse) => {
           console.log(error);
           if (error.status === 401) {
-            this.authService.logout();
+            // this.authService.logout();
           } else {
             this.toastr.error(error?.error?.message);
           }
