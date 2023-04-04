@@ -6,10 +6,13 @@ import { AuthService } from '../services/auth.service';
 import { HelperService } from '../services/helper.service';
 import { UniversalService } from '../services/universal.service';
 import { Location } from '@angular/common';
+import { LoaderService } from '../services/loader.service';
+import { fadeIn } from 'src/animations/itemCardAnimation';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  animations:[fadeIn]
 })
 export class DashboardComponent {
   public login: boolean = false;
@@ -20,18 +23,34 @@ export class DashboardComponent {
   public expanded!: boolean;
   public expandedBody!: boolean;
   public show: boolean = false;
-  constructor(@Inject(DOCUMENT) private document: Document, private cd: ChangeDetectorRef, private router: Router, private location:Location, private helper:HelperService,
-    private store:Store) {
-      helper.myData()
-      router.events.subscribe((val) => {
-        const url = this.location.path().replace('/dashboard','')
-        localStorage.setItem('url',url)
-      })
-      router.navigateByUrl('/dashboard/starters')
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private cd: ChangeDetectorRef,
+    private router: Router,
+    private location: Location,
+    private helper: HelperService,
+    private store: Store
+  ) {
+    if (localStorage.getItem('access_token') != 'skipped') {
+      helper.myData();
     }
+    else{
+      setTimeout(() => {
+        let route:any = localStorage.getItem('categories')
+        route = JSON.parse(route)
+        router.navigateByUrl(`/dashboard/${route?.[0]?.name?.toLowerCase()?.replace(/\s/g, '')}`);
+        LoaderService.loader.next(false);
+      }, 1000);
+    }
+    router.events.subscribe((val: any) => {
+      const url = this.location.path().replace('/dashboard', '');
+      localStorage.setItem('url', url);
+      // "/dashboard/starters"
+    });
+  }
 
   ngOnInit(): void {
-    this.getSubDomain()
+    this.getSubDomain();
     if (window.innerWidth < 415) {
       this.expanded = false;
       this.expandedBody = false;
@@ -67,7 +86,6 @@ export class DashboardComponent {
       }
     } else this.sidebarEnable = true;
     this.observe();
-
   }
   async observe() {
     AuthService.signin.subscribe((res: boolean) => {
@@ -148,8 +166,8 @@ export class DashboardComponent {
     }
     UniversalService.expand.next(this.expanded);
   }
-  getSubDomain(){
-    localStorage.removeItem('subDomain')
+  getSubDomain() {
+    localStorage.removeItem('subDomain');
     const domain = window.location.hostname;
     if (
       domain.indexOf('.') < 0 ||
@@ -157,10 +175,9 @@ export class DashboardComponent {
       domain.split('.')[0] === 'lvh' ||
       domain.split('.')[0] === 'www'
     ) {
-      localStorage.removeItem('subDomain')
+      localStorage.removeItem('subDomain');
     } else {
       localStorage.setItem('subDomain', domain.split('.')[0]);
-
     }
   }
 }

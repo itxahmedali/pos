@@ -187,23 +187,22 @@ function generateRoutes(menuItems: any): Route[] {
   const routes: Route[] = [];
   if (menuItem) {
     for (const menuItem of menuItems) {
-      if (menuItem.type === 'link') {
+      if (menuItem?.type === 'link') {
         routes.push({
-          path: menuItem.path,
+          path: menuItem?.path,
           component: MenuItemsComponent,
           canActivate: [RoleGuard],
           data: { allowedRoles: ['customers'] },
-          // component: getMenuComponent(menuItem.title),
+          // component: getMenuComponent(menuItem?.title),
         });
-      } else if (menuItem.type === 'sub') {
-        console.log(menuItem.type, menuItem, 'hellomenyuu');
-        for (const child of menuItem.children) {
+      } else if (menuItem?.type === 'sub') {
+        for (const child of menuItem?.children) {
           routes.push({
-            path: `${child.path}`,
+            path: `${child?.path}`,
             component: MenuItemsComponent,
             canActivate: [RoleGuard],
             data: { allowedRoles: ['customers'] },
-            // component: getMenuComponent(child.title),
+            // component: getMenuComponent(child?.title),
           });
         }
       }

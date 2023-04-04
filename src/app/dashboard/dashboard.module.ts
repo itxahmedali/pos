@@ -30,6 +30,7 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { EllipsisPipe } from '../pipes/ellipses.pipe';
 import { FilterPipe } from '../pipes/filter.pipe';
 import { MenuItemsComponent } from './components/menu-items/menu-items.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,7 @@ import { MenuItemsComponent } from './components/menu-items/menu-items.component
     ReactiveFormsModule,
     FormsModule,
     NgxPaginationModule,
-    CarouselModule
+    CarouselModule,
   ]
 })
 export class DashboardModule { }

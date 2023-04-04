@@ -4,16 +4,13 @@ import { fadeIn } from 'src/animations/itemCardAnimation';
 import { Store } from '@ngrx/store';
 import { addItem } from 'src/app/store/actions/cart.action';
 import { CartState } from 'src/app/store/reducers/cart.reducer';
+import { Router } from '@angular/router';
 
 export interface Menu {
   img: string;
   item: string;
   description: string;
   price: number;
-}
-export interface Name {
-  firstName: string;
-  lastName: string;
 }
 @Component({
   selector: 'app-item',
@@ -24,23 +21,25 @@ export interface Name {
 })
 export class ItemComponent implements OnInit {
   @Input() data: any;
-  public MenuItems: Menu[] = [];
-  public ItemNames: Name[] = [];
+  public MenuItems: any[] = [];
+  public ItemNames: any[] = [];
   public MenuItemsAnimate: Menu[] = [];
-  public ItemNamesAnimate: Name[] = [];
+  public ItemNamesAnimate: any[] = [];
   public CartItems:any = [];
   public PreviousCartItems:any = [];
   public previousItems:any;
   cartItems: any[];
-  constructor(private cd:ChangeDetectorRef, private store: Store<{ cart: CartState }>) {}
-  ngOnChanges(changes: SimpleChanges) {
-    this.MenuItems = this.data;
-    this.data?.map((e: Menu) => {
-      this.ItemNames.push({
-        firstName: e.item.split(' ')[0],
-        lastName: e.item.split(' ')[1],
-      });
-    });
+  public url!:string;
+  constructor(private cd:ChangeDetectorRef, private store: Store<{ cart: CartState }>,private route:Router) {
+  }
+  ngOnChanges(changes: any) {
+    const url = window.location.pathname.split('/')[2];
+    console.log(changes.data.currentValue,url,"hellomenuselected2");
+    changes.data.currentValue?.map((e:any)=>{
+      if (e?.name?.toLowerCase()?.replace(/ /g, '') == url) {
+        this.MenuItems = e.items;
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -51,6 +50,8 @@ export class ItemComponent implements OnInit {
     UniversalService.cartPreviousState.next(false);
   }
   addItem(item:any){
-    this.store.dispatch(addItem({ item: { name: item?.item, quantity: 1, addOns:[], details:item }}))
+    console.log(item,'hellotitem');
+
+    this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item }}))
   }
 }

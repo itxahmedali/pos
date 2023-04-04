@@ -59,8 +59,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [BrowserAnimationsModule, RouterModule.forRoot(routes,
-    { enableTracing: true })],
+  imports: [BrowserAnimationsModule, RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

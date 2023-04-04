@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { HttpService } from './http.service';
 import { LoaderService } from './loader.service';
 @Injectable({
   providedIn: 'root',
 })
 export class HelperService {
-  constructor(private http: HttpService, private toastr:ToastrService) {}
+  constructor(private http: HttpService, private toastr:ToastrService) {
+  }
   fileUpload(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
       var reader = new FileReader();
@@ -84,10 +85,21 @@ export class HelperService {
       localStorage.setItem('my_data', JSON.stringify(res));
     });
   }
-  getDomainId() {
-    this.http.loaderPost('get-domain-id', {name:localStorage.getItem('subDomain')} ,false).subscribe((res: any) => {
-      localStorage.setItem('domainId', JSON.stringify(res?.data));
-    });
+  async getDomainId(name:any): Promise<any> {
+    const res:any = await this.http.loaderPost('get-domain-id', { name: name }, false).toPromise();
+    localStorage.setItem('domainId',JSON.stringify(res?.data?.id))
+    return res.data?.id;
+}
+  async getCategory(): Promise<any> {
+        const res:any = await this.http.loaderPost('get-category', { domain_id: localStorage.getItem("domainId") }, false).toPromise();
+        localStorage.setItem('categories',JSON.stringify(res?.data))
+        return res.data;
+  }
+  async getAddOns(): Promise<any> {
+    if(localStorage.getItem("domainId")){
+      const res:any = await this.http.loaderPost('get-addon', { domain_id: localStorage.getItem("domainId") }, true).toPromise();
+      return res.data;
+    }
   }
   addSpaces(str: string): string {
     let result = str.replace(/([a-z])([A-Z])/g, '$1 $2'); // add space between lowercase and uppercase letters

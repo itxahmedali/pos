@@ -132,14 +132,7 @@ export class AddOnComponent {
       });
   }
   async getCategory(id: number) {
-    await this.http
-      .loaderPost('get-addon', { domain_id: id }, true)
-      .subscribe((res: any) => {
-        this.MenuSelected = res?.data;
-        console.log('====================================');
-        console.log(this.MenuSelected,"hellothis.selectedMenu");
-        console.log('====================================');
-      });
+    this.MenuSelected = await this.helper.getAddOns();
   }
   combineArray(originalArray: any) {
     const newArray = originalArray.reduce(

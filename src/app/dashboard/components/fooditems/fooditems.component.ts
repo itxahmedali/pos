@@ -103,7 +103,7 @@ export class FooditemsComponent {
     private helper: HelperService
   ) {}
   ngOnInit(): void {
-    this.getData();
+    this.getCategory();
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -115,11 +115,18 @@ export class FooditemsComponent {
   proceed() {
     this.modalReference.close();
   }
-  async getData() {
-    let data = localStorage.getItem('domainId');
-    if (data) {
-      await this.getCategory(JSON.parse(data)?.id);
-    } else return;
+  async getCategory() {
+    let foodItems: any = [];
+    let categories: any = [];
+    const menu = await this.helper.getCategory();
+    menu?.map((item: any, index: any) => {
+      categories.push({ name: item?.name, id: menu?.[index]?.id });
+      foodItems.push({ item: item.items, category: item?.name });
+    });
+    foodItems = this.combineArray(foodItems);
+    this.Categories = categories;
+    this.MenuSelected = foodItems;
+    this.addOns = await this.helper.getAddOns()
   }
   async stateItem(event: any, state: string, data: any) {
     this.selectedMenu = this.MenuSelected?.find(
@@ -173,7 +180,7 @@ export class FooditemsComponent {
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
-          this.getData();
+          this.getCategory();
         } else {
           this.toastr.error(res?.message);
         }
@@ -185,26 +192,6 @@ export class FooditemsComponent {
   }
   async add(item: any, val: boolean) {
     item['selected'] = val;
-  }
-  async getCategory(id: number) {
-    let foodItems: any = [];
-    let categories: any = [];
-    await this.http
-      .loaderPost('get-category', { domain_id: id }, true)
-      .subscribe((res: any) => {
-        res?.data?.map((item: any, index: any) => {
-          categories.push({ name: item?.name, id: res?.data?.[index]?.id });
-          foodItems.push({ item: item.items, category: item?.name });
-        });
-        foodItems = this.combineArray(foodItems);
-        this.Categories = categories;
-        this.MenuSelected = foodItems;
-      });
-    await this.http
-      .loaderPost('get-addon', { domain_id: id }, true)
-      .subscribe((res: any) => {
-        this.addOns = res?.data;
-      });
   }
   combineArray(originalArray: any) {
     const newArray = originalArray.reduce(

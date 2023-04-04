@@ -110,7 +110,7 @@ export class WelcomeComponent implements OnInit {
         UniversalService.modules.next(true);
       }
     } else if (event == 'skip') {
-      localStorage.setItem('access_token', 'hellotoken');
+      localStorage.setItem('access_token', 'skipped');
       if (this.helper.urlSplit(this.href) == 'welcome-customers') {
         this.authGuardService.login('customers');
         this.router.navigate(['/dashboard']);

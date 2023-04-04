@@ -219,48 +219,37 @@ export class EditComponent {
     let foodItems: any = [];
     let categories: any = [];
     if (this.url != 'add-ons') {
-      await this.http
-        .loaderPost('get-category', { domain_id: id }, true)
-        .subscribe((res: any) => {
-          res.data.map((item: any, index: any) => {
-            categories.push({ name: item.name, id: res.data?.[index].id });
-            foodItems.push({ item: item.items, category: item.name });
-          });
-          foodItems = this.combineArray(foodItems);
-          this.Categories = categories;
-          if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
-            if (this.url == 'foodItems') {
-              this.MenuSelected = foodItems;
-              if (this.id) {
-                this.handleID(this.id, 'foodItem');
-              }
-            } else {
-              this.MenuSelected = res.data;
-              if (this.id) {
-                this.handleID(this.id, 'category');
-              }
-            }
+      const menu = await this.helper.getCategory();
+      menu.map((item: any, index: any) => {
+        categories.push({ name: item.name, id: menu?.[index].id });
+        foodItems.push({ item: item.items, category: item.name });
+      });
+      foodItems = this.combineArray(foodItems);
+      this.Categories = categories;
+      if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
+        if (this.url == 'foodItems') {
+          this.MenuSelected = foodItems;
+          if (this.id) {
+            this.handleID(this.id, 'foodItem');
           }
-        });
-      await this.http
-        .loaderPost('get-addon', { domain_id: id }, true)
-        .subscribe(async (res: any) => {
-          await this.handleResponse(res);
-        });
+        } else {
+          this.MenuSelected = menu;
+          if (this.id) {
+            this.handleID(this.id, 'category');
+          }
+        }
+      }
+      const addOn = await this.helper.getAddOns()
+      await this.handleResponse(addOn);
     } else if (this.url == 'add-ons') {
-      await this.http
-        .loaderPost('get-addon', { domain_id: id }, true)
-        .subscribe(async (res: any) => {
-          await this.handleResponse(res);
-        });
+      const addOn = await this.helper.getAddOns();
+      await this.handleResponse(addOn);
     }
   }
   async handleResponse(res: any) {
     if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
-      if (this.url == 'add-ons') {
-        this.addOns = res.data;
+        this.addOns = res;
         await this.handleID(this.id, 'add-ons');
-      }
     }
   }
   handleID(id: any, event: string) {

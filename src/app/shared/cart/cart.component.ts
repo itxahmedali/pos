@@ -104,11 +104,13 @@ export class CartComponent implements OnInit {
   }
   calculateTotalPrice(items:any) {
     let totalPrice = 0;
+    console.log(items,"hellonumberItem");
+
     items.forEach((item:any) => {
       if (item.quantity > 1) {
-        totalPrice += item?.details?.price * item.quantity;
+        totalPrice += Number(item?.details?.price) * item.quantity;
       } else {
-        totalPrice += item?.details?.price;
+        totalPrice += Number(item?.details?.price);
       }
     });
     return totalPrice;

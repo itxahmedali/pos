@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
 
@@ -42,11 +43,12 @@ export class CategoryComponent {
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private helper:HelperService
   ) {
   }
   ngOnInit(): void {
-    this.getData();
+    this.getCategory();
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -57,12 +59,6 @@ export class CategoryComponent {
   }
   proceed() {
     this.modalReference.close();
-  }
-  async getData() {
-    let data = localStorage.getItem('domainId');
-    if (data) {
-      await this.getCategory(JSON.parse(data)?.id);
-    } else return;
   }
   async stateItem(event: any, state: string, data: any) {
     this.selectedMenu = this.MenuSelected?.find(
@@ -96,7 +92,7 @@ export class CategoryComponent {
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
-          this.getData()
+          this.getCategory();
         } else {
           this.toastr.error(res?.message);
         }
@@ -106,11 +102,7 @@ export class CategoryComponent {
         this.categoryForm.removeControl('out_of_stock');
       });
   }
-  async getCategory(id: number) {
-    await this.http
-      .loaderPost('get-category', { domain_id: id }, true)
-      .subscribe((res: any) => {
-        this.MenuSelected = res?.data;
-      });
+  async getCategory() {
+    this.MenuSelected = await this.helper.getCategory();
   }
 }

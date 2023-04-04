@@ -21,11 +21,12 @@ export class AppComponent {
   public cart: boolean = false;
   public windowHeight: number = window.innerHeight;
   private role: any = localStorage.getItem('role');
+  public categories: any = localStorage.getItem('categories');
   public sidebarEnable: boolean = false;
   public expanded!: boolean;
   public expandedBody!: boolean;
   public show: boolean = false;
-  public menuItems:any;
+  public menuItems: any;
   public menuItem = [
     {
       path: 'starters',
@@ -218,11 +219,11 @@ export class AppComponent {
     private helper: HelperService,
     private store: Store
   ) {
-    router.events.subscribe(()=>{
-      if(localStorage.getItem('loginstate')){
-        this.setMenu()
+    router.events.subscribe(() => {
+      if (localStorage.getItem('loginstate')) {
+        this.setMenu();
       }
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -351,7 +352,7 @@ export class AppComponent {
     }
     UniversalService.expand.next(this.expanded);
   }
-  getSubDomain() {
+  async getSubDomain() {
     localStorage.removeItem('subDomain');
     const domain = window.location.hostname;
     if (
@@ -376,11 +377,44 @@ export class AppComponent {
       });
     } else {
       localStorage.setItem('subDomain', domain.split('.')[0]);
+      await this.getCategories();
     }
   }
-  setMenu(){
+  setMenu() {
     this.role = localStorage.getItem('role');
-    if (this.role == 'customers') this.menuItems = this.menuItem;
+    this.categories = localStorage.getItem('categories');
+    this.categories = JSON.parse(this.categories);
+    if (this.role == 'customers') {
+      let menu: any = [];
+      if (this.categories) {
+        this.categories?.map((e: any) => {
+          if (e?.sub_category?.length) {
+            const children = e.sub_category.map((subCat: any) => ({
+              path: subCat.name?.toLowerCase()?.replace(/\s/g, ''),
+              title: subCat.name,
+              type: 'link',
+            }));
+
+            menu?.push({
+              title: e?.name,
+              type: 'sub',
+              icon: e?.image,
+              active: false,
+              children,
+            });
+          } else {
+            menu?.push({
+              title: e?.name,
+              path: e?.name?.toLowerCase()?.replace(/\s/g, ''),
+              type: 'link',
+              icon: e?.image,
+              active: false,
+            });
+          }
+        });
+      }
+      this.menuItems = menu;
+    }
     if (this.role == 'waiters') {
       this.menuItems = this.menuItem;
       if (!localStorage.hasOwnProperty('orderview')) {
@@ -402,5 +436,11 @@ export class AppComponent {
       this.menuItems = this.masterItem;
     }
     localStorage.setItem('routes', JSON.stringify(this.menuItems));
+  }
+  async getCategories() {
+    const id = await this.helper.getDomainId(localStorage.getItem('subDomain'));
+    if(id){
+      this.categories = await this.helper.getCategory();
+    }
   }
 }
