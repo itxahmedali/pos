@@ -111,6 +111,7 @@ export class WelcomeComponent implements OnInit {
       }
     } else if (event == 'skip') {
       localStorage.setItem('access_token', 'skipped');
+      this.generateUniqueId()
       if (this.helper.urlSplit(this.href) == 'welcome-customers') {
         this.authGuardService.login('customers');
         this.router.navigate(['/dashboard']);
@@ -122,5 +123,13 @@ export class WelcomeComponent implements OnInit {
       return;
     }
   }
-
+  generateUniqueId() {
+    // Generate a unique ID with a length of at least 5 characters
+    const uniqueId = Math.random().toString(36).substring(2, 7);
+    const randomNumber = Math.floor(Math.random() * 1000);
+    // Generate a corresponding secret key with some unique text
+    const secretKey = `${uniqueId+"-"+randomNumber}`;
+    localStorage.setItem('customer_id',uniqueId)
+    localStorage.setItem('customer_secret',secretKey)
+  }
 }

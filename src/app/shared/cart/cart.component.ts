@@ -10,6 +10,7 @@ import { HelperService } from 'src/app/services/helper.service';
 import { CartState } from 'src/app/store/reducers/cart.reducer';
 import { Store } from '@ngrx/store';
 import { resetCart } from 'src/app/store/actions/cart.action';
+import { HttpService } from 'src/app/services/http.service';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -20,23 +21,30 @@ export class CartComponent implements OnInit {
   CartItems: any = [];
   duplicateItem: any = [];
   sum: number = 0;
-  role:any;
+  role: any;
   grandTotal: any = 0;
   currentOrderNo = 1; // initialize to 1 as the first order
-  constructor(private modalService: NgbModal, private cd: ChangeDetectorRef, private help:HelperService,
-    private store: Store<{ cart: CartState }>) {
-    this.store.select(state => state.cart.items).subscribe(items => {
-      this.CartItems = items
-      this.sum = this.calculateTotalPrice(items)
-      this.grandTotal = this.sum - (this.sum * 0.13);
-    });
+  constructor(
+    private modalService: NgbModal,
+    private cd: ChangeDetectorRef,
+    private help: HelperService,
+    private http: HttpService,
+    private store: Store<{ cart: CartState }>
+  ) {
+    this.store
+      .select((state) => state.cart.items)
+      .subscribe((items) => {
+        this.CartItems = items;
+        this.sum = this.calculateTotalPrice(items);
+        this.grandTotal = this.sum - this.sum * 0.13;
+      });
   }
   reorder() {
     this.currentOrderNo++;
     // this.CartItems.push(`Order ${this.currentOrderNo}`);
   }
   ngOnInit(): void {
-    this.role = localStorage.getItem('role')
+    this.role = localStorage.getItem('role');
     this.duplicateItem = [];
     if (localStorage.getItem('modal')) {
       if (localStorage.getItem('modal') == 'checkout') {
@@ -58,6 +66,26 @@ export class CartComponent implements OnInit {
   }
   checkout(reason: string) {
     UniversalService.checkoutModal.next(reason);
+  }
+  save() {
+    console.log(this.CartItems);
+    const items = this.CartItems.reduce((acc: any, item: any) => {
+      acc[item.details.id] = item.details;
+      return acc;
+    }, {});
+    const data: any = {
+      domain_id: localStorage.getItem('domainId'),
+      items: JSON.stringify(items),
+      total: this.grandTotal,
+      gst: 13,
+      discount: 5,
+      customer_id: localStorage.getItem('customer_id'),
+      customer_secret: localStorage.getItem('customer_secret'),
+      table_id: 1,
+    };
+    this.http.loaderPost('add-order', data, false).subscribe((res: any) => {
+      console.log(res);
+    });
   }
   open(content: any, modal: string) {
     localStorage.setItem('modal', modal);
@@ -102,11 +130,11 @@ export class CartComponent implements OnInit {
     UniversalService.cartShow.next(false);
     this.store.dispatch(resetCart());
   }
-  calculateTotalPrice(items:any) {
+  calculateTotalPrice(items: any) {
     let totalPrice = 0;
-    console.log(items,"hellonumberItem");
+    console.log(items, 'hellonumberItem');
 
-    items.forEach((item:any) => {
+    items.forEach((item: any) => {
       if (item.quantity > 1) {
         totalPrice += Number(item?.details?.price) * item.quantity;
       } else {
