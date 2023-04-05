@@ -101,6 +101,12 @@ export class HelperService {
       return res.data;
     }
   }
+  async getGstDiscount(): Promise<any> {
+    if(localStorage.getItem("domainId")){
+      const res:any = await this.http.loaderPost('get-gst-charges', { domain_id: localStorage.getItem("domainId") }, false).toPromise();
+      return res.data;
+    }
+  }
   addSpaces(str: string): string {
     let result = str.replace(/([a-z])([A-Z])/g, '$1 $2'); // add space between lowercase and uppercase letters
     result = result.replace(/&/, ' & '); // add spaces around "&" character

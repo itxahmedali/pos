@@ -382,9 +382,9 @@ export class AppComponent {
   }
   setMenu() {
     this.role = localStorage.getItem('role');
-    this.categories = localStorage.getItem('categories');
-    this.categories = JSON.parse(this.categories);
     if (this.role == 'customers') {
+      this.categories = localStorage.getItem('categories');
+      this.categories = JSON.parse(this.categories);
       let menu: any = [];
       if (this.categories) {
         this.categories?.map((e: any) => {

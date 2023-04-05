@@ -176,7 +176,7 @@ else if(role == 'customers'){
     children: [
       {
         path: '',
-        redirectTo: route?.[0]?.path,
+        redirectTo: route?.[0]?.path ? route?.[0]?.path : '',
         pathMatch: 'full',
       },
       ...generateRoutes(JSON.parse(menuItem))

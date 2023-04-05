@@ -119,7 +119,7 @@ export class EditComponent {
     this.categoryForm = this.fb.group({
       name: [null, [Validators.required]],
       description: [null, [Validators.required]],
-      image: ['null'],
+      image: [null],
     });
     this.addOnForm = this.fb.group({
       name: [null, [Validators.required]],
@@ -351,13 +351,17 @@ export class EditComponent {
         this.image = result.data.image_url;
         if (this.url == 'add-ons') {
           this.addOnForm.patchValue({
-            image: result.data.image_url,
+            image: result.data.image_url
           });
         } else if (this.url == 'foodItems') {
           this.itemForm.patchValue({
-            image: result.data.image_url,
+            image: result.data.image_url
           });
-        } else return;
+        } else {
+          this.categoryForm.patchValue({
+            image: result.data.image_url
+          })
+        };
       })
       .catch((error) => {
         console.error(error);

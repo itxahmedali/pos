@@ -21,13 +21,51 @@
               </div>
             </div>
           </div>
-          <h1 *ngIf="CartItems?.length < 1" class="heading text-center">No Items Yet</h1>
-          <div class="w-100">
+          <h1 *ngIf="CartItems?.length < 1 && !previouseOrders?.length" class="heading text-center">No Items Yet</h1>
+          <ng-container *ngIf="previouseOrders?.length">
+            <div class="w-100">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <h5 class="heading mb-3">Previous Orders</h5>
+                  </div>
+                </div>
+                <div class="row mt-3 mb-3" *ngFor="let item of previouseOrders">
+                  <div class="col-sm-12">
+                    <h6 class="heading mb-0">Order No: {{item?.id}}</h6>
+                  </div>
+                  <div class="col-sm-6">
+                    <app-cartitem [data]='item?.items' [showActions]="false"></app-cartitem>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="hr"></div>
+                      <div class="totalSection">
+                        <div class="extraCharges">
+                          <h6>GST Tax</h6>
+                          <h6>{{item?.gst}}%</h6>
+                        </div>
+                        <div class="extraCharges">
+                          <h6>Discount</h6>
+                          <h6>{{item?.discount}}%</h6>
+                        </div>
+                        <div class="grandtotal">
+                          <h5>Grand Total</h5>
+                          <h5>{{item?.total | currency:"USD"}}</h5>
+                        </div>
+                        <div class="hr mt-3 mb-3"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div class="w-100" *ngIf="CartItems?.length">
             <div class="container">
               <div class="row">
-                <div class="col-sm-12" *ngIf="CartItems?.length > 0">
-                  <!-- <h3 class="white">Order No: 01</h3> -->
-                  <h3 class="white">Order {{ currentOrderNo }}</h3>
+                <div class="col-sm-12">
+                  <h5 class="heading mb-0 mt-3">Current Order</h5>
                 </div>
                 <div class="col-sm-6">
                   <app-cartitem [data]='CartItems' [showActions]="true"></app-cartitem>
@@ -35,8 +73,8 @@
               </div>
             </div>
           </div>
-          <div class="w-100">
-            <div class="container" *ngIf="CartItems?.length > 0">
+          <div class="w-100" *ngIf="CartItems?.length">
+            <div class="container">
               <div class="row">
                 <div class="col-sm-12">
                   <div class="hr"></div>
@@ -47,11 +85,11 @@
                     </div>
                     <div class="extraCharges">
                       <h6>GST Tax</h6>
-                      <h6>13%</h6>
+                      <h6>{{gst}}%</h6>
                     </div>
                     <div class="extraCharges">
                       <h6>Discount</h6>
-                      <h6>0%</h6>
+                      <h6>{{discount}}%</h6>
                     </div>
                     <div class="grandtotal">
                       <h5>Grand Total</h5>
@@ -78,18 +116,18 @@
 
 <!-- order modals -->
 <ng-template #checkout let-modal>
-  <button  class="btn-close" id="checkoutClose" aria-label="Close"
+  <button class="btn-close" id="checkoutClose" aria-label="Close"
     (click)="modal.dismiss('Cross click'); modalClose()"></button>
   <div class="modal-body checkoutModal">
     <h3 class="modalHead">Checkout</h3>
     <div class="modalActions">
       <button class="scanBtn">Scan QR Code</button>
-      <button class="btm-btn" (click)="save();">
-        Proceed To Checkout
-      </button>
-      <!-- <button class="btm-btn" (click)="proceed(); open(thanks, 'thanks')">
+      <!-- <button class="btm-btn" (click)="save();">
         Proceed To Checkout
       </button> -->
+      <button class="btm-btn" (click)="save();proceed(); open(thanks, 'thanks')">
+        Proceed To Checkout
+      </button>
     </div>
   </div>
 </ng-template>
@@ -172,7 +210,7 @@
 </ng-template>
 <!-- completed -->
 <ng-template #completed let-modal>
-  <button  class="btn-close" id="checkoutClose" aria-label="Close"
+  <button class="btn-close" id="checkoutClose" aria-label="Close"
     (click)="modalClose(); proceed(); complete();"></button>
   <div class="modal-body checkoutModal completed">
     <div class="waiterIcon">

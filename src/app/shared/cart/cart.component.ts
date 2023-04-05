@@ -11,6 +11,7 @@ import { CartState } from 'src/app/store/reducers/cart.reducer';
 import { Store } from '@ngrx/store';
 import { resetCart } from 'src/app/store/actions/cart.action';
 import { HttpService } from 'src/app/services/http.service';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -19,16 +20,18 @@ import { HttpService } from 'src/app/services/http.service';
 export class CartComponent implements OnInit {
   modalReference: any;
   CartItems: any = [];
-  duplicateItem: any = [];
   sum: number = 0;
   role: any;
   grandTotal: any = 0;
-  currentOrderNo = 1; // initialize to 1 as the first order
+  previouseOrders: any;
+  gst: string;
+  discount: string;
   constructor(
     private modalService: NgbModal,
     private cd: ChangeDetectorRef,
     private help: HelperService,
     private http: HttpService,
+    private authService: AuthService,
     private store: Store<{ cart: CartState }>
   ) {
     this.store
@@ -38,14 +41,14 @@ export class CartComponent implements OnInit {
         this.sum = this.calculateTotalPrice(items);
         this.grandTotal = this.sum - this.sum * 0.13;
       });
+    console.log(this.CartItems);
   }
-  reorder() {
-    this.currentOrderNo++;
-    // this.CartItems.push(`Order ${this.currentOrderNo}`);
-  }
-  ngOnInit(): void {
+  async ngOnInit() {
+    const gstAndDiscount = await this.help.getGstDiscount();
+    this.gst = gstAndDiscount.GST;
+    this.discount = gstAndDiscount.discount;
+
     this.role = localStorage.getItem('role');
-    this.duplicateItem = [];
     if (localStorage.getItem('modal')) {
       if (localStorage.getItem('modal') == 'checkout') {
         $('#checkoutBtn').trigger('click');
@@ -60,6 +63,7 @@ export class CartComponent implements OnInit {
         $('#completed').trigger('click');
       }
     }
+    await this.getOrders();
   }
   cartshow() {
     UniversalService.cartShow.next(false);
@@ -67,24 +71,41 @@ export class CartComponent implements OnInit {
   checkout(reason: string) {
     UniversalService.checkoutModal.next(reason);
   }
+  getOrders() {
+    const data = {
+      domain_id: localStorage.getItem('domainId'),
+      customer_id: localStorage.getItem('customer_id'),
+      customer_secret: localStorage.getItem('customer_secret'),
+    };
+    this.http
+      .loaderPost('get-order-customer', data, false)
+      .subscribe((res: any) => {
+        if (res?.data) {
+          this.previouseOrders = res?.data;
+        }
+        console.log(this.previouseOrders, 'this.previouseOrders');
+      });
+  }
   save() {
-    console.log(this.CartItems);
     const items = this.CartItems.reduce((acc: any, item: any) => {
-      acc[item.details.id] = item.details;
+      const newItem = { ...item.details, quantity: item.quantity };
+      acc.push(newItem);
       return acc;
-    }, {});
+    }, []);
     const data: any = {
       domain_id: localStorage.getItem('domainId'),
       items: JSON.stringify(items),
       total: this.grandTotal,
-      gst: 13,
-      discount: 5,
+      gst: this.gst,
+      discount: this.discount,
       customer_id: localStorage.getItem('customer_id'),
       customer_secret: localStorage.getItem('customer_secret'),
       table_id: 1,
     };
     this.http.loaderPost('add-order', data, false).subscribe((res: any) => {
-      console.log(res);
+      // this.getOrders()
+      // this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item }}))
+      this.store.dispatch(resetCart());
     });
   }
   open(content: any, modal: string) {
@@ -128,12 +149,10 @@ export class CartComponent implements OnInit {
   }
   complete() {
     UniversalService.cartShow.next(false);
-    this.store.dispatch(resetCart());
+    this.authService.logout();
   }
   calculateTotalPrice(items: any) {
     let totalPrice = 0;
-    console.log(items, 'hellonumberItem');
-
     items.forEach((item: any) => {
       if (item.quantity > 1) {
         totalPrice += Number(item?.details?.price) * item.quantity;
