@@ -31,6 +31,7 @@ import { EllipsisPipe } from '../pipes/ellipses.pipe';
 import { FilterPipe } from '../pipes/filter.pipe';
 import { MenuItemsComponent } from './components/menu-items/menu-items.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SubCategoryComponent } from './components/sub-category/sub-category.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AddOnComponent,
     EllipsisPipe,
     FilterPipe,
-    MenuItemsComponent
+    MenuItemsComponent,
+    SubCategoryComponent
   ],
   imports: [
     CommonModule,

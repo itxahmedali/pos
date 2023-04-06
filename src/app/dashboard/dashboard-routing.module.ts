@@ -20,6 +20,7 @@ import { StaffPayRollComponent } from './components/staff-pay-roll/staff-pay-rol
 import { StaffComponent } from './components/staff/staff.component';
 import { SupportComponent } from './components/support/support.component';
 import { DashboardComponent } from './dashboard.component';
+import { SubCategoryComponent } from './components/sub-category/sub-category.component';
 let menuItem: any = localStorage.getItem('routes');
 let role = localStorage.getItem('role')
 let routes: Routes = [];
@@ -124,6 +125,12 @@ if(role == 'master'){
         data: { allowedRoles: ['master'] },
       },
       {
+        path: 'sub-category',
+        component: SubCategoryComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
         path: 'add-ons',
         component: AddOnComponent,
         canActivate: [RoleGuard],
@@ -149,6 +156,18 @@ if(role == 'master'){
       },
       {
         path: 'category/add',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'sub-category/edit/:id',
+        component: EditComponent,
+        canActivate: [RoleGuard],
+        data: { allowedRoles: ['master'] },
+      },
+      {
+        path: 'sub-category/add',
         component: EditComponent,
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },

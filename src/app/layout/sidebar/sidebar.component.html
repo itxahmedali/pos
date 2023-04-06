@@ -34,7 +34,7 @@
                 [routerLink]="childrenItem?.path" routerLinkActive="is-active" >
                 <a class="submenu-title w-100" *ngIf="childrenItem?.type === 'link'">
                   <i
-                    class="fa {{childrenItem?.title == 'Add Item' || childrenItem?.title == 'Category' || childrenItem?.title == 'Food Items' || childrenItem?.title == 'Add Ons' ? 'fa-plus' : 'fa-minus'}}"></i>
+                    class="fa {{childrenItem?.title == 'Add Item' || childrenItem?.title == 'Category' || childrenItem?.title == 'Food Items' || childrenItem?.title == 'Add Ons' || childrenItem?.title == 'Sub Category' ? 'fa-plus' : 'fa-minus'}}"></i>
                   <span>{{ childrenItem?.title }}</span>
                 </a>
               </button>

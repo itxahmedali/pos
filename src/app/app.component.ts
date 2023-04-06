@@ -20,12 +20,12 @@ export class AppComponent {
   public login: boolean = false;
   public cart: boolean = false;
   public windowHeight: number = window.innerHeight;
-  private role: any = localStorage.getItem('role');
+  private role: any;
   public categories: any = localStorage.getItem('categories');
   public sidebarEnable: boolean = false;
   public expanded!: boolean;
   public expandedBody!: boolean;
-  public show: boolean = false;
+  public show: boolean = true;
   public menuItems: any;
   public menuItem = [
     {
@@ -146,6 +146,7 @@ export class AppComponent {
       children: [
         { path: 'foodItems', title: 'Food Items', type: 'link' },
         { path: 'category', title: 'Category', type: 'link' },
+        { path: 'sub-category', title: 'Sub Category', type: 'link' },
         { path: 'add-ons', title: 'Add Ons', type: 'link' },
       ],
     },
@@ -215,24 +216,36 @@ export class AppComponent {
     @Inject(DOCUMENT) private document: Document,
     private cd: ChangeDetectorRef,
     private router: Router,
-    private location: Location,
-    private helper: HelperService,
-    private store: Store
+    private helper: HelperService
   ) {
-    router.events.subscribe(() => {
+    this.init();
+  }
+  private async init() {
+    await this.helper.getSubDomain();
+
+    if (this.helper.getRole(window.location.href)) {
+      this.role = this.helper.getRole(window.location.href);
+    } else {
+      this.role = localStorage.getItem('role');
+    }
+
+    if (this.role == 'customers') {
+      await this.getCategories();
+    }
+    else{
+      LoaderService.loader.next(false)
+    }
+    this.router.events.subscribe(() => {
       if (localStorage.getItem('loginstate')) {
         this.setMenu();
       }
     });
   }
-
   ngOnInit(): void {
-    this.getSubDomain();
     if (window.innerWidth < 415) {
       this.expanded = false;
       this.expandedBody = false;
     }
-    // UniversalService.routePath.next(localStorage.getItem("heading"))
     if (localStorage.getItem('access_token') != null) {
       this.login = true;
     } else {
@@ -352,36 +365,7 @@ export class AppComponent {
     }
     UniversalService.expand.next(this.expanded);
   }
-  async getSubDomain() {
-    localStorage.removeItem('subDomain');
-    const domain = window.location.hostname;
-    if (
-      domain.indexOf('.') < 0 ||
-      domain.split('.')[0] === 'example' ||
-      domain.split('.')[0] === 'lvh' ||
-      domain.split('.')[0] === 'www'
-    ) {
-      localStorage.removeItem('subDomain');
-      Swal.fire({
-        title: 'No domain detected try again with proper url',
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'Reload',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.value) {
-          window.location.reload();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.close();
-        }
-      });
-    } else {
-      localStorage.setItem('subDomain', domain.split('.')[0]);
-      await this.getCategories();
-    }
-  }
   setMenu() {
-    this.role = localStorage.getItem('role');
     if (this.role == 'customers') {
       this.categories = localStorage.getItem('categories');
       this.categories = JSON.parse(this.categories);
@@ -438,9 +422,6 @@ export class AppComponent {
     localStorage.setItem('routes', JSON.stringify(this.menuItems));
   }
   async getCategories() {
-    const id = await this.helper.getDomainId(localStorage.getItem('subDomain'));
-    if(id){
-      this.categories = await this.helper.getCategory();
-    }
+    this.categories = await this.helper.getCategory();
   }
 }

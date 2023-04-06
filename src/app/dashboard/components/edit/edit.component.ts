@@ -48,6 +48,7 @@ export class EditComponent {
   public selectedMenu: any;
   public addOns: any;
   public Categories: any;
+  public subCategories: any;
   public image: any;
   public itemForm: any = this.fb.group({
     name: [null],
@@ -58,8 +59,14 @@ export class EditComponent {
   });
   public categoryForm: any = this.fb.group({
     name: [null],
-    description: [null],
+    description: ['null'],
     image: [null],
+  });
+  public subCategoryForm: any = this.fb.group({
+    name: [null],
+    description: ['null'],
+    image: ['null'],
+    parent_id: [null],
   });
   public addOnForm: any = this.fb.group({
     name: [null],
@@ -118,8 +125,14 @@ export class EditComponent {
     });
     this.categoryForm = this.fb.group({
       name: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      image: [null],
+      description: ['null'],
+      image: [null, [Validators.required]],
+    });
+    this.subCategoryForm = this.fb.group({
+      name: [null, [Validators.required]],
+      description: ['null'],
+      image: ['null'],
+      parent_id: [null],
     });
     this.addOnForm = this.fb.group({
       name: [null, [Validators.required]],
@@ -130,10 +143,62 @@ export class EditComponent {
     this.getData();
   }
   async getData() {
-    let data = localStorage.getItem('domainId');
-    if (data) {
-      await this.getCategory(JSON.parse(data).id);
+    let id = localStorage.getItem('domainId');
+    if (id) {
+      await this.getCategory(JSON.parse(id));
     } else return;
+  }
+  async getCategory(id: number) {
+    let foodItems: any = [];
+    let categories: any = [];
+    let subCategories: any = [];
+    if (this.url != 'add-ons') {
+      const menu = await this.helper.getCategory();
+      menu.map((item: any, index: any) => {
+        categories.push({ name: item.name, id: menu?.[index].id });
+        foodItems.push({ item: item.items, category: item.name });
+        subCategories.push({ name: item.name, id: menu?.[index].id });
+        console.log('subItem',"subsitem");
+        item?.sub_category?.map((subItem: any, index: any) => {
+          subCategories.push({
+            name: subItem.name,
+            id: item?.sub_category?.[index].id,
+          });
+        });
+      });
+      console.log(menu, categories, 'hellocategoriesmenuitem', subCategories);
+
+      foodItems = this.combineArray(foodItems);
+      this.Categories = categories;
+      this.subCategories = subCategories;
+      if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
+        if (this.url == 'foodItems') {
+          this.MenuSelected = foodItems;
+          if (this.id) {
+            this.handleID(this.id, 'foodItem');
+          }
+        } else if (this.url == 'sub-category') {
+          this.MenuSelected = menu;
+          this.handleID(this.id, 'sub-category');
+        } else {
+          this.MenuSelected = menu;
+          if (this.id) {
+            this.handleID(this.id, 'category');
+          }
+        }
+      }
+      const addOn = await this.helper.getAddOns();
+      await this.handleResponse(addOn);
+    } else if (this.url == 'add-ons') {
+      const addOn = await this.helper.getAddOns();
+      await this.handleResponse(addOn);
+    }
+  }
+  async handleResponse(res: any) {
+    if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
+      this.addOns = res;
+      await this.handleID(this.id, 'add-ons');
+    }
   }
   async saveCategory(event: string) {
     if (event == 'item') {
@@ -152,7 +217,7 @@ export class EditComponent {
         );
       }
       this.itemForm.addControl('active_status', new FormControl(1));
-      this.itemForm.addControl('out_of_stock', new FormControl(0));
+      this.itemForm.addControl('out_of_stock', new FormControl(1));
       await this.http
         .loaderPost('add-item', this.itemForm.value, true)
         .subscribe((res: any) => {
@@ -171,10 +236,10 @@ export class EditComponent {
       let domainId: any = localStorage.getItem('domainId');
       this.addOnForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId).id)
+        new FormControl(JSON.parse(domainId))
       );
       this.addOnForm.addControl('active_status', new FormControl(1));
-      this.addOnForm.addControl('out_of_stock', new FormControl(0));
+      this.addOnForm.addControl('out_of_stock', new FormControl(1));
       await this.http
         .loaderPost('add-addon', this.addOnForm.value, true)
         .subscribe((res: any) => {
@@ -192,10 +257,10 @@ export class EditComponent {
       let domainId: any = localStorage.getItem('domainId');
       this.categoryForm.addControl(
         'domain_id',
-        new FormControl(JSON.parse(domainId).id)
+        new FormControl(JSON.parse(domainId))
       );
       this.categoryForm.addControl('active_status', new FormControl(1));
-      this.categoryForm.addControl('out_of_stock', new FormControl(0));
+      this.categoryForm.addControl('out_of_stock', new FormControl(1));
       await this.http
         .loaderPost('add-category', this.categoryForm.value, true)
         .subscribe((res: any) => {
@@ -210,48 +275,39 @@ export class EditComponent {
           this.categoryForm.removeControl('active_status');
           this.categoryForm.removeControl('out_of_stock');
         });
+    } else if (event == 'sub-category') {
+      let domainId: any = localStorage.getItem('domainId');
+      this.subCategoryForm.addControl(
+        'domain_id',
+        new FormControl(JSON.parse(domainId))
+      );
+      this.subCategoryForm.addControl('active_status', new FormControl(1));
+      this.subCategoryForm.addControl('out_of_stock', new FormControl(1));
+      if (typeof this.subCategoryForm.controls['parent_id'].value == 'string') {
+        this.subCategoryForm.patchValue({
+          parent_id: this.selectedMenu.parent_id,
+        });
+      }
+      await this.http
+        .loaderPost('add-category', this.subCategoryForm.value, true)
+        .subscribe((res: any) => {
+          if (res.status != 400) {
+            this.toastr.success(res.message);
+            this.router.navigate(['/dashboard/sub-category']);
+          } else {
+            this.toastr.error(res.message);
+          }
+          this.subCategoryForm.removeControl('id');
+          this.subCategoryForm.removeControl('domain_id');
+          this.subCategoryForm.removeControl('active_status');
+          this.subCategoryForm.removeControl('out_of_stock');
+        });
     }
   }
   async add(item: any, val: boolean) {
     item['selected'] = val;
   }
-  async getCategory(id: number) {
-    let foodItems: any = [];
-    let categories: any = [];
-    if (this.url != 'add-ons') {
-      const menu = await this.helper.getCategory();
-      menu.map((item: any, index: any) => {
-        categories.push({ name: item.name, id: menu?.[index].id });
-        foodItems.push({ item: item.items, category: item.name });
-      });
-      foodItems = this.combineArray(foodItems);
-      this.Categories = categories;
-      if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
-        if (this.url == 'foodItems') {
-          this.MenuSelected = foodItems;
-          if (this.id) {
-            this.handleID(this.id, 'foodItem');
-          }
-        } else {
-          this.MenuSelected = menu;
-          if (this.id) {
-            this.handleID(this.id, 'category');
-          }
-        }
-      }
-      const addOn = await this.helper.getAddOns()
-      await this.handleResponse(addOn);
-    } else if (this.url == 'add-ons') {
-      const addOn = await this.helper.getAddOns();
-      await this.handleResponse(addOn);
-    }
-  }
-  async handleResponse(res: any) {
-    if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
-        this.addOns = res;
-        await this.handleID(this.id, 'add-ons');
-    }
-  }
+
   handleID(id: any, event: string) {
     if (event == 'foodItem') {
       this.image = null;
@@ -308,7 +364,7 @@ export class EditComponent {
         );
         this.categoryForm.addControl(
           'domain_id',
-          new FormControl(JSON.parse(domainId).id)
+          new FormControl(JSON.parse(domainId))
         );
         this.categoryForm.addControl(
           'active_status',
@@ -321,7 +377,46 @@ export class EditComponent {
         this.categoryForm.patchValue({
           name: this.selectedMenu.name,
           description: this.selectedMenu.description,
+          image: this.selectedMenu.image,
         });
+        this.image = this.selectedMenu.image;
+      }
+    } else if (event == 'sub-category' && this.url == 'sub-category') {
+      let domainId: any = localStorage.getItem('domainId');
+      // returning subcaegoris of categories by using flatmap
+      const subCategory: any = this.MenuSelected?.flatMap(
+        (item: any) => item?.sub_category ?? []
+      );
+      this.selectedMenu = subCategory.find((e: any) => e.id == id);
+      const category = this.MenuSelected.find(
+        (e: any) => e.id == this.selectedMenu?.parent_id
+      );
+      if (this.selectedMenu) {
+        this.subCategoryForm.addControl(
+          'id',
+          new FormControl(this.selectedMenu.id)
+        );
+        this.subCategoryForm.addControl(
+          'domain_id',
+          new FormControl(JSON.parse(domainId))
+        );
+        this.subCategoryForm.addControl(
+          'active_status',
+          new FormControl(this.selectedMenu.active_status)
+        );
+        this.addOnForm.addControl(
+          'out_of_stock',
+          new FormControl(this.selectedMenu.out_of_stock)
+        );
+        console.log(category, 'categorycategorycategory', this.MenuSelected);
+
+        this.subCategoryForm.patchValue({
+          name: this.selectedMenu.name,
+          description: this.selectedMenu.description,
+          image: this.selectedMenu.image,
+          parent_id: category.name,
+        });
+        this.image = this.selectedMenu.image;
       }
     }
   }
@@ -351,17 +446,17 @@ export class EditComponent {
         this.image = result.data.image_url;
         if (this.url == 'add-ons') {
           this.addOnForm.patchValue({
-            image: result.data.image_url
+            image: result.data.image_url,
           });
         } else if (this.url == 'foodItems') {
           this.itemForm.patchValue({
-            image: result.data.image_url
+            image: result.data.image_url,
           });
         } else {
           this.categoryForm.patchValue({
-            image: result.data.image_url
-          })
-        };
+            image: result.data.image_url,
+          });
+        }
       })
       .catch((error) => {
         console.error(error);

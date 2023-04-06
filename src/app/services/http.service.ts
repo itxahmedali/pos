@@ -58,6 +58,27 @@ export class HttpService {
         })
       );
   }
+  loaderPost(link:string, data:any, token:boolean) {
+    LoaderService.loader.next(true);
+    return this.http
+      .post(
+        environment.baseUrl + link,
+        data,
+        token ? this.headerToken : this.header
+      )
+      .pipe(
+        finalize(() => LoaderService.loader.next(false)),
+        catchError((error: HttpErrorResponse) => {
+          console.log(error);
+          if (error.status === 401) {
+            // this.authService.logout();
+          } else {
+            this.toastr.error(error?.error?.message);
+          }
+          return throwError(error.message || 'Server error');
+        })
+      );
+  }
 
   get(url: string, token: boolean) {
     return this.http
@@ -84,27 +105,6 @@ export class HttpService {
             // this.authService.logout();
           } else {
             this.toastr.error(error.message);
-          }
-          return throwError(error.message || 'Server error');
-        })
-      );
-  }
-  loaderPost(link:string, data:any, token:boolean) {
-    LoaderService.loader.next(true);
-    return this.http
-      .post(
-        environment.baseUrl + link,
-        data,
-        token ? this.headerToken : this.header
-      )
-      .pipe(
-        finalize(() => LoaderService.loader.next(false)),
-        catchError((error: HttpErrorResponse) => {
-          console.log(error);
-          if (error.status === 401) {
-            // this.authService.logout();
-          } else {
-            this.toastr.error(error?.error?.message);
           }
           return throwError(error.message || 'Server error');
         })

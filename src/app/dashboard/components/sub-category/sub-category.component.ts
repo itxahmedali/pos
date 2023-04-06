@@ -6,15 +6,15 @@ import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 
 @Component({
-  selector: 'app-category',
-  templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss'],
+  selector: 'app-sub-category',
+  templateUrl: './sub-category.component.html',
+  styleUrls: ['./sub-category.component.scss'],
 })
-export class CategoryComponent {
+export class SubCategoryComponent {
   public duePage: any;
   public searchInput: any;
   public selectedSort: any;
-  public MenuSelected: any;
+  public MenuSelected: any = [];
   public selectedMenu: any;
   public modalReference: any;
   public image: any;
@@ -34,9 +34,8 @@ export class CategoryComponent {
     private http: HttpService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private helper:HelperService
-  ) {
-  }
+    private helper: HelperService
+  ) {}
   ngOnInit(): void {
     this.getCategory();
   }
@@ -51,9 +50,7 @@ export class CategoryComponent {
     this.modalReference.close();
   }
   async stateItem(event: any, state: string, data: any) {
-    this.selectedMenu = this.MenuSelected?.find(
-      (e: any) => e?.id == event.id
-    );
+    this.selectedMenu = this.MenuSelected?.find((e: any) => e?.id == event.id);
     if (this.selectedMenu) {
       if (state == 'delete') {
         this.categoryForm.patchValue({
@@ -61,7 +58,10 @@ export class CategoryComponent {
           image: this.selectedMenu.image,
           description: this.selectedMenu.description,
         });
-        this.categoryForm.addControl('id', new FormControl(this.selectedMenu.id));
+        this.categoryForm.addControl(
+          'id',
+          new FormControl(this.selectedMenu.id)
+        );
         this.categoryForm.addControl('active_status', new FormControl(0));
       } else {
         this.categoryForm.patchValue({
@@ -69,7 +69,10 @@ export class CategoryComponent {
           image: this.selectedMenu.image,
           description: this.selectedMenu.description,
         });
-        this.categoryForm.addControl('id', new FormControl(this.selectedMenu.id));
+        this.categoryForm.addControl(
+          'id',
+          new FormControl(this.selectedMenu.id)
+        );
         this.categoryForm.addControl(
           'out_of_stock',
           new FormControl(data.target.checked ? 1 : 0)
@@ -95,6 +98,11 @@ export class CategoryComponent {
       });
   }
   async getCategory() {
-    this.MenuSelected = await this.helper.getCategory();
+    const subCategories = await this.helper.getCategory();
+    // returning subcaegoris of categories by using flatmap
+    this.MenuSelected = subCategories?.flatMap(
+      (item: any) => item?.sub_category ?? []
+    );
+    console.log(this.MenuSelected);
   }
 }

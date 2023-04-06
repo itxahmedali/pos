@@ -43,9 +43,10 @@ export class DashboardComponent {
       }, 1000);
     }
     router.events.subscribe((val: any) => {
-      const url = this.location.path().replace('/dashboard', '');
-      localStorage.setItem('url', url);
-      // "/dashboard/starters"
+      if(this.helper.checkUrl(window.location.href)){
+        const url:any = this.helper.checkUrl(window.location.href);
+        localStorage.setItem('url', url);
+      }
     });
   }
 
