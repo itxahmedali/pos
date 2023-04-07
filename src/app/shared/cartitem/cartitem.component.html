@@ -1,7 +1,9 @@
 <div class="cartBox" *ngFor="let item of data; let i = index">
   <!-- <h1>{{item.orderId}}</h1> -->
   <div class="cartItemPic">
-    <img src="{{item?.details?.img ? item?.details?.img : item?.img}}" alt="">
+    <ngx-progressive-image-loader>
+      <img ngxProgressiveImage src="{{item?.details?.img ? item?.details?.img : item?.img}}" alt="">
+    </ngx-progressive-image-loader>
   </div>
   <div class="cartcontent">
     <div class="d-flex justify-content-between">

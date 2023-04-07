@@ -38,7 +38,13 @@ export class DashboardComponent {
       setTimeout(() => {
         let route:any = localStorage.getItem('categories')
         route = JSON.parse(route)
-        router.navigateByUrl(`/dashboard/${route?.[0]?.name?.toLowerCase()?.replace(/\s/g, '')}`);
+        if(!localStorage.getItem('routed')){
+          router.navigateByUrl(`/dashboard/${route?.[0]?.name?.toLowerCase()?.replace(/\s/g, '')}`);
+          localStorage.setItem('routed', 'true')
+        }
+        else{
+          return
+        }
         LoaderService.loader.next(false);
       }, 1000);
     }

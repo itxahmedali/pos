@@ -12,7 +12,9 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
-                  <img width="100%" height="100%" [src]="image" alt="">
+
+                    <img [src]="image" alt="">
+
                 </label>
               </div>
             </div>
@@ -53,66 +55,70 @@
                 <p class="error">Category is required</p>
               </ng-container>
             </div>
-            <div class="col-sm-6 mt-5 mb-3">
-              <h3 class="white mb-3">Suggested AddOns</h3>
-              <owl-carousel-o [options]="customOptions">
-                <ng-container *ngFor="let item of addOns; let i = index;">
-                  <ng-template carouselSlide let-owlItem>
-                    <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
-                      <div class="item">
-                        <div class="itemPic" @fadeIn>
-                          <img src="{{ item.image }}" alt="" />
-                        </div>
-                        <div class="itemContent" @fadeIn>
-                          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
-                            <span>{{ item.name }}</span>
-                          </h5>
-                          <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{
-                            item.description }}</p>
-                        </div>
-                        <div class="itemPrice" @fadeIn>
-                          <p>{{ item.price | currency: "USD" }}</p>
-                          <button class="addItemBtn" (click)="add(item,item?.selected ? false :true)">
-                            <i
-                              class="fa {{item?.selected? 'fa-minus' :'fa-plus' }}"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-template>
-                </ng-container>
-              </owl-carousel-o>
-            </div>
-            <div class="col-sm-6 mt-5 mb-3">
-              <h3 class="white mb-3">Suggested Items</h3>
-              <owl-carousel-o [options]="customOptions">
-                <ng-container *ngFor="let item of MenuSelected; let i = index">
-                  <ng-template *ngIf="item?.item.id != id" carouselSlide let-owlItem>
-                    <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
-                      <div class="item">
-                        <div class="itemPic" @fadeIn>
-                          <img src="{{ item.item.image }}" alt="" />
-                        </div>
-                        <div class="itemContent" @fadeIn>
-                          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item.name }}">
-                            <span>{{ item.item.name }}</span>
-                          </h5>
-                          <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.item.description }}">{{
-                            item.item.description }}</p>
-                        </div>
-                        <div class="itemPrice" @fadeIn>
-                          <p>{{ item.item.price | currency: "USD" }}</p>
-                          <button class="addItemBtn" (click)="add(item.item,item?.item?.selected ? false :true)">
-                            <i
-                              class="fa {{item?.item?.selected  ? 'fa-minus' :'fa-plus' }}"></i>
-                          </button>
+            <ng-container *ngIf="addOns?.length">
+              <div class="col-sm-6 mt-5 mb-3">
+                <h3 class="white mb-3">Suggested AddOns</h3>
+                <owl-carousel-o [options]="customOptions">
+                  <ng-container *ngFor="let item of addOns; let i = index;">
+                    <ng-template carouselSlide let-owlItem>
+                      <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
+                        <div class="item">
+                          <div class="itemPic" @fadeIn>
+                              <img src="{{ item.image }}" alt=""/>
+                          </div>
+                          <div class="itemContent" @fadeIn>
+                            <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
+                              <span>{{ item.name }}</span>
+                            </h5>
+                            <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{
+                              item.description }}</p>
+                          </div>
+                          <div class="itemPrice" @fadeIn>
+                            <p>{{ item.price | currency: "USD" }}</p>
+                            <button class="addItemBtn" (click)="add(item,item?.selected ? false :true)">
+                              <i
+                                class="fa {{item?.selected? 'fa-minus' :'fa-plus' }}"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </ng-template>
-                </ng-container>
-              </owl-carousel-o>
-            </div>
+                    </ng-template>
+                  </ng-container>
+                </owl-carousel-o>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="MenuSelected?.length">
+              <div class="col-sm-6 mt-5 mb-3">
+                <h3 class="white mb-3">Suggested Items</h3>
+                <owl-carousel-o [options]="customOptions">
+                  <ng-container *ngFor="let item of MenuSelected; let i = index">
+                    <ng-template *ngIf="item?.item.id != id" carouselSlide let-owlItem>
+                      <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
+                        <div class="item">
+                          <div class="itemPic" @fadeIn>
+                              <img src="{{ item.item.image }}" alt=""/>
+                          </div>
+                          <div class="itemContent" @fadeIn>
+                            <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item.name }}">
+                              <span>{{ item.item.name }}</span>
+                            </h5>
+                            <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.item.description }}">{{
+                              item.item.description }}</p>
+                          </div>
+                          <div class="itemPrice" @fadeIn>
+                            <p>{{ item.item.price | currency: "USD" }}</p>
+                            <button class="addItemBtn" (click)="add(item.item,item?.item?.selected ? false :true)">
+                              <i
+                                class="fa {{item?.item?.selected  ? 'fa-minus' :'fa-plus' }}"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                </owl-carousel-o>
+              </div>
+            </ng-container>
             <div class="col-lg-7 mt-3 mb-3 d-flex justify-content-between align-items-center">
               <button class="btn add-btn" [disabled]="!itemForm.valid" (click)="saveCategory('item')">Save</button>
             </div>
@@ -136,7 +142,9 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
-                  <img width="100%" height="100%" [src]="image" alt="">
+
+                    <img [src]="image" alt="">
+
                 </label>
               </div>
             </div>
@@ -223,7 +231,9 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center">
-                  <img width="100%" height="100%" [src]="image" alt="">
+
+                    <img  [src]="image" alt="">
+
                 </label>
               </div>
             </div>

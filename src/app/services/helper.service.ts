@@ -10,37 +10,55 @@ import Swal from 'sweetalert2';
 export class HelperService {
   public domainId: number;
   constructor(private http: HttpService, private toastr: ToastrService) {}
-  fileUpload(event: any): Promise<string> {
-    return new Promise((resolve, reject) => {
-      var reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      reader.onload = () => {
-        resolve(reader.result as string);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
-      var reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
       reader.onload = () => {
-        const base64String = reader.result as string;
-        if (base64String) {
-          this.http
-            .loaderPost('image-upload-64', { image: base64String }, true)
-            .subscribe(
-              (response: any) => {
-                resolve(response);
-                this.toastr.success(response.message);
-              },
-              (error) => {
-                reject(error);
-              }
-            );
-        }
+        const img = new Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const base64String = canvas.toDataURL('image/webp', 0.8);
+
+            if (base64String) {
+              this.http
+                .loaderPost('image-upload-64', { image: base64String }, true)
+                .subscribe(
+                  (response: any) => {
+                    resolve(response);
+                    this.toastr.success(response.message);
+                  },
+                  (error) => {
+                    reject(error);
+                  }
+                );
+            }
+          }
+        };
       };
       reader.onerror = (error) => {
         reject(error);
@@ -206,5 +224,31 @@ export class HelperService {
       localStorage.setItem('subDomain', domain.split('.')[0]);
       return await this.getDomainId(domain.split('.')[0]);
     }
+  }
+  subItemRessurect(array:any,item:any){
+    item?.sub_category?.map((subItem:any)=>{
+      array.push({ item: subItem.items, category: subItem?.name });
+      if(subItem?.sub_category?.length){
+        this.subItemRessurect(array,subItem?.sub_category)
+      }
+    })
+  }
+  async getFoodItems(categories:any, foodItems:any, subCategories:any){
+    const menu = await this.getCategory();
+    menu?.map((item: any, index: number) => {
+      categories.push({ name: item?.name, id: menu?.[index]?.id });
+      foodItems.push({ item: item?.items, category: item?.name });
+      subCategories.push({ name: item.name, id: menu?.[index].id });
+      item?.sub_category?.map((subItem:any,i:number)=>{
+        foodItems.push({ item: subItem?.items, category: subItem?.name });
+        if(subItem?.sub_category?.length){
+          this.subItemRessurect(foodItems,subItem?.sub_category)
+        }
+        subCategories.push({
+          name: subItem?.name,
+          id: item?.sub_category?.[i].id,
+        });
+      })
+    });
   }
 }

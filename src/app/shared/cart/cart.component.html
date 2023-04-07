@@ -214,14 +214,18 @@
     (click)="modalClose(); proceed(); complete();"></button>
   <div class="modal-body checkoutModal completed">
     <div class="waiterIcon">
-      <img src="assets/images/billWaiter.png" alt="" />
+      <ngx-progressive-image-loader>
+        <img ngxProgressiveImage src="assets/images/billWaiter.png" alt="" />
+      </ngx-progressive-image-loader>
     </div>
     <h5 class="subHead mt-5 text-center">
       Kindly Wait for a While Your Waiter is Coming to collect your bill.
     </h5>
     <h4 class="subHead mt-3 text-center w-80">THANKS FOR YOUR SUPPORT!</h4>
     <div class="exclamationMark">
-      <img src="assets/images/tahnkYouExclamation.webp" alt="">
+      <ngx-progressive-image-loader>
+        <img ngxProgressiveImage src="assets/images/tahnkYouExclamation.webp" alt="">
+      </ngx-progressive-image-loader>
     </div>
   </div>
 </ng-template>

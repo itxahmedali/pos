@@ -154,26 +154,15 @@ export class EditComponent {
     let subCategories: any = [];
     if (this.url != 'add-ons') {
       const menu = await this.helper.getCategory();
-      menu.map((item: any, index: any) => {
-        categories.push({ name: item.name, id: menu?.[index].id });
-        foodItems.push({ item: item.items, category: item.name });
-        subCategories.push({ name: item.name, id: menu?.[index].id });
-        console.log('subItem',"subsitem");
-        item?.sub_category?.map((subItem: any, index: any) => {
-          subCategories.push({
-            name: subItem.name,
-            id: item?.sub_category?.[index].id,
-          });
-        });
-      });
-      console.log(menu, categories, 'hellocategoriesmenuitem', subCategories);
-
+      await this.helper.getFoodItems(categories, foodItems, subCategories)
       foodItems = this.combineArray(foodItems);
       this.Categories = categories;
       this.subCategories = subCategories;
       if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
         if (this.url == 'foodItems') {
           this.MenuSelected = foodItems;
+          // funciton for select selected items from api
+          this.suggestedItemSelected()
           if (this.id) {
             this.handleID(this.id, 'foodItem');
           }
@@ -188,9 +177,11 @@ export class EditComponent {
         }
       }
       const addOn = await this.helper.getAddOns();
+      this.addOnSelected(this.MenuSelected, addOn)
       await this.handleResponse(addOn);
     } else if (this.url == 'add-ons') {
       const addOn = await this.helper.getAddOns();
+      this.addOnSelected(this.MenuSelected, addOn)
       await this.handleResponse(addOn);
     }
   }
@@ -330,7 +321,7 @@ export class EditComponent {
           name: this.selectedMenu.item.name,
           description: this.selectedMenu.item.description,
           price: this.selectedMenu.item.price,
-          category_id: null,
+          category_id: this.selectedMenu.item.category_id,
           image: this.selectedMenu.item.image,
         });
       }
@@ -484,5 +475,28 @@ export class EditComponent {
     const str = JSON.stringify(ids);
     const result = str.replace(/\[|\]/g, '"');
     return result;
+  }
+  addOnSelected(array:any, addOn:any){
+    array?.forEach((item: any) => {
+      if (item?.item?.addons_id_list?.length) {
+        item?.item?.addons_id_list?.forEach((addItem: any) => {
+          addOn?.forEach((add: any) => {
+            if (addItem.id == add.id) {
+              add['selected'] = true;
+            }
+          })
+        })
+      }
+    });
+  }
+  suggestedItemSelected() {
+    this.MenuSelected?.forEach((item: any) => {
+      item?.item?.suggested_list?.forEach((suggestedItem: any) => {
+        const parentItem = this.MenuSelected.find((parentItem: any) => suggestedItem?.id === parentItem?.item?.id);
+        if (parentItem) {
+          parentItem.item['selected'] = true;
+        }
+      });
+    });
   }
 }

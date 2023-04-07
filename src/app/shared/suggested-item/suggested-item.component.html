@@ -7,7 +7,9 @@
           <div class="slide" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
             <div class="item">
               <div class="itemPic" @fadeIn>
-                <img src="{{ item.img }}" alt="" />
+                <ngx-progressive-image-loader>
+                  <img ngxProgressiveImage src="{{ item.img }}" alt="" />
+                </ngx-progressive-image-loader>
               </div>
               <div class="itemContent" @fadeIn>
                 <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item }}">

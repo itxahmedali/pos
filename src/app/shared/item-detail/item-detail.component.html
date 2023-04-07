@@ -60,7 +60,9 @@
             <div class="col-sm-6">
               <div class="w-100 d-flex justify-content-center align-items-center">
                 <div class="itemImg mt-5" @fadeIn>
-                  <img src="{{ data?.img ? data?.img : data?.details?.img }}" alt="" />
+                  <ngx-progressive-image-loader>
+                    <img [src]="data?.image ? data?.image : data?.details?.image" alt="" ngxProgressiveImage />
+                  </ngx-progressive-image-loader>
                 </div>
               </div>
               <div class="checkoutBtn d-flex justify-content-center w-100 mb-3">

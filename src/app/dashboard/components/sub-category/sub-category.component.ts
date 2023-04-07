@@ -24,7 +24,7 @@ export class SubCategoryComponent {
     { id: 1, name: 'Sort By Name' },
     { id: 2, name: 'Sort By Date' },
   ];
-  public categoryForm: any = this.fb.group({
+  public subCategoryForm: any = this.fb.group({
     name: [null],
     description: [null],
     image: [null],
@@ -53,27 +53,27 @@ export class SubCategoryComponent {
     this.selectedMenu = this.MenuSelected?.find((e: any) => e?.id == event.id);
     if (this.selectedMenu) {
       if (state == 'delete') {
-        this.categoryForm.patchValue({
+        this.subCategoryForm.patchValue({
           name: this.selectedMenu.name,
           image: this.selectedMenu.image,
           description: this.selectedMenu.description,
         });
-        this.categoryForm.addControl(
+        this.subCategoryForm.addControl(
           'id',
           new FormControl(this.selectedMenu.id)
         );
-        this.categoryForm.addControl('active_status', new FormControl(0));
+        this.subCategoryForm.addControl('active_status', new FormControl(0));
       } else {
-        this.categoryForm.patchValue({
+        this.subCategoryForm.patchValue({
           name: this.selectedMenu.name,
           image: this.selectedMenu.image,
           description: this.selectedMenu.description,
         });
-        this.categoryForm.addControl(
+        this.subCategoryForm.addControl(
           'id',
           new FormControl(this.selectedMenu.id)
         );
-        this.categoryForm.addControl(
+        this.subCategoryForm.addControl(
           'out_of_stock',
           new FormControl(data.target.checked ? 1 : 0)
         );
@@ -83,7 +83,7 @@ export class SubCategoryComponent {
   }
   async saveCategory() {
     await this.http
-      .loaderPost('add-category', this.categoryForm.value, true)
+      .loaderPost('add-category', this.subCategoryForm.value, true)
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
@@ -91,10 +91,10 @@ export class SubCategoryComponent {
         } else {
           this.toastr.error(res?.message);
         }
-        this.categoryForm.removeControl('id');
-        this.categoryForm.removeControl('domain_id');
-        this.categoryForm.removeControl('active_status');
-        this.categoryForm.removeControl('out_of_stock');
+        this.subCategoryForm.removeControl('id');
+        this.subCategoryForm.removeControl('domain_id');
+        this.subCategoryForm.removeControl('active_status');
+        this.subCategoryForm.removeControl('out_of_stock');
       });
   }
   async getCategory() {

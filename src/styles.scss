@@ -10,6 +10,11 @@
 $font-awesome: FontAwesome;
 // toaster
 @import 'ngx-toastr/toastr';
+// image processor
+@import 'ngx-progressive-image-loader/ngx-progressive-image-loader';
+$scale: 0.5; // the scale of loading image in place holder
+$transition: opacity 1s linear; // the transition of loading image in place holder, you could try: opacity .3s ease
+@include progressive-image-loader($scale, $transition);
 // fonts families
 @font-face {
   font-family: "josefinsemibold";

@@ -988,44 +988,28 @@ export class MenuItemsComponent {
   }
   async getCategories() {
     this.categories = await this.helper.getCategory();
-    let menu: any = [];
-    this.categories?.map((e: any) => {
-      if (e?.items?.length) {
-        const items = e.items;
+    let categories: any = [];
+    let foodItems: any = [];
+    let subCategories: any = [];
+    let menu:any = []
+    await this.helper.getFoodItems(categories, foodItems, subCategories)
+    foodItems?.map((e: any) => {
+      if (e?.item?.length) {
+        console.log(e);
+        const items = e.item;
         menu?.push({
-          name: e?.name,
+          name: e?.category,
           items,
         });
       }
     });
+
     this.Menus = menu;
   }
   ngOnInit(): void {
-
-    // this.Menus.map((e: any) => {
-    //   const word = res.replace(/ /g, '_');
-    //   if (e.hasOwnProperty(word)) {
-    //     this.MenuSelected = e[word];
-    //   }
-    //   console.log('====================================');
-    //   console.log(this.MenuSelected,"helloworld");
-    //   console.log('====================================');
-    // });
-    // this.observe();
+    this.observe()
   }
   async observe() {
-    UniversalService.headerHeading.subscribe((res: string) => {
-      console.log('====================================');
-      console.log(res, 'helloemap');
-      console.log('====================================');
-      this.Menus.map((e: any) => {
-        const word = res.replace(/ /g, '_');
-        if (e.hasOwnProperty(word)) {
-          this.MenuSelected = e[word];
-        }
-      });
-      this.cd.detectChanges();
-    });
     UniversalService.cartShow.subscribe((res) => {
       if (res) {
         this.Menus.map((e: any) => {

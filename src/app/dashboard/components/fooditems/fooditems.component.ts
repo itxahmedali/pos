@@ -118,11 +118,8 @@ export class FooditemsComponent {
   async getCategory() {
     let foodItems: any = [];
     let categories: any = [];
-    const menu = await this.helper.getCategory();
-    menu?.map((item: any, index: any) => {
-      categories.push({ name: item?.name, id: menu?.[index]?.id });
-      foodItems.push({ item: item.items, category: item?.name });
-    });
+    let subCategories: any = [];
+    await this.helper.getFoodItems(categories, foodItems, subCategories)
     foodItems = this.combineArray(foodItems);
     this.Categories = categories;
     this.MenuSelected = foodItems;

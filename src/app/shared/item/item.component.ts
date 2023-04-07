@@ -34,11 +34,12 @@ export class ItemComponent implements OnInit {
   }
   ngOnChanges(changes: any) {
     const url = window.location.pathname.split('/')[2];
-    console.log(changes.data.currentValue,url,"hellomenuselected2");
     changes.data.currentValue?.map((e:any)=>{
       if (e?.name?.toLowerCase()?.replace(/ /g, '') == url) {
         this.MenuItems = e.items;
       }
+      console.log(this.MenuItems,'Hello menuitem');
+
     })
   }
 

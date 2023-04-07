@@ -6,7 +6,9 @@
       <div
         class="item">
         <div class="itemPic" @fadeIn (click)="viewDetail(item)">
-          <img src="{{ item.img }}" alt="" />
+          <ngx-progressive-image-loader>
+            <img ngxProgressiveImage src="{{ item.image }}" [alt]="item.name" />
+          </ngx-progressive-image-loader>
         </div>
         <div class="itemContent" @fadeIn (click)="viewDetail(item)">
           <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
