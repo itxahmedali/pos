@@ -60,12 +60,6 @@ export class SidebarComponent implements OnInit {
       UniversalService.cartShow.next(false);
     }
   }
-  // parentActive(event:any){
-  //   // $(event.target.parentNode)
-  //   // console.log((event.target.parentNode.parentNode.parentNode.parentNode.parentNode).find('.sidebar-title'));
-  //   $($(event.target.parentNode.parentNode.parentNode.parentNode.parentNode)).find('.sidebar-title').addClass('linkActive')
-
-  // }
   toggletNavActive(item: any) {
     if (!item.active) {
       this.menuItems.forEach((a: any) => {

@@ -8,18 +8,19 @@
             <div class="item">
               <div class="itemPic" @fadeIn>
                 <ngx-progressive-image-loader>
-                  <img ngxProgressiveImage src="{{ item.img }}" alt="" />
+                  <img ngxProgressiveImage src="{{ item.image }}" alt="" />
                 </ngx-progressive-image-loader>
               </div>
               <div class="itemContent" @fadeIn>
-                <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item }}">
-                  <span>{{ item.item }}</span>
+                <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
+                  <span>{{ item.name }}</span>
                 </h5>
                 <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{ item.description }}</p>
               </div>
-              <div class="itemPrice" @fadeIn>
-                <p>{{ item.price | currency: "USD" }}</p>
-              </div>
+                <div class="itemPrice" @fadeIn>
+                  <p>{{ item.price | currency: "USD" }}</p>
+                  <button class="addCartBtn" (click)="title == 'suggestions' ? addItem(item) : addOn(item)"><i class="fa fa-plus"></i></button>
+                </div>
             </div>
           </div>
         </ng-template>
@@ -35,8 +36,8 @@
           <img src="{{ item.img }}" alt="" />
         </div>
         <div class="itemContent" @fadeIn>
-          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item }}">
-            <span>{{ item.item }}</span>
+          <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
+            <span>{{ item.name }}</span>
           </h5>
           <p class="itemDescription" placement="bottom" ngbTooltip="{{ item.description }}">{{ item.description }}</p>
         </div>

@@ -31,8 +31,13 @@
                   </div>
                 </div>
                 <div class="row mt-3 mb-3" *ngFor="let item of previouseOrders">
-                  <div class="col-sm-12">
+                  <div class="col-sm-12 d-flex justify-content-between align-items-center">
                     <h6 class="heading mb-0">Order No: {{item?.id}}</h6>
+                    <ng-container *ngIf="item?.order_status == 'pending'">
+                      <button class="btn btn-success" (click)="editOrder(item?.id)">
+                        <i class="fa fa-edit fa-sm"></i>
+                      </button>
+                    </ng-container>
                   </div>
                   <div class="col-sm-6">
                     <app-cartitem [data]='item?.items' [showActions]="false"></app-cartitem>
@@ -125,7 +130,8 @@
       <!-- <button class="btm-btn" (click)="save();">
         Proceed To Checkout
       </button> -->
-      <button class="btm-btn" (click)="save();proceed(); open(thanks, 'thanks')">
+      <!-- <button class="btm-btn" (click)="proceed(); open(thanks, 'thanks')"> -->
+        <button class="btm-btn" (click)="save();proceed();">
         Proceed To Checkout
       </button>
     </div>
@@ -143,7 +149,7 @@
       <button class="timerCapsule">20:00</button>
     </div>
     <div><button class="btm-btn" (click)="proceed(); modalClose(); cartshow()">Re Order</button></div>
-    <div><button class="btm-btn bg-success1" (click)="proceed(); modalClose(); cartshow()">Edit Order</button></div>
+    <div><button class="btm-btn bg-success1" (click)="proceed(); modalClose(); cartshow();">Edit Order</button></div>
     <div><button class="btm-btn bg-dng" *ngIf="role != 'waiters'">Call Waiter</button></div>
     <button class="scanBtn mt-5 mb-3" (click)="proceed(); open(viewOrder, 'viewOrder')">
       View order
@@ -165,42 +171,31 @@
         <div class="col-sm-12">
           <h1 class="head mt-3 text-center">Order Preview</h1>
         </div>
-        <div class="col-sm-12 d-flex justify-content-center align-items-center">
-          <div class="w-100 d-flex justify-content-center align-items-center">
-            <app-cartitem [data]="CartItems" [showActions]="false"></app-cartitem>
-          </div>
+      </div>
+      <div class="row mt-3 mb-3" *ngFor="let item of previouseOrders">
+        <div class="col-sm-12">
+          <h6 class="heading mb-0">Order No: {{item?.id}}</h6>
         </div>
-        <div class="col-sm-12 d-flex justify-content-center align-items-center">
-          <div class="w-100 d-flex justify-content-center align-items-center">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="hr"></div>
-                  <div class="totalSection">
-                    <div class="subtotal">
-                      <h5>Sub Total</h5>
-                      <h5>$236</h5>
-                    </div>
-                    <div class="extraCharges">
-                      <h6>GST Tax</h6>
-                      <h6>13%</h6>
-                    </div>
-                    <div class="extraCharges">
-                      <h6>Discount</h6>
-                      <h6>0%</h6>
-                    </div>
-                    <div class="grandtotal">
-                      <h5>Grand Total</h5>
-                      <h5>$250</h5>
-                    </div>
-                  </div>
-                  <div class="checkoutBtn">
-                    <button (click)="proceed(); modalClose();cartshow()">
-                      Go to Main Menu
-                    </button>
-                  </div>
-                </div>
+        <div class="col-sm-12">
+          <app-cartitem [data]='item?.items' [showActions]="false"></app-cartitem>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="hr"></div>
+            <div class="totalSection">
+              <div class="extraCharges">
+                <h6>GST Tax</h6>
+                <h6>{{item?.gst}}%</h6>
               </div>
+              <div class="extraCharges">
+                <h6>Discount</h6>
+                <h6>{{item?.discount}}%</h6>
+              </div>
+              <div class="grandtotal">
+                <h5>Grand Total</h5>
+                <h5>{{item?.total | currency:"USD"}}</h5>
+              </div>
+              <div class="hr mt-3 mb-3"></div>
             </div>
           </div>
         </div>

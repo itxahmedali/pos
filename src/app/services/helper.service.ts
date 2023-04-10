@@ -156,6 +156,19 @@ export class HelperService {
       return res.data;
     }
   }
+  async getOrders(): Promise<any> {
+    const data = await {
+      domain_id: localStorage.getItem('domainId'),
+      customer_id: localStorage.getItem('customer_id'),
+      customer_secret: localStorage.getItem('customer_secret'),
+    };
+    if(data){
+      const res: any = await this.http
+      .loaderPost('get-order-customer', data, false)
+      .toPromise();
+      return res.data;
+    }
+  }
   addSpaces(str: string): string {
     let result = str.replace(/([a-z])([A-Z])/g, '$1 $2'); // add space between lowercase and uppercase letters
     result = result.replace(/&/, ' & '); // add spaces around "&" character

@@ -103,6 +103,5 @@ export class SubCategoryComponent {
     this.MenuSelected = subCategories?.flatMap(
       (item: any) => item?.sub_category ?? []
     );
-    console.log(this.MenuSelected);
   }
 }

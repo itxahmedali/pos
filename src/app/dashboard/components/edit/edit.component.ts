@@ -154,7 +154,7 @@ export class EditComponent {
     let subCategories: any = [];
     if (this.url != 'add-ons') {
       const menu = await this.helper.getCategory();
-      await this.helper.getFoodItems(categories, foodItems, subCategories)
+      await this.helper.getFoodItems(categories, foodItems, subCategories);
       foodItems = this.combineArray(foodItems);
       this.Categories = categories;
       this.subCategories = subCategories;
@@ -162,10 +162,10 @@ export class EditComponent {
         if (this.url == 'foodItems') {
           this.MenuSelected = foodItems;
           // funciton for select selected items from api
-          this.suggestedItemSelected()
           if (this.id) {
             this.handleID(this.id, 'foodItem');
           }
+          this.suggestedItemSelected();
         } else if (this.url == 'sub-category') {
           this.MenuSelected = menu;
           this.handleID(this.id, 'sub-category');
@@ -177,11 +177,11 @@ export class EditComponent {
         }
       }
       const addOn = await this.helper.getAddOns();
-      this.addOnSelected(this.MenuSelected, addOn)
+      this.addOnSelected(addOn);
       await this.handleResponse(addOn);
     } else if (this.url == 'add-ons') {
       const addOn = await this.helper.getAddOns();
-      this.addOnSelected(this.MenuSelected, addOn)
+      this.addOnSelected(addOn);
       await this.handleResponse(addOn);
     }
   }
@@ -399,8 +399,6 @@ export class EditComponent {
           'out_of_stock',
           new FormControl(this.selectedMenu.out_of_stock)
         );
-        console.log(category, 'categorycategorycategory', this.MenuSelected);
-
         this.subCategoryForm.patchValue({
           name: this.selectedMenu.name,
           description: this.selectedMenu.description,
@@ -476,27 +474,26 @@ export class EditComponent {
     const result = str.replace(/\[|\]/g, '"');
     return result;
   }
-  addOnSelected(array:any, addOn:any){
-    array?.forEach((item: any) => {
-      if (item?.item?.addons_id_list?.length) {
-        item?.item?.addons_id_list?.forEach((addItem: any) => {
-          addOn?.forEach((add: any) => {
-            if (addItem.id == add.id) {
-              add['selected'] = true;
-            }
-          })
-        })
+  addOnSelected(addOns: any) {
+    addOns?.map((addOn: any) => {
+      if (this.selectedMenu.item.addons_id_list.length) {
+        this.selectedMenu.item.addons_id_list?.map((itemAddOn: any) => {
+          if (itemAddOn?.id == addOn?.id) {
+            addOn['selected'] = true;
+          }
+        });
       }
     });
   }
   suggestedItemSelected() {
-    this.MenuSelected?.forEach((item: any) => {
-      item?.item?.suggested_list?.forEach((suggestedItem: any) => {
-        const parentItem = this.MenuSelected.find((parentItem: any) => suggestedItem?.id === parentItem?.item?.id);
-        if (parentItem) {
-          parentItem.item['selected'] = true;
+    this.MenuSelected?.map((item: any) => {
+      this.selectedMenu.item.suggested_list?.map(
+        (selectedSuggestedItem: any) => {
+          if (selectedSuggestedItem?.id == item?.item?.id) {
+            item.item['selected'] = true;
+          }
         }
-      });
+      );
     });
   }
 }

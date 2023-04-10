@@ -6,17 +6,17 @@
           <i class="fa fa-arrow-left"></i>
         </button>
         <div class="container">
-          <div class="row" [ngClass]="cartItem || data?.addOns ? '' :'align-items-center'">
-            <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-6 d-flex justify-content-center align-items-center">
               <div class="itemContent">
                 <h5 class="itemName mt-5 mb-3">
-                  <span @fadeIn>{{ firstName ? firstName :data?.name?.split(' ')[0] }}</span>
-                  <span @fadeIn> {{ lastName? lastName :data?.name?.split(' ')[1] }}</span>
+                  <span @fadeIn>{{ data?.name?.split(' ')[0] }}</span>
+                  <span @fadeIn> {{ data?.name?.split(' ')[1] }}</span>
                 </h5>
                 <p class="itemDescription mt-3 mb-5" @fadeIn>{{ data?.description ? data?.description
                   :data?.details?.description }}</p>
               </div>
-              <div class="container mt-5 mb-3 addOnsHeight" *ngIf="cartItem || data?.addOns">
+              <!-- <div class="container mt-5 mb-3 addOnsHeight">
                 <div class="row mt-3 mb-3">
                   <div class="col-sm-6">
                     <div class="addOnsSection">
@@ -45,17 +45,19 @@
                         *ngFor="let item of drinks; let i = index">
                         <p @fadeIn>{{item?.name}}</p>
                         <div class="counter d-flex align-items-center">
-                          <button class="addBtn" (click)="decrement(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
-                            class="fa fa-minus"></i></button>
-                            <label class="value">{{countersDrinks[i]}}</label>
-                            <button class="addBtn" (click)="increment(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
-                                class="fa fa-plus"></i></button>
+                          <button class="addBtn"
+                            (click)="decrement(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
+                              class="fa fa-minus"></i></button>
+                          <label class="value">{{countersDrinks[i]}}</label>
+                          <button class="addBtn"
+                            (click)="increment(i, countersDrinks, item,data?.item ? data?.item :data?.name, 'drinks')"><i
+                              class="fa fa-plus"></i></button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="col-sm-6">
               <div class="w-100 d-flex justify-content-center align-items-center">
@@ -65,10 +67,25 @@
                   </ngx-progressive-image-loader>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <ng-container *ngIf="data?.addons_id_list?.length">
+              <div [ngClass]="data?.suggested_list?.length ? 'col-sm-6' : 'col-sm-12'">
+                <h6 @fadeIn class="text-center text-light mb-5">Add Ons</h6>
+                <app-suggested-item [data]="data?.addons_id_list" title="addOn" [parentItem]="data"></app-suggested-item>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="data?.suggested_list?.length">
+            <div [ngClass]="data?.addons_id_list?.length ? 'col-sm-6' : 'col-sm-12'">
+              <h6 @fadeIn class="text-center text-light mb-5">Suggested Items</h6>
+              <app-suggested-item [data]="data?.suggested_list" title="suggestions" [parentItem]="data"></app-suggested-item>
+            </div>
+            </ng-container>
+            <div class="col-sm-12">
               <div class="checkoutBtn d-flex justify-content-center w-100 mb-3">
                 <button (click)="back()">Done</button>
               </div>
-            <app-suggested-item *ngIf="cartItem || data?.addOns" [data]="suggestedItems"></app-suggested-item>
             </div>
           </div>
         </div>

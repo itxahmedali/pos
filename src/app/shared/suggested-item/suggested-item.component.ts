@@ -1,13 +1,10 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { OwlOptions } from 'ngx-owl-carousel-o/public_api';
 import { fadeIn } from 'src/animations/itemCardAnimation';
-export interface Menu {
-  img: string;
-  item: string;
-  description: string;
-  price: number;
-}
+import { addAddOn, addItem } from 'src/app/store/actions/cart.action';
+import { CartState } from 'src/app/store/state';
 @Component({
   selector: 'app-suggested-item',
   templateUrl: './suggested-item.component.html',
@@ -33,8 +30,11 @@ export interface Menu {
 
 export class SuggestedItemComponent implements OnInit {
   @Input() data: any;
-  public MenuItems: Menu[] = [];
-  constructor() { }
+  @Input() title: any;
+  @Input() parentItem: any;
+  public index:number = 0;
+  public MenuItems: any[] = [];
+  constructor(private store: Store<{ cart: CartState }>) { }
   customOptions: OwlOptions = {
     loop: true,
     autoWidth: true,
@@ -65,9 +65,20 @@ export class SuggestedItemComponent implements OnInit {
   }
   ngOnInit(): void {
     this.MenuItems = this.data
-    this.MenuItems.map(e=>{
-      console.log(e,"heloda");
-    })
   }
-
+  addItem(item:any){
+    this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item, orderId:null }}))
+  }
+  addOn(item:any){
+    this.index++
+    const itemName = this.parentItem;
+    const addOn = {
+      item: item,
+      parentItem: this.parentItem,
+      index: this.index,
+      category: 'addOn',
+    };
+    console.log(addOn)
+    this.store.dispatch(addAddOn({ itemName, addOn }));
+  }
 }

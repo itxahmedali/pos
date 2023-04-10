@@ -5,7 +5,7 @@ export const addItem = createAction(
   props<{ item: any }>());
 export const addAddOn = createAction(
   '[Cart] Add AddOn',
-  props<{ itemName: string; addOn: any }>()
+  props<{ itemName: any; addOn: any }>()
 );
 export const removeItem = createAction(
   '[Cart] Remove Item',

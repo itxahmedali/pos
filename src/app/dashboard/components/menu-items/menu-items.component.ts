@@ -995,7 +995,6 @@ export class MenuItemsComponent {
     await this.helper.getFoodItems(categories, foodItems, subCategories)
     foodItems?.map((e: any) => {
       if (e?.item?.length) {
-        console.log(e);
         const items = e.item;
         menu?.push({
           name: e?.category,

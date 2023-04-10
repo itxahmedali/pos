@@ -9,7 +9,7 @@ import * as $ from 'jquery';
 import { HelperService } from 'src/app/services/helper.service';
 import { CartState } from 'src/app/store/reducers/cart.reducer';
 import { Store } from '@ngrx/store';
-import { resetCart } from 'src/app/store/actions/cart.action';
+import { addItem, resetCart } from 'src/app/store/actions/cart.action';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from 'src/app/services/auth.service';
 @Component({
@@ -24,6 +24,7 @@ export class CartComponent implements OnInit {
   role: any;
   grandTotal: any = 0;
   previouseOrders: any;
+  previouseOrdersId: any = null;
   gst: string;
   discount: string;
   constructor(
@@ -33,21 +34,37 @@ export class CartComponent implements OnInit {
     private http: HttpService,
     private authService: AuthService,
     private store: Store<{ cart: CartState }>
-  ) {
-    this.store
-      .select((state) => state.cart.items)
-      .subscribe((items) => {
-        this.CartItems = items;
-        this.sum = this.calculateTotalPrice(items);
-        this.grandTotal = this.sum - this.sum * 0.13;
-      });
-    console.log(this.CartItems);
-  }
+  ) {}
   async ngOnInit() {
     const gstAndDiscount = await this.help.getGstDiscount();
     this.gst = gstAndDiscount.GST;
     this.discount = gstAndDiscount.discount;
-
+    this.store
+      .select((state) => state.cart.items)
+      .subscribe((items) => {
+        items?.map((item:any)=>{
+          // const parentPrice = Number(item.details.price)
+          // if(item?.addOns?.length){
+          //   item?.addOns?.map((addOnItem:any)=>{
+          //     const price = Number(addOnItem.item.price)
+          //     const qty = addOnItem.quantity;
+          //     const addOnSum = (price * qty) + parentPrice
+          //     console.log(item,parentPrice,price,qty,addOnSum,"hello cart item");
+          //   })
+          // }
+        })
+        this.CartItems = items;
+        const prevousItem = this.CartItems[0]
+        if(prevousItem?.orderId){
+          this.previouseOrdersId = prevousItem?.orderId
+        }
+        this.sum = this.calculateTotalPrice(items);
+        this.grandTotal = this.sum + this.sum * (Number(this.gst) / 100);
+        if (Number(this.discount) > 0) {
+          this.grandTotal =
+            this.grandTotal - this.grandTotal * (Number(this.discount) / 100);
+        }
+      });
     this.role = localStorage.getItem('role');
     if (localStorage.getItem('modal')) {
       if (localStorage.getItem('modal') == 'checkout') {
@@ -71,24 +88,18 @@ export class CartComponent implements OnInit {
   checkout(reason: string) {
     UniversalService.checkoutModal.next(reason);
   }
-  getOrders() {
-    const data = {
-      domain_id: localStorage.getItem('domainId'),
-      customer_id: localStorage.getItem('customer_id'),
-      customer_secret: localStorage.getItem('customer_secret'),
-    };
-    this.http
-      .loaderPost('get-order-customer', data, false)
-      .subscribe((res: any) => {
-        if (res?.data) {
-          this.previouseOrders = res?.data;
-        }
-        console.log(this.previouseOrders, 'this.previouseOrders');
-      });
+  async getOrders() {
+    this.previouseOrders = await this.help.getOrders();
   }
   save() {
     const items = this.CartItems.reduce((acc: any, item: any) => {
       const newItem = { ...item.details, quantity: item.quantity };
+      if (item.addOns && item.addOns.length > 0) {
+        newItem.addOns = item.addOns.map((addOn: any) => ({
+          ...addOn.item,
+          quantity: addOn.quantity,
+        }));
+      }
       acc.push(newItem);
       return acc;
     }, []);
@@ -102,9 +113,10 @@ export class CartComponent implements OnInit {
       customer_secret: localStorage.getItem('customer_secret'),
       table_id: 1,
     };
+    if(this.previouseOrdersId){
+      data['id'] = this.previouseOrdersId
+    }
     this.http.loaderPost('add-order', data, false).subscribe((res: any) => {
-      // this.getOrders()
-      // this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item }}))
       this.store.dispatch(resetCart());
     });
   }
@@ -161,5 +173,26 @@ export class CartComponent implements OnInit {
       }
     });
     return totalPrice;
+  }
+  async editOrder(id:any) {
+    this.store.dispatch(resetCart());
+    this.previouseOrders = await this.help.getOrders();
+    const previousItems = this.previouseOrders.find((item:any)=> id == item.id)
+    if (previousItems) {
+      await previousItems?.items?.map((item: any) => {
+        const previousItem = item
+        this.store.dispatch(
+          addItem({
+            item: {
+              name: previousItem.name,
+              quantity: previousItem.quantity,
+              addOns: previousItem.addons_id_list,
+              details: previousItem,
+              orderId:previousItems.id
+            },
+          })
+        );
+      });
+    }
   }
 }

@@ -38,8 +38,6 @@ export class ItemComponent implements OnInit {
       if (e?.name?.toLowerCase()?.replace(/ /g, '') == url) {
         this.MenuItems = e.items;
       }
-      console.log(this.MenuItems,'Hello menuitem');
-
     })
   }
 
@@ -51,8 +49,6 @@ export class ItemComponent implements OnInit {
     UniversalService.cartPreviousState.next(false);
   }
   addItem(item:any){
-    console.log(item,'hellotitem');
-
-    this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item }}))
+    this.store.dispatch(addItem({ item: { name: item?.name, quantity: 1, addOns:[], details:item, orderId:null }}))
   }
 }

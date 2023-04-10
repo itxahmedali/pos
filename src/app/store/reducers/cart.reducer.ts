@@ -5,7 +5,8 @@ export interface CartItem {
   name: string;
   quantity: number;
   addOns: any;
-  details:any
+  details:any;
+  orderId:any
 }
 
 export interface CartState {
@@ -58,7 +59,7 @@ export const cartReducer = createReducer(
   }
   ),
   on(addAddOn, (state, { itemName, addOn }) => {
-    const existingParentItemIndex = state.items.findIndex(i => i.name === itemName);
+    const existingParentItemIndex = state.items.findIndex(i => i.name === itemName.name);
     if (existingParentItemIndex !== -1) {
       const existingAddOnIndex = state.items[existingParentItemIndex].addOns.findIndex((a:any) => a.item.name === addOn.item.name);
       if (existingAddOnIndex !== -1) {

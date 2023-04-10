@@ -1,5 +1,5 @@
 import { UniversalService } from 'src/app/services/universal.service';
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { CartState } from 'src/app/store/reducers/cart.reducer';
 import { Store } from '@ngrx/store';
 import { removeItem } from 'src/app/store/actions/cart.action';
@@ -13,12 +13,8 @@ export class CartitemComponent implements OnInit {
   @Input() data: any;
   @Input() showActions: any;
   public duplicateItems: any;
-  constructor(private cd: ChangeDetectorRef, private store: Store<{ cart: CartState }>) { }
-
-  ngOnInit(): void {
-    console.log(this.data,"hellodata");
-
-  }
+  constructor(private cd: ChangeDetectorRef, private store: Store<{ cart: CartState }>) {}
+  ngOnInit(): void {}
   editItem(item: any) {
     this.cartshow()
     UniversalService.itemDetail.next(item)

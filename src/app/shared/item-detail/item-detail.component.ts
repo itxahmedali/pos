@@ -71,8 +71,6 @@ export class ItemDetailComponent implements OnInit {
   cartItem: boolean = false;
   addOnsArray: any = [];
   ngOnChanges(changes: SimpleChanges) {
-    this.firstName = this.data?.item?.split(' ')[0];
-    this.lastName = this.data?.item?.split(' ')[1];
   }
   increment(
     index: number,
@@ -159,7 +157,6 @@ export class ItemDetailComponent implements OnInit {
   async observe() {
     UniversalService.cartPreviousState.subscribe((res: boolean) => {
         this.cartPreviouseState = res;
-    console.log(this.cartPreviouseState,"please");
       this.cd.detectChanges();
     });
   }
