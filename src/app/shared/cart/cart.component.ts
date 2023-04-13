@@ -37,35 +37,35 @@ export class CartComponent implements OnInit {
   ) {}
   async ngOnInit() {
     const gstAndDiscount = await this.help.getGstDiscount();
-    this.gst = gstAndDiscount.GST;
-    this.discount = gstAndDiscount.discount;
-    this.store
+    this.gst = await gstAndDiscount.GST;
+    this.discount = await gstAndDiscount.discount;
+    await this.store
       .select((state) => state.cart.items)
-      .subscribe((items) => {
-        items?.map((item:any)=>{
-          // const parentPrice = Number(item.details.price)
-          // if(item?.addOns?.length){
-          //   item?.addOns?.map((addOnItem:any)=>{
-          //     const price = Number(addOnItem.item.price)
-          //     const qty = addOnItem.quantity;
-          //     const addOnSum = (price * qty) + parentPrice
-          //     console.log(item,parentPrice,price,qty,addOnSum,"hello cart item");
-          //   })
-          // }
+      .subscribe(async(items: any) => {
+        await items?.map(async(item:any,index:number)=>{
+          let prices:any = []
+          if(item?.addOns?.length){
+            prices.push({itemPrce:item?.details?.price})
+            item?.addOns?.map((addOnItem:any)=>{
+              prices.push({addOnPrice:addOnItem?.item?.price,addOnQuantity:addOnItem?.quantity})
+            })
+            const price = this.getTotalPrice(prices)
+            item = { ...item, details: { ...item.details, price: price } };
+          }
+          await this.CartItems.push(item)
         })
-        this.CartItems = items;
-        const prevousItem = this.CartItems[0]
-        if(prevousItem?.orderId){
-          this.previouseOrdersId = prevousItem?.orderId
+        const prevousItem = this.CartItems[0];
+        if (prevousItem?.orderId) {
+          this.previouseOrdersId = prevousItem?.orderId;
         }
-        this.sum = this.calculateTotalPrice(items);
-        this.grandTotal = this.sum + this.sum * (Number(this.gst) / 100);
+        this.sum = await this.calculateTotalPrice(this.CartItems);
+        this.grandTotal = await this.sum + this.sum * (Number(this.gst) / 100);
         if (Number(this.discount) > 0) {
           this.grandTotal =
             this.grandTotal - this.grandTotal * (Number(this.discount) / 100);
         }
       });
-    this.role = localStorage.getItem('role');
+    this.role = await localStorage.getItem('role');
     if (localStorage.getItem('modal')) {
       if (localStorage.getItem('modal') == 'checkout') {
         $('#checkoutBtn').trigger('click');
@@ -113,8 +113,8 @@ export class CartComponent implements OnInit {
       customer_secret: localStorage.getItem('customer_secret'),
       table_id: 1,
     };
-    if(this.previouseOrdersId){
-      data['id'] = this.previouseOrdersId
+    if (this.previouseOrdersId) {
+      data['id'] = this.previouseOrdersId;
     }
     this.http.loaderPost('add-order', data, false).subscribe((res: any) => {
       this.store.dispatch(resetCart());
@@ -174,13 +174,15 @@ export class CartComponent implements OnInit {
     });
     return totalPrice;
   }
-  async editOrder(id:any) {
+  async editOrder(id: any) {
     this.store.dispatch(resetCart());
     this.previouseOrders = await this.help.getOrders();
-    const previousItems = this.previouseOrders.find((item:any)=> id == item.id)
+    const previousItems = this.previouseOrders.find(
+      (item: any) => id == item.id
+    );
     if (previousItems) {
       await previousItems?.items?.map((item: any) => {
-        const previousItem = item
+        const previousItem = item;
         this.store.dispatch(
           addItem({
             item: {
@@ -188,11 +190,24 @@ export class CartComponent implements OnInit {
               quantity: previousItem.quantity,
               addOns: previousItem.addons_id_list,
               details: previousItem,
-              orderId:previousItems.id
+              orderId: previousItems.id,
             },
           })
         );
       });
     }
+  }
+  getTotalPrice(items: any) {
+    let total = 0;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.itemPrce) {
+        total += parseFloat(item.itemPrce);
+      }
+      if (item.addOnPrice) {
+        total += parseFloat(item.addOnPrice) * item.addOnQuantity;
+      }
+    }
+    return total;
   }
 }
