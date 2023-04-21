@@ -19,6 +19,7 @@ export class WelcomeComponent implements OnInit {
   href: string;
   skip: any = true;
   url: string;
+  id:number;
   public Data: any = {};
   public formValid = false;
   public auth: boolean;
@@ -31,8 +32,8 @@ export class WelcomeComponent implements OnInit {
     private toaster: ToastrService,
     private http: HttpService
   ) {}
-  ngOnInit(): void {
-    this.href = this.router.url;
+  async ngOnInit() {
+    this.href = await this.router.url;
     if (this.helper.urlSplit(this.href) == 'welcome-waiters') {
       this.skip = this.helper.urlCheck(this.href, 'welcome-waiters', 'waiters');
       this.auth = true;
@@ -53,6 +54,8 @@ export class WelcomeComponent implements OnInit {
       this.skip = false;
       this.auth = false;
     }
+    await this.getData();
+    await this.getSettings();
   }
   signin(event: string, customer: any) {
     LoaderService.loader.next(true)
@@ -131,5 +134,19 @@ export class WelcomeComponent implements OnInit {
     const secretKey = `${uniqueId+"-"+randomNumber}`;
     localStorage.setItem('customer_id',uniqueId)
     localStorage.setItem('customer_secret',secretKey)
+  }
+  async getData() {
+    let data = localStorage.getItem('domainId');
+    if (data) {
+      this.id = await JSON.parse(data);
+    } else return;
+  }
+  async getSettings() {
+    // await this.http
+    //   .loaderPost('get-setting', { domain_id: this.id }, true)
+    //   .subscribe((res: any) => {
+    //     console.log(res);
+
+    //   });
   }
 }

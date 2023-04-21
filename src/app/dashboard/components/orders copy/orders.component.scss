@@ -1,0 +1,40 @@
+.nav-link.active {
+  border-radius: 100px;
+  background: none;
+  color: var(--headings-primary-color);
+}
+.nav-link {
+  margin: 0 10px;
+  min-width: 120px;
+  border-radius: 100px;
+  color: var(--headings-primary-color);
+}
+.nav-tabs {
+  border: none;
+}
+.tab-content,
+.menuItemLabel,.counter label {
+  color: var(--headings-primary-color);
+}
+.menuItemLabel {
+  min-width: 150px;
+}
+.counter {
+  position: relative;
+  label {
+      background: none;
+      text-align: center;
+  }
+  button{
+      color: var(--headings-primary-color);
+      border-color: var(--headings-primary-color);
+      border-radius: 40px;
+      background: none;
+      margin: 10px 20px;
+  }
+}
+.checboxes{
+  height: 450px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

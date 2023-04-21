@@ -212,31 +212,33 @@ export class HelperService {
   }
   async getSubDomain() {
     localStorage.removeItem('subDomain');
-    const domain = window.location.hostname;
-    if (
-      domain.indexOf('.') < 0 ||
-      domain.split('.')[0] === 'example' ||
-      domain.split('.')[0] === 'lvh' ||
-      domain.split('.')[0] === 'www'
-    ) {
-      localStorage.removeItem('subDomain');
-      Swal.fire({
-        title: 'No domain detected try again with proper url',
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'Reload',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.value) {
-          window.location.reload();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          window.close();
-        }
-      });
-    } else {
-      localStorage.setItem('subDomain', domain.split('.')[0]);
-      return await this.getDomainId(domain.split('.')[0]);
-    }
+    // const domain = window.location.hostname;
+    // if (
+    //   domain.indexOf('.') < 0 ||
+    //   domain.split('.')[0] === 'example' ||
+    //   domain.split('.')[0] === 'lvh' ||
+    //   domain.split('.')[0] === 'www'
+    // ) {
+    //   localStorage.removeItem('subDomain');
+    //   Swal.fire({
+    //     title: 'No domain detected try again with proper url',
+    //     icon: 'error',
+    //     showCancelButton: true,
+    //     confirmButtonText: 'Reload',
+    //     cancelButtonText: 'Cancel',
+    //   }).then((result) => {
+    //     if (result.value) {
+    //       window.location.reload();
+    //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+    //       window.close();
+    //     }
+    //   });
+    // } else {
+      // localStorage.setItem('subDomain', domain.split('.')[0]);
+      // return await this.getDomainId(domain.split('.')[0]);
+      localStorage.setItem('subDomain', 'wadayah');
+      return await this.getDomainId('wadayah');
+    // }
   }
   subItemRessurect(array:any,item:any){
     item?.sub_category?.map((subItem:any)=>{

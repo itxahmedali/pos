@@ -35,6 +35,7 @@
             ],
             "scripts": []
           },
+          "gzip": true,
           "configurations": {
             "production": {
               "budgets": [

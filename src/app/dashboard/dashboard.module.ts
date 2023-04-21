@@ -54,8 +54,6 @@ import { NgxProgressiveImageLoaderModule, IImageLoaderOptions } from 'ngx-progre
     CategoryComponent,
     EditComponent,
     AddOnComponent,
-    EllipsisPipe,
-    FilterPipe,
     MenuItemsComponent,
     SubCategoryComponent
   ],

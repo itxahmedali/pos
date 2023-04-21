@@ -18,6 +18,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { FormComponent } from './form/form.component';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxProgressiveImageLoaderModule, IImageLoaderOptions  } from 'ngx-progressive-image-loader';
+import { FilterPipe } from '../pipes/filter.pipe';
+import { EllipsisPipe } from '../pipes/ellipses.pipe';
 // import { EllipsisPipe } from '../pipes/ellipses.pipe';
 // import { FilterPipe } from '../pipes/filter.pipe';
 @NgModule({
@@ -32,8 +34,8 @@ import { NgxProgressiveImageLoaderModule, IImageLoaderOptions  } from 'ngx-progr
     OrderComponent,
     SuggestedItemComponent,
     FormComponent,
-    // EllipsisPipe,
-    // FilterPipe
+    EllipsisPipe,
+    FilterPipe,
   ],
   imports: [
     CommonModule,
@@ -62,6 +64,7 @@ import { NgxProgressiveImageLoaderModule, IImageLoaderOptions  } from 'ngx-progr
     ToastrModule.forRoot({
     preventDuplicates: true,
     }),
+
   ],
   exports:[
     ItemComponent,
@@ -72,7 +75,9 @@ import { NgxProgressiveImageLoaderModule, IImageLoaderOptions  } from 'ngx-progr
     NgSelectModule,
     SuggestedItemComponent,
     FormComponent,
-    TableComponent
+    TableComponent,
+    EllipsisPipe,
+    FilterPipe,
   ]
 })
 export class SharedModule { }

@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import * as $ from 'jquery';
 import { Location } from '@angular/common';
+import { HttpService } from 'src/app/services/http.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -20,9 +21,11 @@ export class SidebarComponent implements OnInit {
   public serviceheading: any;
   public href!: string;
   public role: any;
+  public logo: any;
+  public id: any;
   public routes:any = localStorage.getItem('routes')
   public menuItems:any = JSON.parse(this.routes)
-  constructor(private location: Location, private cd: ChangeDetectorRef) {
+  constructor(private location: Location, private cd: ChangeDetectorRef, private http:HttpService) {
     this.href = this.location.path();
     if (localStorage.hasOwnProperty('orderview')) {
       if (
@@ -35,10 +38,24 @@ export class SidebarComponent implements OnInit {
       }
     } else this.sidebarEnable = true;
   }
-  ngOnInit(): void {
-    this.observe();
+  async ngOnInit() {
+    await this.observe();
+    await this.getData();
+    await this.getSettings();
   }
-
+  async getData() {
+    let data = localStorage.getItem('domainId');
+    if (data) {
+      this.id = await JSON.parse(data);
+    } else return;
+  }
+  async getSettings() {
+    await this.http
+      .loaderPost('get-setting', { domain_id: this.id }, true)
+      .subscribe((res: any) => {
+        this.logo = res?.data?.logo
+      });
+  }
   // Click Toggle menu
   routerHead(event: any, heading: any) {
     UniversalService.headerHeading.next(heading);
@@ -89,6 +106,12 @@ export class SidebarComponent implements OnInit {
         this.cd.detectChanges();
       },
       (err: any) => console.log(err)
+    );
+    UniversalService.logoUpdated.subscribe(
+      (res:any) => {
+        this.logo = res
+        this.cd.detectChanges();
+      }
     );
   }
 }

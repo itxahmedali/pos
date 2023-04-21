@@ -20,7 +20,8 @@ export class MyorderComponent implements OnInit {
   selectedCategoryName: any;
   public searchInput:any;
   public CartItems:any =[{img: 'assets/menu items/soup.webp', item: 'Chicken Soup', description: 'Soup is a primarily liquid food, generally served …of meat or vegetables with stock, milk, or water.', price: 80}]
-
+  public EmployeeDetail:any;
+  @Output() employeeDetailEmitter = new EventEmitter<any>();
   constructor(private modalService: NgbModal, private router: Router, private cd: ChangeDetectorRef) { }
   public image:any
   views = [
@@ -861,6 +862,9 @@ export class MyorderComponent implements OnInit {
     else{
       this.id.emit({id:data.id,state:'delete'});
     }
+  }
+  editStaff(item:any){
+    UniversalService.editModal.next(item)
   }
   change(event:any,id:any){
     if(event.target.checked == true){

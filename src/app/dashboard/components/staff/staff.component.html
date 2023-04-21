@@ -1,16 +1,10 @@
 <div class="container overflowScroll">
   <div class="row">
-    <div class="col-sm-12 d-flex justify-content-between mt-5">
-      <button id="qrCode" (click)="open(qr, 'qr')" class="add-table">
+    <div class="col-sm-12 d-flex flex-column justify-content-end mt-3 position-relative">
+      <button id="qrCode" (click)="open(qr, 'qr');" class="add-table">
         <i class="fa fa-plus"></i> Add Employee
       </button>
-        <div class="searchField mt-2 me-3">
-          <input type="text" placeholder="Search Item" />
-          <i class="fa fa-search"></i>
-        </div>
-    </div>
-    <div class="col-sm-12">
-      <app-myorder [tables]="Staff" [opt]="'masterstaff'"></app-myorder>
+      <app-myorder class="staffTable" [tables]="Staff" [opt]="'masterstaff'" (employeeDetailEmitter)="handleEmployeeDetail($event)" (id)="statusHandler($event)"></app-myorder>
     </div>
   </div>
 </div>
@@ -18,72 +12,120 @@
 <ng-container>
   <ng-template #qr let-modal>
     <div class="modal-body checkoutModal completed">
-      <button
-
-      class="btn-close"
-      id="checkoutClose"
-      aria-label="Close"
-      (click)="proceed()"
-    ></button>
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
       <h5 class="modal-title">Add Employee / Edit Employee</h5>
-      <form action="" class="form">
+      <form [formGroup]="staffForm" class="form">
         <div class="row mt-4">
+          <div class="col-lg-12 mt-3" *ngIf="image">
+            <div class="imgBox">
+              <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
+                  <img [src]="image" alt="">
+              </label>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3" *ngIf="!image">
+            <div class="imgBox">
+              <label for="imageUpload" class="d-flex justify-content-center align-items-center">
+                <span class="addImage">+</span>
+              </label>
+            </div>
+            <small class="text-danger">Image is required</small>
+          </div>
+          <input (change)="upload($event)" accept="image/*" id="imageUpload" type="file" hidden />
           <div class="col-lg-6 mt-3">
-            <input type="text" placeholder="Username" class="text-light w-100" />
+            <input formControlName="name" type="text" placeholder="Name" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.name.invalid && (staffForm.controls.name.dirty || staffForm.controls.name.touched)">
+              <small class="text-danger">Name is required</small>
+            </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <ng-select placeholder="Select">
-              <ng-option>Fast food</ng-option>
-              <ng-option>BBQ</ng-option>
-            </ng-select>
-            <!-- <input type="text" placeholder="Father Name" class="text-light w-100" /> -->
+            <input formControlName="father_name" type="text" placeholder="Father Name" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.father_name.invalid && (staffForm.controls.father_name.dirty || staffForm.controls.father_name.touched)">
+              <small class="text-danger">Father Name is required</small>
+            </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <input type="text" placeholder="Name" class="text-light w-100" />
-          </div>
-          <div class="col-lg-6 mt-3">
-            <input type="text" placeholder="Father Name" class="text-light w-100" />
-          </div>
-          <div class="col-lg-12 mt-3">
-            <input type="text" placeholder="Address" class="text-light w-100" />
-          </div>
-          <div class="col-lg-6 mt-3">
-            <input type="text" placeholder="Contact No." class="text-light w-100" />
+            <input formControlName="email" type="email" placeholder="Email" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.email.invalid && (staffForm.controls.email.dirty || staffForm.controls.email.touched)">
+              <small class="text-danger" *ngIf="staffForm.controls.email.errors.required">Email is required</small>
+              <small class="text-danger" *ngIf="staffForm.controls.email.errors.email">Invalid email format</small>
+            </div>
           </div>
           <div class="col-lg-6 mt-3">
             <div class="passwordBox">
-              <input
-                type="password"
-                placeholder="Password"
-                class="text-light w-100"
-              />
+              <input formControlName="password" type="password" placeholder="Password" class="text-light w-100" />
               <i class="fa fa-eye"></i>
+            </div>
+            <div *ngIf="staffForm.controls.password.invalid && (staffForm.controls.password.dirty || staffForm.controls.password.touched)">
+              <small class="text-danger">Password is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <div class="imgBox">
-              <label
-                for="imageUpload"
-                *ngIf="!image"
-                class="d-flex justify-content-center align-items-center"
-              >
-                <span class="addImage">+</span>
-                <input id="imageUpload" type="file" hidden />
-              </label>
+            <input formControlName="phone" type="text" placeholder="Contact no" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.phone.invalid && (staffForm.controls.phone.dirty || staffForm.controls.phone.touched)">
+              <small class="text-danger">Contact no is required</small>
             </div>
-            <label class="addProfileLabel mt-3">Add Profile Picture </label>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="dob" type="date" placeholder="DOB" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.dob.invalid && (staffForm.controls.dob.dirty || staffForm.controls.dob.touched)">
+              <small class="text-danger">DOB is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="address" type="text" placeholder="Address" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.address.invalid && (staffForm.controls.address.dirty || staffForm.controls.address.touched)">
+              <small class="text-danger">Address is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="zipcode" type="text" placeholder="Zip Code" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.zipcode.invalid && (staffForm.controls.zipcode.dirty || staffForm.controls.zipcode.touched)">
+              <small class="text-danger">Zipcode is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="position" type="text" placeholder="Position" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.position.invalid && (staffForm.controls.position.dirty || staffForm.controls.position.touched)">
+              <small class="text-danger">Position is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="manager" type="text" placeholder="Manager" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.manager.invalid && (staffForm.controls.manager.dirty || staffForm.controls.manager.touched)">
+              <small class="text-danger">Manager is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="shift" type="text" placeholder="Shift" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.shift.invalid && (staffForm.controls.shift.dirty || staffForm.controls.shift.touched)">
+              <small class="text-danger">Shift is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="joining_date" type="text" placeholder="Joining Date" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.joining_date.invalid && (staffForm.controls.joining_date.dirty || staffForm.controls.joining_date.touched)">
+              <small class="text-danger">Joining Date is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="national_identity" type="text" placeholder="Id Card No." class="text-light w-100" />
+            <div *ngIf="staffForm.controls.national_identity.invalid && (staffForm.controls.national_identity.dirty || staffForm.controls.national_identity.touched)">
+              <small class="text-danger">Id Card No. is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="salary" type="text" placeholder="Salary" class="text-light w-100" />
+            <div *ngIf="staffForm.controls.salary.invalid && (staffForm.controls.salary.dirty || staffForm.controls.salary.touched)">
+              <small class="text-danger">Salary is required</small>
+            </div>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer d-flex justify-content-start">
-      <button  class="btn add-btn">Save</button>
-      <button
-
-        class="btn cancel-btn"
-        aria-label="Close"
-        (click)="proceed()"
-      >
+      <button class="btn add-btn" [disabled]="staffForm.invalid" (click)="save(true)">Save</button>
+      <button class="btn cancel-btn" aria-label="Close" (click)="proceed()">
         Cancel
       </button>
     </div>

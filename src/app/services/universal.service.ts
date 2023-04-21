@@ -25,5 +25,7 @@ export class UniversalService {
   public static itemAddOnsUnique: Subject<any> = new Subject<any>();
   public static reOrder: Subject<any> = new Subject<any>();
   public static expand: Subject<any> = new Subject<any>();
+  public static editModal: Subject<any> = new Subject<any>();
+  public static logoUpdated: Subject<any> = new Subject<any>();
   constructor() { }
 }
