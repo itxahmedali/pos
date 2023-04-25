@@ -1,19 +1,15 @@
-<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+<ul ngbNav #navChild="ngbNav" [(activeId)]="childActive" class="nav-tabs">
   <li [ngbNavItem]="1">
-    <a ngbNavLink>Current Orders</a>
+    <a ngbNavLink>Pending Orders</a>
     <ng-template ngbNavContent>
-      <div class="container overflowScroll">
-        <app-myorder [tables]="currentOrder" [opt]="'master orderStatus'"></app-myorder>
-      </div>
+      <app-myorder [tables]="pendingSales" [opt]="'pendingSale'"></app-myorder>
     </ng-template>
   </li>
   <li [ngbNavItem]="2">
-    <a ngbNavLink>Pervious Orders</a>
+    <a ngbNavLink>All Orders</a>
     <ng-template ngbNavContent>
-      <div class="container overflowScroll">
-        <app-myorder [tables]="otherOrder" [opt]="'master orderStatus'"></app-myorder>
-      </div>
+      <app-myorder [tables]="allSales" [opt]="'allSale'"></app-myorder>
     </ng-template>
   </li>
 </ul>
-<div [ngbNavOutlet]="nav" class="mt-2"></div>
+<div [ngbNavOutlet]="navChild" class="mt-2"></div>

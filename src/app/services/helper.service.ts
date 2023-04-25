@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, map } from 'rxjs';
 import { HttpService } from './http.service';
+import { Setting } from 'src/classes';
 import { LoaderService } from './loader.service';
-import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root',
 })
 export class HelperService {
   public domainId: number;
-  constructor(private http: HttpService, private toastr: ToastrService) {}
+  public settings: Setting;
+  private settingsPromise: Promise<Setting>;
+  constructor(private http: HttpService, private toastr: ToastrService) {
+    this.setSettings()
+  }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -114,7 +117,7 @@ export class HelperService {
       return localStorage.getItem('domainId');
     } else {
       const res: any = await this.http
-        .post('get-domain-id', { name: name }, false)
+        .loaderPost('get-domain-id', { name: name }, false)
         .toPromise();
       this.domainId = res?.data?.id;
       localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
@@ -125,7 +128,12 @@ export class HelperService {
     const res: any = await this.http
       .loaderPost(
         'get-category',
-        { domain_id: this.domainId ? this.domainId : localStorage.getItem('domainId'), type:'main' },
+        {
+          domain_id: this.domainId
+            ? this.domainId
+            : localStorage.getItem('domainId'),
+          type: 'main',
+        },
         false
       )
       .toPromise();
@@ -162,10 +170,10 @@ export class HelperService {
       customer_id: localStorage.getItem('customer_id'),
       customer_secret: localStorage.getItem('customer_secret'),
     };
-    if(data){
+    if (data) {
       const res: any = await this.http
-      .loaderPost('get-order-customer', data, false)
-      .toPromise();
+        .loaderPost('get-order-customer', data, false)
+        .toPromise();
       return res.data;
     }
   }
@@ -234,36 +242,71 @@ export class HelperService {
     //     }
     //   });
     // } else {
-      // localStorage.setItem('subDomain', domain.split('.')[0]);
-      // return await this.getDomainId(domain.split('.')[0]);
-      localStorage.setItem('subDomain', 'wadayah');
-      return await this.getDomainId('wadayah');
+    // localStorage.setItem('subDomain', domain.split('.')[0]);
+    // return await this.getDomainId(domain.split('.')[0]);
+    localStorage.setItem('subDomain', 'wadayah');
+    return await this.getDomainId('wadayah');
     // }
   }
-  subItemRessurect(array:any,item:any){
-    item?.sub_category?.map((subItem:any)=>{
+  subItemRessurect(array: any, item: any) {
+    item?.sub_category?.map((subItem: any) => {
       array.push({ item: subItem.items, category: subItem?.name });
-      if(subItem?.sub_category?.length){
-        this.subItemRessurect(array,subItem?.sub_category)
+      if (subItem?.sub_category?.length) {
+        this.subItemRessurect(array, subItem?.sub_category);
       }
-    })
+    });
   }
-  async getFoodItems(categories:any, foodItems:any, subCategories:any){
+  async getFoodItems(categories: any, foodItems: any, subCategories: any) {
     const menu = await this.getCategory();
     menu?.map((item: any, index: number) => {
       categories.push({ name: item?.name, id: menu?.[index]?.id });
       foodItems.push({ item: item?.items, category: item?.name });
       subCategories.push({ name: item.name, id: menu?.[index].id });
-      item?.sub_category?.map((subItem:any,i:number)=>{
+      item?.sub_category?.map((subItem: any, i: number) => {
         foodItems.push({ item: subItem?.items, category: subItem?.name });
-        if(subItem?.sub_category?.length){
-          this.subItemRessurect(foodItems,subItem?.sub_category)
+        if (subItem?.sub_category?.length) {
+          this.subItemRessurect(foodItems, subItem?.sub_category);
         }
         subCategories.push({
           name: subItem?.name,
           id: item?.sub_category?.[i].id,
         });
-      })
+      });
     });
+  }
+  async setSettings(){
+    await this.getDomainId('wadayah');
+    this.settingsPromise = this.loadSettings()
+  }
+  public async loadSettings(): Promise<Setting> {
+    await this.getDomainId('wadayah');
+    let id = localStorage.getItem('domainId');
+    const res: any = await this.http
+      .loaderPost('get-setting', { domain_id: id }, true)
+      .toPromise();
+    this.settings = new Setting(
+      res.data.address,
+      res.data.banner,
+      res.data.banner_shade,
+      res.data.city,
+      res.data.description,
+      res.data.slogan,
+      res.data.domain_id,
+      res.data.email,
+      res.data.id,
+      res.data.logo,
+      res.data.phone,
+      res.data.profile,
+      res.data.restaurant_name,
+      res.data.theme
+    );
+    return this.settings;
+  }
+
+  public getSettings(): Promise<Setting> {
+    if (!this.settingsPromise) {
+      this.settingsPromise = this.loadSettings();
+    }
+    return this.settingsPromise;
   }
 }

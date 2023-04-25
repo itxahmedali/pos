@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
+import { Setting } from 'src/classes';
 
 @Component({
   selector: 'app-setting',
@@ -23,6 +24,7 @@ export class SettingComponent implements OnInit {
     phone: [null, Validators.required],
     email: [null, Validators.required],
     description: [null, Validators.required],
+    slogan: [null, Validators.required],
     theme: [null, Validators.required],
     banner_shade: [null, Validators.required],
   });
@@ -44,23 +46,22 @@ export class SettingComponent implements OnInit {
     } else return;
   }
   async getSettings() {
-    await this.http
-      .loaderPost('get-setting', { domain_id: this.id }, true)
-      .subscribe((res: any) => {
-        this.settingsForm.patchValue({
-          logo: res?.data?.logo,
-          banner: res?.data?.banner,
-          profile: res?.data?.profile,
-          restaurant_name: res?.data?.restaurant_name,
-          city: res?.data?.city,
-          address: res?.data?.address,
-          phone: res?.data?.phone,
-          email: res?.data?.email,
-          description: res?.data?.description,
-          theme: res?.data?.theme,
-          banner_shade: res?.data?.banner_shade,
-        });
+    await this.helper.getSettings()?.then((settings: Setting) => {
+      this.settingsForm.patchValue({
+        logo: settings?.logo,
+        banner: settings?.banner,
+        profile: settings?.profile,
+        restaurant_name: settings?.restaurant_name,
+        city: settings?.city,
+        address: settings?.address,
+        phone: settings?.phone,
+        email: settings?.email,
+        description: settings?.description,
+        slogan:settings?.slogan,
+        theme: settings?.theme,
+        banner_shade: settings?.banner_shade,
       });
+    })
   }
   upload(event: any, type: any) {
     this.helper
@@ -69,7 +70,7 @@ export class SettingComponent implements OnInit {
         this.settingsForm.patchValue({
           [type]: result.data.image_url,
         });
-        console.log(this.settingsForm.controls['logo'].value);
+        console.log(this.settingsForm.value);
       })
       .catch((error) => {
         console.error(error);
@@ -121,6 +122,7 @@ export class SettingComponent implements OnInit {
       .loaderPost('add-setting', this.settingsForm.value, true)
       .subscribe((res: any) => {
         this.settingsForm.removeControl('domain_id');
+        this.helper.setSettings()
         this.getSettings()
         UniversalService.logoUpdated.next(this.settingsForm.controls['logo'].value)
       });

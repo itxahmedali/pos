@@ -4,7 +4,8 @@
       <button id="qrCode" (click)="open(qr, 'qr');" class="add-table">
         <i class="fa fa-plus"></i> Add Employee
       </button>
-      <app-myorder class="staffTable" [tables]="Staff" [opt]="'masterstaff'" (employeeDetailEmitter)="handleEmployeeDetail($event)" (id)="statusHandler($event)"></app-myorder>
+      <app-myorder class="staffTable" [tables]="Staff" [opt]="'masterstaff'"
+        (employeeDetailEmitter)="handleEmployeeDetail($event)" (id)="statusHandler($event)"></app-myorder>
     </div>
   </div>
 </div>
@@ -19,7 +20,7 @@
           <div class="col-lg-12 mt-3" *ngIf="image">
             <div class="imgBox">
               <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
-                  <img [src]="image" alt="">
+                <app-img src="{{image}}"></app-img>
               </label>
             </div>
           </div>
@@ -31,22 +32,25 @@
             </div>
             <small class="text-danger">Image is required</small>
           </div>
-          <input (change)="upload($event)" accept="image/*" id="imageUpload" type="file" hidden />
+          <input (change)="upload($event)" accept="image/*" id="imageUpload" type="file" hidden accept="image/*"/>
           <div class="col-lg-6 mt-3">
             <input formControlName="name" type="text" placeholder="Name" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.name.invalid && (staffForm.controls.name.dirty || staffForm.controls.name.touched)">
+            <div
+              *ngIf="staffForm.controls.name.invalid && (staffForm.controls.name.dirty || staffForm.controls.name.touched)">
               <small class="text-danger">Name is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="father_name" type="text" placeholder="Father Name" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.father_name.invalid && (staffForm.controls.father_name.dirty || staffForm.controls.father_name.touched)">
+            <div
+              *ngIf="staffForm.controls.father_name.invalid && (staffForm.controls.father_name.dirty || staffForm.controls.father_name.touched)">
               <small class="text-danger">Father Name is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="email" type="email" placeholder="Email" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.email.invalid && (staffForm.controls.email.dirty || staffForm.controls.email.touched)">
+            <div
+              *ngIf="staffForm.controls.email.invalid && (staffForm.controls.email.dirty || staffForm.controls.email.touched)">
               <small class="text-danger" *ngIf="staffForm.controls.email.errors.required">Email is required</small>
               <small class="text-danger" *ngIf="staffForm.controls.email.errors.email">Invalid email format</small>
             </div>
@@ -56,67 +60,78 @@
               <input formControlName="password" type="password" placeholder="Password" class="text-light w-100" />
               <i class="fa fa-eye"></i>
             </div>
-            <div *ngIf="staffForm.controls.password.invalid && (staffForm.controls.password.dirty || staffForm.controls.password.touched)">
+            <div
+              *ngIf="staffForm.controls.password.invalid && (staffForm.controls.password.dirty || staffForm.controls.password.touched)">
               <small class="text-danger">Password is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="phone" type="text" placeholder="Contact no" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.phone.invalid && (staffForm.controls.phone.dirty || staffForm.controls.phone.touched)">
+            <div
+              *ngIf="staffForm.controls.phone.invalid && (staffForm.controls.phone.dirty || staffForm.controls.phone.touched)">
               <small class="text-danger">Contact no is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="dob" type="date" placeholder="DOB" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.dob.invalid && (staffForm.controls.dob.dirty || staffForm.controls.dob.touched)">
+            <div
+              *ngIf="staffForm.controls.dob.invalid && (staffForm.controls.dob.dirty || staffForm.controls.dob.touched)">
               <small class="text-danger">DOB is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="address" type="text" placeholder="Address" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.address.invalid && (staffForm.controls.address.dirty || staffForm.controls.address.touched)">
+            <div
+              *ngIf="staffForm.controls.address.invalid && (staffForm.controls.address.dirty || staffForm.controls.address.touched)">
               <small class="text-danger">Address is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="zipcode" type="text" placeholder="Zip Code" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.zipcode.invalid && (staffForm.controls.zipcode.dirty || staffForm.controls.zipcode.touched)">
+            <div
+              *ngIf="staffForm.controls.zipcode.invalid && (staffForm.controls.zipcode.dirty || staffForm.controls.zipcode.touched)">
               <small class="text-danger">Zipcode is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="position" type="text" placeholder="Position" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.position.invalid && (staffForm.controls.position.dirty || staffForm.controls.position.touched)">
+            <div
+              *ngIf="staffForm.controls.position.invalid && (staffForm.controls.position.dirty || staffForm.controls.position.touched)">
               <small class="text-danger">Position is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="manager" type="text" placeholder="Manager" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.manager.invalid && (staffForm.controls.manager.dirty || staffForm.controls.manager.touched)">
+            <div
+              *ngIf="staffForm.controls.manager.invalid && (staffForm.controls.manager.dirty || staffForm.controls.manager.touched)">
               <small class="text-danger">Manager is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="shift" type="text" placeholder="Shift" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.shift.invalid && (staffForm.controls.shift.dirty || staffForm.controls.shift.touched)">
+            <div
+              *ngIf="staffForm.controls.shift.invalid && (staffForm.controls.shift.dirty || staffForm.controls.shift.touched)">
               <small class="text-danger">Shift is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="joining_date" type="text" placeholder="Joining Date" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.joining_date.invalid && (staffForm.controls.joining_date.dirty || staffForm.controls.joining_date.touched)">
+            <div
+              *ngIf="staffForm.controls.joining_date.invalid && (staffForm.controls.joining_date.dirty || staffForm.controls.joining_date.touched)">
               <small class="text-danger">Joining Date is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="national_identity" type="text" placeholder="Id Card No." class="text-light w-100" />
-            <div *ngIf="staffForm.controls.national_identity.invalid && (staffForm.controls.national_identity.dirty || staffForm.controls.national_identity.touched)">
+            <div
+              *ngIf="staffForm.controls.national_identity.invalid && (staffForm.controls.national_identity.dirty || staffForm.controls.national_identity.touched)">
               <small class="text-danger">Id Card No. is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
             <input formControlName="salary" type="text" placeholder="Salary" class="text-light w-100" />
-            <div *ngIf="staffForm.controls.salary.invalid && (staffForm.controls.salary.dirty || staffForm.controls.salary.touched)">
+            <div
+              *ngIf="staffForm.controls.salary.invalid && (staffForm.controls.salary.dirty || staffForm.controls.salary.touched)">
               <small class="text-danger">Salary is required</small>
             </div>
           </div>

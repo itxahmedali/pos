@@ -14,7 +14,8 @@
             </ng-container>
             <label *ngIf="settingsForm.get('logo').valid" for="uploadLogo"
               class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <img [src]="settingsForm.controls['logo'].value">
+              <app-img src="{{settingsForm.controls['logo'].value}}"
+                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
             </label>
           </div>
           <small *ngIf="settingsForm.get('logo').invalid" class="text-danger">Logo is required</small>
@@ -28,9 +29,10 @@
                   Your Sign In Banner</span>
               </label>
             </ng-container>
-            <label *ngIf="settingsForm.get('banner').valid" for="uploadLogo"
+            <label *ngIf="settingsForm.get('banner').valid" for="uploadBanner"
               class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <img [src]="settingsForm.controls['banner'].value">
+              <app-img src="{{settingsForm.controls['banner'].value}}"
+                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
             </label>
           </div>
           <small *ngIf="settingsForm.get('banner').invalid" class="text-danger">Banner is required</small>
@@ -44,9 +46,10 @@
                   Your Profile Picture</span>
               </label>
             </ng-container>
-            <label *ngIf="settingsForm.get('profile').valid" for="uploadLogo"
+            <label *ngIf="settingsForm.get('profile').valid" for="uploadProfile"
               class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <img [src]="settingsForm.controls['profile'].value">
+              <app-img src="{{settingsForm.controls['profile'].value}}"
+                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
             </label>
           </div>
           <small *ngIf="settingsForm.get('profile').invalid" class="text-danger">Profile is required</small>
@@ -88,6 +91,14 @@
             <div
               *ngIf="settingsForm.controls.email.invalid && (settingsForm.controls.email.dirty || settingsForm.controls.email.touched)">
               <small class="text-danger">Email is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <textarea formControlName="slogan" mdbInput class="form-control (resize) text-light" id="textAreaExample"
+              rows="10" placeholder="Slogan"></textarea>
+            <div
+              *ngIf="settingsForm.controls.slogan.invalid && (settingsForm.controls.slogan.dirty || settingsForm.controls.slogan.touched)">
+              <small class="text-danger">Slogan is required</small>
             </div>
           </div>
           <div class="col-lg-12 mt-3">

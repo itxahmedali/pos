@@ -12,7 +12,7 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
-                    <img [src]="image" alt="">
+                  <app-img src="{{image}}"></app-img>
                 </label>
               </div>
             </div>
@@ -24,7 +24,7 @@
               </div>
             </div>
             <div class="col-lg-7"></div>
-            <input (change)="upload($event)" id="imageUpload" type="file" hidden />
+            <input (change)="upload($event)" id="imageUpload" type="file" hidden accept="image/*"/>
             <div class="col-lg-7 mt-3">
               <input type="text" formControlName="name" placeholder="Name" class="text-light w-100" />
               <ng-container *ngIf="itemForm.get('name')?.errors && itemForm.get('name')?.touched">
@@ -62,7 +62,8 @@
                       <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
                         <div class="item">
                           <div class="itemPic" @fadeIn>
-                              <img src="{{ item.image }}" alt=""/>
+                            <app-img src="{{item.image}}"
+                              [styles]="{'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
                           </div>
                           <div class="itemContent" @fadeIn>
                             <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.name }}">
@@ -74,8 +75,7 @@
                           <div class="itemPrice" @fadeIn>
                             <p>{{ item.price | currency: "USD" }}</p>
                             <button class="addItemBtn" (click)="add(item,item?.selected ? false :true)">
-                              <i
-                                class="fa {{item?.selected? 'fa-minus' :'fa-plus' }}"></i>
+                              <i class="fa {{item?.selected? 'fa-minus' :'fa-plus' }}"></i>
                             </button>
                           </div>
                         </div>
@@ -94,7 +94,8 @@
                       <div class="slide text-center" [@activeSlide]="owlItem.isCentered ? 'active' : 'inActive'">
                         <div class="item">
                           <div class="itemPic" @fadeIn>
-                              <img src="{{ item.item.image }}" alt=""/>
+                            <app-img src="{{item.item.image}}"
+                              [styles]="{'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
                           </div>
                           <div class="itemContent" @fadeIn>
                             <h5 class="itemName mt-3" placement="bottom" ngbTooltip="{{ item.item.name }}">
@@ -106,8 +107,7 @@
                           <div class="itemPrice" @fadeIn>
                             <p>{{ item.item.price | currency: "USD" }}</p>
                             <button class="addItemBtn" (click)="add(item.item,item?.item?.selected ? false :true)">
-                              <i
-                                class="fa {{item?.item?.selected  ? 'fa-minus' :'fa-plus' }}"></i>
+                              <i class="fa {{item?.item?.selected  ? 'fa-minus' :'fa-plus' }}"></i>
                             </button>
                           </div>
                         </div>
@@ -140,9 +140,8 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center imgUploadedBox">
-
-                    <img [src]="image" alt="">
-
+                  <app-img src="{{image}}"
+                    [styles]="{'width': '90%', 'height': '90%', 'object-fit': 'cover' }"></app-img>
                 </label>
               </div>
             </div>
@@ -154,7 +153,7 @@
               </div>
             </div>
             <div class="col-lg-7"></div>
-            <input (change)="upload($event)" id="imageUpload" type="file" hidden />
+            <input (change)="upload($event)" id="imageUpload" type="file" hidden accept="image/*"/>
             <div class="col-lg-7 mt-3">
               <input type="text" placeholder="Name" formControlName="name" class="text-light w-100" />
               <ng-container *ngIf="categoryForm.get('name')?.errors && categoryForm.get('name')?.touched">
@@ -201,7 +200,8 @@
                   <ng-option *ngFor="let parent of MenuSelected" [value]="parent.id">{{parent.name}}</ng-option>
                 </ng-select>
               </div>
-              <ng-container *ngIf="subCategoryForm.get('parent_id')?.errors && subCategoryForm.get('parent_id')?.touched">
+              <ng-container
+                *ngIf="subCategoryForm.get('parent_id')?.errors && subCategoryForm.get('parent_id')?.touched">
                 <p class="error">Parent Category is required</p>
               </ng-container>
             </div>
@@ -229,9 +229,7 @@
             <div class="col-lg-3 mt-3" *ngIf="image">
               <div class="imgBox">
                 <label for="imageUpload" class="d-flex justify-content-center align-items-center">
-
-                    <img  [src]="image" alt="">
-
+                  <app-img src="{{image}}"></app-img>
                 </label>
               </div>
             </div>
@@ -243,7 +241,7 @@
               </div>
             </div>
             <div class="col-lg-7"></div>
-            <input (change)="upload($event)" id="imageUpload" type="file" hidden />
+            <input (change)="upload($event)" id="imageUpload" type="file" hidden accept="image/*"/>
             <div class="col-lg-7 mt-3">
               <input type="text" formControlName="name" placeholder="Name" class="text-light w-100" />
               <ng-container *ngIf="addOnForm.get('name')?.errors && addOnForm.get('name')?.touched">

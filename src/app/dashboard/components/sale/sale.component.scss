@@ -156,36 +156,3 @@
   padding-left: 1.5rem;
   font-family: "josefinsemilight";
 }
-// modal Css
-.modal-title {
-  color: var(--headings-primary-color);
-}
-.modal-footer {
-  border-top: none;
-}
-.cancel-btn {
-  background-color: #bb2b2b;
-  color: var(--headings-primary-color);
-  padding: 5px 40px;
-  border-radius: 50px;
-}
-.add-btn {
-  background-color: #2b98bb;
-  padding: 5px 40px;
-  color: var(--headings-primary-color);
-  border-radius: 50px;
-}
-.form input,
-.form textarea {
-  background-color: #3a3a3a;
-  padding: 8px 11px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
-.date{
-  color: var(--headings-primary-color);
-  font-family: "josefinsemiregular";
-  margin-top: 2rem;
-  padding-left: 10px;
-}

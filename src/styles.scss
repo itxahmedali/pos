@@ -10,11 +10,6 @@
 $font-awesome: FontAwesome;
 // toaster
 @import 'ngx-toastr/toastr';
-// image processor
-@import 'ngx-progressive-image-loader/ngx-progressive-image-loader';
-$scale: 0.5; // the scale of loading image in place holder
-$transition: opacity 1s linear; // the transition of loading image in place holder, you could try: opacity .3s ease
-@include progressive-image-loader($scale, $transition);
 // fonts families
 @font-face {
   font-family: "josefinsemibold";
@@ -197,10 +192,6 @@ body {
   .fa-edit {
     color: #2bbbbb;
   }
-}
-// placeholder of imges
-.ngx-image-placeholder{
-  height: 100% !important;
 }
 .table{
   font-family: josefinsemilight;
@@ -633,4 +624,15 @@ button:disabled{
 }
 .error{
   color: red;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

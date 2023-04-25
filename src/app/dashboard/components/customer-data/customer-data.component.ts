@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
 
 @Component({
@@ -10,191 +12,16 @@ import { UniversalService } from 'src/app/services/universal.service';
 })
 export class CustomerDataComponent {
   modalReference: any;
-  constructor(private router:Router, private cd:ChangeDetectorRef, private modalService: NgbModal) { }
-  public Staff: any = [
-    {
-      id: 1,
-      Name: 'Jennifer',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'Johnsons',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'Cena',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'Jennifer',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'Johnsons',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'Cena',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John Sandwich',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John Sandwich',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John Sandwich',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-    {
-      id: 1,
-      Name: 'John',
-      contact: '123-456-789-0',
-      email:'abc@exmaple.com',
-      lastdinein: '01-Jan-2022',
-    },
-
-];
+  constructor(private http:HttpService, private fb:FormBuilder, private modalService: NgbModal) { }
+  public Staff: any;
+  public CustomerForm: any = this.fb.group({
+    domain_id: [localStorage.getItem('domainId'), Validators.required],
+    name: [null, Validators.required],
+    email: [null, Validators.required],
+    phone: [null, Validators.required]
+  });
   ngOnInit(): void {
-    this.observe('customerdata');
-  }
-  alert(){
-   alert('no screen')
-
+    this.getCustomers()
   }
   open(content: any, modal: any) {
       this.modalReference = this.modalService.open(content, {
@@ -207,14 +34,10 @@ export class CustomerDataComponent {
   proceed() {
     this.modalReference.close();
   }
-  async observe(path: string) {
-    // if (path) {
-    //   this.router.navigate([`master/${path}`]);
-    // }
-    // UniversalService.routePath.subscribe((res: string) => {
-    //   let path = res.toLowerCase();
-    //   this.router.navigate([`master/${path}`]);
-    //   this.cd.detectChanges();
-    // });
+  async getCustomers(){
+    await this.http.loaderPost('get-customers', { domain_id: localStorage.getItem('domainId') }, true)
+    .subscribe((res:any)=>{
+      this.Staff = res?.data
+    })
   }
 }

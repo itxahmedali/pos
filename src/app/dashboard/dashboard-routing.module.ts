@@ -82,12 +82,12 @@ if(role == 'master'){
         canActivate: [RoleGuard],
         data: { allowedRoles: ['master'] },
       },
-      {
-        path: 'inventory',
-        component: InventoryComponent,
-        canActivate: [RoleGuard],
-        data: { allowedRoles: ['master'] },
-      },
+      // {
+      //   path: 'inventory',
+      //   component: InventoryComponent,
+      //   canActivate: [RoleGuard],
+      //   data: { allowedRoles: ['master'] },
+      // },
       {
         path: 'customerData',
         component: CustomerDataComponent,

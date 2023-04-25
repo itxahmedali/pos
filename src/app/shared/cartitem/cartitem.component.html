@@ -1,7 +1,7 @@
 <div class="cartBox" *ngFor="let item of data; let i = index">
   <!-- <h1>{{item.orderId}}</h1> -->
   <div class="cartItemPic">
-      <img src="{{item?.details?.image ? item?.details?.image : item?.image}}" [alt]="item?.name">
+      <app-img src="{{item?.details?.image ? item?.details?.image : item?.image}}" alt="{{item?.name}}" [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
   </div>
   <div class="cartcontent">
     <div class="d-flex justify-content-between">

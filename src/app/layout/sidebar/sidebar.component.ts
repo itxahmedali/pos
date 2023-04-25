@@ -10,6 +10,7 @@ import {
 import * as $ from 'jquery';
 import { Location } from '@angular/common';
 import { HttpService } from 'src/app/services/http.service';
+import { Setting } from 'src/classes';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -25,7 +26,7 @@ export class SidebarComponent implements OnInit {
   public id: any;
   public routes:any = localStorage.getItem('routes')
   public menuItems:any = JSON.parse(this.routes)
-  constructor(private location: Location, private cd: ChangeDetectorRef, private http:HttpService) {
+  constructor(private location: Location, private cd: ChangeDetectorRef, private http:HttpService,private helper:HelperService) {
     this.href = this.location.path();
     if (localStorage.hasOwnProperty('orderview')) {
       if (
@@ -50,11 +51,9 @@ export class SidebarComponent implements OnInit {
     } else return;
   }
   async getSettings() {
-    await this.http
-      .loaderPost('get-setting', { domain_id: this.id }, true)
-      .subscribe((res: any) => {
-        this.logo = res?.data?.logo
-      });
+    await this.helper.getSettings()?.then((settings: Setting) => {
+      this.logo = settings?.logo
+    })
   }
   // Click Toggle menu
   routerHead(event: any, heading: any) {

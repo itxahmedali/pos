@@ -9,6 +9,7 @@ import { HelperService } from './services/helper.service';
 import { Store } from '@ngrx/store';
 import { LoaderService } from './services/loader.service';
 import Swal from 'sweetalert2';
+import { Setting } from 'src/classes';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -193,12 +194,12 @@ export class AppComponent {
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
     },
-    {
-      path: 'inventory',
-      title: 'Inventory',
-      icon: 'assets/sidebarIcons/dessert.webp',
-      type: 'link',
-    },
+    // {
+    //   path: 'inventory',
+    //   title: 'Inventory',
+    //   icon: 'assets/sidebarIcons/dessert.webp',
+    //   type: 'link',
+    // },
     {
       path: 'support',
       title: 'Support',
@@ -231,9 +232,8 @@ export class AppComponent {
 
     if (this.role == 'customers') {
       await this.getCategories();
-    }
-    else{
-      LoaderService.loader.next(false)
+    } else {
+      LoaderService.loader.next(false);
     }
     this.router.events.subscribe(() => {
       if (localStorage.getItem('loginstate')) {
@@ -241,7 +241,7 @@ export class AppComponent {
       }
     });
   }
-  ngOnInit(): void {
+  async ngOnInit() {
     if (window.innerWidth < 415) {
       this.expanded = false;
       this.expandedBody = false;
@@ -275,7 +275,14 @@ export class AppComponent {
         this.sidebarEnable = true;
       }
     } else this.sidebarEnable = true;
-    this.observe();
+    await this.observe();
+    await this.getSettings();
+  }
+  async getSettings() {
+    this.helper.getSettings()?.then((settings: Setting) => {
+      this.colorTheme(settings.theme);
+      this.colorBanner(settings.banner_shade);
+    });
   }
   async observe() {
     AuthService.signin.subscribe((res: boolean) => {

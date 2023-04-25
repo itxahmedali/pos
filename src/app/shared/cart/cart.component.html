@@ -131,7 +131,7 @@
         Proceed To Checkout
       </button> -->
       <!-- <button class="btm-btn" (click)="proceed(); open(thanks, 'thanks')"> -->
-        <button class="btm-btn" (click)="save();proceed();">
+      <button class="btm-btn" (click)="save();proceed();">
         Proceed To Checkout
       </button>
     </div>
@@ -209,18 +209,16 @@
     (click)="modalClose(); proceed(); complete();"></button>
   <div class="modal-body checkoutModal completed">
     <div class="waiterIcon">
-      <ngx-progressive-image-loader>
-        <img ngxProgressiveImage src="assets/images/billWaiter.png" alt="" />
-      </ngx-progressive-image-loader>
+      <app-img src="assets/images/billWaiter.png" alt="waiterDummy"
+        [styles]="{ 'width': '100%', 'height': '100%'}"></app-img>
     </div>
     <h5 class="subHead mt-5 text-center">
       Kindly Wait for a While Your Waiter is Coming to collect your bill.
     </h5>
     <h4 class="subHead mt-3 text-center w-80">THANKS FOR YOUR SUPPORT!</h4>
     <div class="exclamationMark">
-      <ngx-progressive-image-loader>
-        <img ngxProgressiveImage src="assets/images/tahnkYouExclamation.webp" alt="">
-      </ngx-progressive-image-loader>
+      <app-img src="assets/images/tahnkYouExclamation.webp" alt="exclamationMark"
+        [styles]="{ 'width': '100%', 'height': '100%','objec-fit':'contain'}"></app-img>
     </div>
   </div>
 </ng-template>

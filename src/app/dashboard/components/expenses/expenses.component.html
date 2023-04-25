@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-end ">
+  <div class="modalbtn add-table-width">
+    <button id="qrCode" (click)="open(qr)" class="add-table"><i class="fa fa-plus"></i> Add
+      Expense</button>
+  </div>
+</div>
+<app-myorder [tables]="Expenses" [opt]="'expenses'"></app-myorder>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <h5 class="modal-title">Add Expense</h5>
+      <form [formGroup]="expenseForm" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-6">
+            <input formControlName="type" type="text" placeholder="Type" class="text-light" />
+            <div
+              *ngIf="expenseForm.controls.type.invalid && (expenseForm.controls.type.dirty || expenseForm.controls.type.touched)">
+              <small class="text-danger">Type is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <input type="number" formControlName="expenses" placeholder="Amount" class="text-light" />
+            <div
+              *ngIf="expenseForm.controls.expenses.invalid && (expenseForm.controls.expenses.dirty || expenseForm.controls.expenses.touched)">
+              <small class="text-danger">Expenses is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input type="date" formControlName="date" placeholder="Date" class="text-light" />
+            <div
+              *ngIf="expenseForm.controls.date.invalid && (expenseForm.controls.date.dirty || expenseForm.controls.date.touched)">
+              <small class="text-danger">Date is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <textarea type="text" formControlName="description" placeholder="Description" class="text-light w-100" rows="10"></textarea>
+            <div
+              *ngIf="expenseForm.controls.description.invalid && (expenseForm.controls.description.dirty || expenseForm.controls.description.touched)">
+              <small class="text-danger">Description is required</small>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-start">
+      <button class="btn cancel-btn" aria-label="Close" (click)="proceed()">
+        Cancel
+      </button>
+      <button class="btn add-btn" [disabled]="expenseForm.invalid" (click)="addExpense()">Add</button>
+    </div>
+  </ng-template>
+</ng-container>

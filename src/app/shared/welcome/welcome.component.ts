@@ -9,6 +9,7 @@ import { FormComponent } from '../form/form.component';
 import { ToastrService } from 'ngx-toastr';
 import { HttpService } from 'src/app/services/http.service';
 import { LoaderService } from 'src/app/services/loader.service';
+import { Setting } from 'src/classes';
 
 @Component({
   selector: 'app-welcome',
@@ -19,10 +20,11 @@ export class WelcomeComponent implements OnInit {
   href: string;
   skip: any = true;
   url: string;
-  id:number;
+  id: number;
   public Data: any = {};
   public formValid = false;
   public auth: boolean;
+  public setting: Setting;
   @ViewChild(FormComponent) formComponent: FormComponent;
   constructor(
     private router: Router,
@@ -58,19 +60,18 @@ export class WelcomeComponent implements OnInit {
     await this.getSettings();
   }
   signin(event: string, customer: any) {
-    LoaderService.loader.next(true)
     const formData = this.formComponent.formGroup.value;
-    let loginData = {
-      email: formData.Email,
-      password: formData.Password,
-      domain: localStorage.getItem('subDomain'),
-    };
     if (
       this.formComponent.formGroup.status == 'VALID' &&
       event == 'signin' &&
       this.auth
-    ) {
-      this.http.post('login', loginData, false).subscribe((res: any) => {
+      ) {
+      let loginData = {
+        email: formData.Email,
+        password: formData.Password,
+        domain: localStorage.getItem('subDomain'),
+      };
+      this.http.loaderPost('login', loginData, false).subscribe((res: any) => {
         if (res) {
           if (res?.hasOwnProperty('errors')) {
             for (const key in res?.errors) {
@@ -105,16 +106,34 @@ export class WelcomeComponent implements OnInit {
     }
     // else if for feedback api form
     else if (event == 'signin' && !this.auth) {
-      localStorage.setItem('access_token', 'hellotoken');
-      if (this.helper.urlSplit(this.href) == 'welcome-customers') {
-        this.router.navigate(['/dashboard']);
-        this.authGuardService.login('customers');
-        AuthService.signin.next(true);
-        UniversalService.modules.next(true);
-      }
+      let loginData = {
+        name: formData.Name,
+        email: formData.Email,
+        password: formData.Password,
+        phone: formData.Phone,
+        domain_id: localStorage.getItem('domainId'),
+      };
+      this.http.loaderPost('add-customers', loginData, false).subscribe((res: any) => {
+        if (res) {
+          if (res?.hasOwnProperty('errors')) {
+            for (const key in res?.errors) {
+              this.toaster.error(res?.errors[key]);
+            }
+          } else {
+            this.toaster.success(res?.message);
+            localStorage.setItem('access_token', 'skipped');
+            if (this.helper.urlSplit(this.href) == 'welcome-customers') {
+              this.router.navigate(['/dashboard']);
+              this.authGuardService.login('customers');
+              AuthService.signin.next(true);
+              UniversalService.modules.next(true);
+            }
+          }
+        }
+      });
     } else if (event == 'skip') {
       localStorage.setItem('access_token', 'skipped');
-      this.generateUniqueId()
+      this.generateUniqueId();
       if (this.helper.urlSplit(this.href) == 'welcome-customers') {
         this.authGuardService.login('customers');
         this.router.navigate(['/dashboard']);
@@ -131,9 +150,9 @@ export class WelcomeComponent implements OnInit {
     const uniqueId = Math.random().toString(36).substring(2, 7);
     const randomNumber = Math.floor(Math.random() * 1000);
     // Generate a corresponding secret key with some unique text
-    const secretKey = `${uniqueId+"-"+randomNumber}`;
-    localStorage.setItem('customer_id',uniqueId)
-    localStorage.setItem('customer_secret',secretKey)
+    const secretKey = `${uniqueId + '-' + randomNumber}`;
+    localStorage.setItem('customer_id', uniqueId);
+    localStorage.setItem('customer_secret', secretKey);
   }
   async getData() {
     let data = localStorage.getItem('domainId');
@@ -142,11 +161,8 @@ export class WelcomeComponent implements OnInit {
     } else return;
   }
   async getSettings() {
-    // await this.http
-    //   .loaderPost('get-setting', { domain_id: this.id }, true)
-    //   .subscribe((res: any) => {
-    //     console.log(res);
-
-    //   });
+    this.helper.getSettings().then((settings: Setting) => {
+      this.setting = settings;
+    });
   }
 }

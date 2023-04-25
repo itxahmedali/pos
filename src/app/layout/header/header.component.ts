@@ -35,19 +35,33 @@ export class HeaderComponent implements OnInit {
     private store: Store<{ cart: CartState }>
   ) {
     router.events.subscribe((val) => {
-      this.text = this.helper.addSpaces(
-        Number(
-          router?.url
-            ?.split('/')
-            ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
-        )
-          ? router?.url
-              ?.split('/')
-              ?.[router?.url?.split('/')?.length - 2]?.replace(/-/g, ' ')
-          : router?.url
+      this.text = localStorage.getItem('heading') ? localStorage.getItem('heading') :
+      this.helper.addSpaces(
+          Number(
+            router?.url
               ?.split('/')
               ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
-      );
+          )
+            ? router?.url
+                ?.split('/')
+                ?.[router?.url?.split('/')?.length - 2]?.replace(/-/g, ' ')
+            : router?.url
+                ?.split('/')
+                ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+        );
+      // this.text = this.helper.addSpaces(
+      //   Number(
+      //     router?.url
+      //       ?.split('/')
+      //       ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+      //   )
+      //     ? router?.url
+      //         ?.split('/')
+      //         ?.[router?.url?.split('/')?.length - 2]?.replace(/-/g, ' ')
+      //     : router?.url
+      //         ?.split('/')
+      //         ?.[router?.url?.split('/')?.length - 1]?.replace(/-/g, ' ')
+      // );
     });
     this.heading = Number(
       router?.url
@@ -135,12 +149,15 @@ export class HeaderComponent implements OnInit {
   }
   animationFinished(event: AnimationEvent) {
     if (event.fromState === 'void' && event.toState === 'hidden') {
-      this.text = this.heading;
+      this.text = localStorage.getItem('heading') ? localStorage.getItem('heading') : this.heading;
       this.currentState = 'visible';
     } else if (event.fromState === 'visible' && event.toState === 'hidden') {
-      this.text = this.heading;
+      this.text = localStorage.getItem('heading') ? localStorage.getItem('heading') : this.heading;
       this.currentState = 'visible';
     }
+    console.log('====================================');
+    console.log(this.text);
+    console.log('====================================');
   }
   cartShow() {
     this.cartButton = !this.cartButton;

@@ -838,6 +838,9 @@ export class MyorderComponent implements OnInit {
   ];
   selectedSort: any = this.sorts[0].name;
   ngOnChanges(){
+    console.log('====================================');
+    console.log(this.tables);
+    console.log('====================================');
   }
   ngOnInit(): void {
     // UniversalService.headerHeading.next(localStorage.getItem('heading'))

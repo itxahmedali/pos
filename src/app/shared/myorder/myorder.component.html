@@ -529,8 +529,8 @@
               </tr>
             </ng-container>
             <ng-template #noData>
-              <tr *ngIf="tables?.length">
-                <td colspan="7" class="text-center white">No Matching Data Available</td>
+              <tr>
+                <td colspan="7" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
             <tr *ngIf="!tables?.length">
@@ -621,8 +621,8 @@
               </tr>
             </ng-container>
             <ng-template #noData>
-              <tr *ngIf="tables?.length">
-                <td colspan="5" class="text-center white">No Matching Data Available</td>
+              <tr>
+                <td colspan="5" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
             <tr *ngIf="!tables?.length">
@@ -743,19 +743,18 @@
                 <td>
                   <div class="toggle d-flex align-items-center w-100 justify-content-center">
                     <input class="checkBox" type="checkbox" [checked]="item?.active_status =='0' ? false: true"
-                      [id]='"staff"+i' (change)="change($event,item?.id)" /><label
-                      [for]='"staff"+i'></label>
+                      [id]='"staff"+i' (change)="change($event,item?.id)" /><label [for]='"staff"+i'></label>
                   </div>
                 </td>
-                <td ><i class="px-2 fa fa-eye" id="qrCode"
+                <td><i class="px-2 fa fa-eye" id="qrCode"
                     (click)="EmployeeDetail = item; open(qr, 'qr'); employeeDetailEmitter.emit(item);"></i>
                   <i class="fa fa-edit" (click)="editStaff(item)"></i>
                 </td>
               </tr>
             </ng-container>
             <ng-template #noData>
-              <tr *ngIf="tables?.length">
-                <td colspan="7" class="text-center white">No Matching Data Available</td>
+              <tr>
+                <td colspan="7" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
           </tbody>
@@ -778,36 +777,48 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'mastercustomerdata'">
   <div class="row">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div class="searchField mt-3 w-100">
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
         <table class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">S.no</th>
+              <th scope="col">Id</th>
               <th scope="col">Name</th>
               <th scope="col">Contact</th>
               <th scope="col">Email</th>
-              <th scope="col">Last Dine in</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
-                  let i = index;
-                  let item;
-                  of: tables
-                    | paginate
-                      : {
-                          itemsPerPage: 8,
-                          currentPage: duePage,
-                          totalItems: total
-                        }
-                ">
-              <th scope="row">{{ i }}</th>
-              <td>{{ item.Name ? item.Name : "N/A" }}</td>
-              <td>{{ item.contact ? item.contact : "N/A" }}</td>
-              <td>{{ item.email ? item.email : "N/A" }}</td>
-              <td>{{ item.lastdinein? item.lastdinein : "N/A" }}</td>
-            </tr>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                    | filter: searchInput
+                      | paginate
+                        : {
+                            itemsPerPage: 8,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <th scope="row">{{ item?.id }}</th>
+                <td>{{ item.name ? item.name : "N/A" }}</td>
+                <td>{{ item.phone ? item.phone : "N/A" }}</td>
+                <td>{{ item.email ? item.email : "N/A" }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="6" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </div>
@@ -1002,7 +1013,7 @@
       <div>
         <label class="dateLabel"></label>
         <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
+          <input type="text" placeholder="Search Item" [(ngModel)]="searchInput" class="w-100" />
           <i class="fa fa-search"></i>
         </div>
       </div>
@@ -1030,7 +1041,7 @@
         <table class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">S.No</th>
+              <th scope="col">Id</th>
               <th scope="col">Name</th>
               <th scope="col">Joining Date</th>
               <th scope="col">Salary</th>
@@ -1039,34 +1050,42 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
-                  let i = index;
-                  let item;
-                  of: tables
-                    | paginate
-                      : {
-                          itemsPerPage: 10,
-                          currentPage: duePage,
-                          totalItems: total
-                        }
-                ">
-              <th scope="row">{{ i }}</th>
-              <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.joining ? item.joining : "N/A" }}</td>
-              <td>{{ item.salary ? item.salary : "N/A" }}</td>
-              <td>{{ item.allownces ? item.allownces : "N/A" }}</td>
-              <td class="d-flex justify-content-center align-items-center">
-                <button class="actionbtn" (click)="staffDetailView(true)">
-                  <i class="fa fa-eye mlicon"></i>
-                </button>
-                <button class="actionbtn">
-                  <i class="fa fa-trash mlicon"></i>
-                </button>
-                <button class="actionbtn">
-                  <i class="fa fa-edit mlicon"></i>
-                </button>
-              </td>
-            </tr>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                    | filter: searchInput
+                      | paginate
+                        : {
+                            itemsPerPage: 10,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <th scope="row">{{ item?.id }}</th>
+                <td>{{ item.name ? item.name : "N/A" }}</td>
+                <td>{{ item.joining ? item.joining : "N/A" }}</td>
+                <td>{{ item.salary ? item.salary : "N/A" }}</td>
+                <td>{{ item.allownces ? item.allownces : "N/A" }}</td>
+                <td class="d-flex justify-content-center align-items-center">
+                  <button class="actionbtn" (click)="staffDetailView(true)">
+                    <i class="fa fa-eye mlicon"></i>
+                  </button>
+                  <button class="actionbtn">
+                    <i class="fa fa-trash mlicon"></i>
+                  </button>
+                  <button class="actionbtn">
+                    <i class="fa fa-edit mlicon"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="6" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </div>
@@ -1221,7 +1240,97 @@
     </div>
   </div>
 </div>
-<div class="container position-relative" *ngIf="opt == 'sale'">
+<div class="container position-relative" *ngIf="opt == 'pendingSale'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Order No</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Table</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                      | paginate
+                        : {
+                            itemsPerPage: 7,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <td scope="row">{{ item?.id }}</td>
+                <td>{{ item?.id }}</td>
+                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ? item?.customer?.customer_id : "N/A"  }}</td>
+                <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
+                <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
+                <td>{{ item.table?.name ? item.table?.name : "N/A" }}</td>
+                <td>{{ item?.waiter?.name ? item?.waiter?.name : "N/A" }}</td>
+                <td>{{ item?.order_status ? item?.order_status : "N/A" }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="8" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'allSale'">
   <div class="row align-items-center">
     <div class="col-sm-4 d-flex justify-content-start align-items-center">
       <div>
@@ -1255,39 +1364,130 @@
         <table class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">S No.</th>
+              <th scope="col">Id</th>
+              <th scope="col">Order No</th>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Items</th>
+              <th scope="col">Table</th>
+              <th scope="col">Waiter</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                      | paginate
+                        : {
+                            itemsPerPage: 7,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <td scope="row">{{ item?.id }}</td>
+                <td>{{ item?.id }}</td>
+                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ? item?.customer?.customer_id : "N/A"  }}</td>
+                <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
+                <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
+                <td>{{ item.table?.name ? item.table?.name : "N/A" }}</td>
+                <td>{{ item?.waiter?.name ? item?.waiter?.name : "N/A" }}</td>
+                <td>{{ item?.order_status ? item?.order_status : "N/A" }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="8" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+      </div>
+      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+    </div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-sm-6">
+          <p class="heading">Showing 1 to 10 of 26 Times</p>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-end">
+          <pagination-controls previousLabel="&lsaquo;" nextLabel="&rsaquo;" (pageChange)="duePage = $event">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container position-relative" *ngIf="opt == 'sale'">
+  <div class="row align-items-center">
+    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+      <div>
+        <label class="dateLabel"></label>
+        <div class="searchField mt-1 w-100">
+          <input type="text" placeholder="Search Item" class="w-100" />
+          <i class="fa fa-search"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label class="dateLabel">Date Range</label>
+      <div class="searchField mt-1 dateForm">
+        <input type="text" placeholder="From" />
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <label for=""></label>
+      <div class="searchField mt-1 dateForm">
+        <input [(ngModel)]="selectedSort" type="text" placeholder="To" />
+      </div>
+    </div>
+    <div class="col-sm-2 mt-3 cstmDropDown">
+      <label class="dateLabel"></label>
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-sm-12 mt-1 listView">
+      <div class="table-responsive">
+        <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
               <th scope="col">Date</th>
               <th scope="col">No. Of Items</th>
               <th scope="col">No. Of Customers</th>
               <th scope="col">Total Sales</th>
-              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
-                  let i = index;
-                  let item;
-                  of: tables
-                    | paginate
-                      : {
-                          itemsPerPage: 7,
-                          currentPage: duePage,
-                          totalItems: total
-                        }
-                ">
-              <td scope="row">{{ i }}</td>
-              <td>
-                {{ item.date ? item.date : "N/A" }}
-              </td>
-              <td>{{ item.noitems ? item.noitems : "N/A" }}</td>
-              <td>{{ item.nocustomers ? item.nocustomers : "N/A" }}</td>
-              <td>{{ item.totalsales ? (item.totalsales | currency:'USD') : "N/A" }}</td>
-              <td>
-                <button class="actionbtn" (click)="orderView($event)">
-                  <i class="fa fa-eye"></i>
-                </button>
-              </td>
-            </tr>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables
+                      | paginate
+                        : {
+                            itemsPerPage: 7,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <td scope="row">{{ item?.id }}</td>
+                <td>
+                  {{ item.updated_at ? (item.updated_at | date : 'longDate') : "N/A" }}
+                </td>
+                <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
+                <td>{{ item?.table?.person_count ? item?.table?.person_count : "N/A" }}</td>
+                <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="5" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </div>
@@ -1482,7 +1682,7 @@
       <div>
         <label class="dateLabel"></label>
         <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
+          <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
           <i class="fa fa-search"></i>
         </div>
       </div>
@@ -1510,7 +1710,7 @@
         <table class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">S No.</th>
+              <th scope="col">Id</th>
               <th scope="col">Date</th>
               <th scope="col">Expenses</th>
               <th scope="col">Description</th>
@@ -1518,25 +1718,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="
-                  let i = index;
-                  let item;
-                  of: tables
-                    | paginate
-                      : {
-                          itemsPerPage: 3,
-                          currentPage: duePage,
-                          totalItems: total
-                        }
-                ">
-              <th scope="row">{{ i }}</th>
-              <td>
-                {{ item.date ? item.date : "N/A" }}
-              </td>
-              <td>{{ item.expenses ? (item.expenses | currency:'USD') : "N/A" }}</td>
-              <td>{{ item.description ? item.description : "N/A" }}</td>
-              <td>{{ item.type ? item.type : "N/A" }}</td>
-            </tr>
+            <ng-container *ngIf="(tables | filter: searchInput)?.length; else noData">
+              <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: tables | filter: searchInput
+                      | paginate
+                        : {
+                            itemsPerPage: 3,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+                <th scope="row">{{ i }}</th>
+                <td>
+                  {{ item.date ? item.date : "N/A" }}
+                </td>
+                <td>{{ item.expenses ? (item.expenses | currency:'USD') : "N/A" }}</td>
+                <td>{{ item.description ? item.description : "N/A" }}</td>
+                <td>{{ item.type ? item.type : "N/A" }}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noData>
+              <tr>
+                <td colspan="7" class="text-center white">No Data Available</td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </div>
@@ -1968,9 +2175,8 @@
         <div class="row mt-4">
           <div class="col-lg-2">
             <div class="userImg">
-              <ngx-progressive-image-loader>
-                <img ngxProgressiveImage [src]="EmployeeDetail?.user?.image" alt="">
-              </ngx-progressive-image-loader>
+              <app-img src="{{EmployeeDetail?.user?.image}}"
+                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'cover', 'border-radius': '10px' }"></app-img>
             </div>
           </div>
           <div class="col-lg-5">
