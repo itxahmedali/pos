@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   ChartComponent
 } from 'ng-apexcharts';
+import { HttpService } from 'src/app/services/http.service';
 export type ChartOptions = {
   series: any;
   chart: any;
@@ -24,41 +25,26 @@ export class OverviewComponent implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   active = 1;
   modalReference: any;
-  public BookingTables: any = [
-    { Tableno: 'Table 01', NumberOfPerson: '04 Person', status: 'free' },
-    { Tableno: 'Table 02', NumberOfPerson: '03 Person', status: 'Reserve' },
-    { Tableno: 'Table 03', NumberOfPerson: '04 Person', status: 'booked' },
-    { Tableno: 'Table 04', NumberOfPerson: '01 Person', status: 'free' },
-    { Tableno: 'Table 05', NumberOfPerson: '05 Person', status: 'free' },
-    { Tableno: 'Table 06', NumberOfPerson: '02 Person', status: 'booked' },
-    { Tableno: 'Table 07', NumberOfPerson: '02 Person', status: 'free' },
-    { Tableno: 'Table 08', NumberOfPerson: '01 Person', status: 'free' },
-    { Tableno: 'Table 09', NumberOfPerson: '03 Person', status: 'free' },
-    { Tableno: 'Table 10', NumberOfPerson: '01 Person', status: 'Reserve' },
-    { Tableno: 'Table 11', NumberOfPerson: '04 Person', status: 'free' },
-    { Tableno: 'Table 12', NumberOfPerson: '03 Person', status: 'Reserve' },
-    { Tableno: 'Table 13', NumberOfPerson: '04 Person', status: 'booked' },
-    { Tableno: 'Table 14', NumberOfPerson: '03 Person', status: 'Reserve' },
-    { Tableno: 'Table 15', NumberOfPerson: '04 Person', status: 'booked' },
-    { Tableno: 'Table 16', NumberOfPerson: '04 Person', status: 'free' },
-  ];
+  overViewDetails:any = {};
+  date = new Date();
   constructor(
     private router: Router,
     private cd: ChangeDetectorRef,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private http:HttpService
   ) {
     this.chartOptions = {
       series: [
         {
-          name: 'series1',
+          name: 'Sale',
           data: [31, 40, 28, 51, 42, 109, 100],
         },
         {
-          name: 'series2',
+          name: 'Revenue',
           data: [32, 34, 52, 41,11, 32, 45],
         },
         {
-          name: 'series3',
+          name: 'Expenses',
           data: [11, 32, 45, 32, 34, 52, 41],
         },
       ],
@@ -92,18 +78,21 @@ export class OverviewComponent implements OnInit {
     };
   }
   ngOnInit(): void {
-    // this.observe('overview');
+    this.getOverView()
   }
-  // async observe(path: string) {
-  //   if (path) {
-  //     this.router.navigate([`master/${path}`]);
-  //   }
-  //   UniversalService.routePath.subscribe((res: string) => {
-  //     let path = res.toLowerCase();
-  //     this.router.navigate([`master/${path}`]);
-  //     this.cd.detectChanges();
-  //   });
-  // }
+  async getOverView() {
+    const res:any = await this.http.loaderPost('overview', { domain_id: localStorage.getItem('domainId') }, true).toPromise();
+    const realtimeOrdersItems = await Promise.all(res.data.realtime_orders.map(async (item:any) => {
+      const items = JSON.parse(item.items);
+      return items.length;
+    }));
+    this.overViewDetails = {
+      realTimeOrders: res.data.realtime_orders.length,
+      realTimeOrdersItems: realtimeOrdersItems.reduce((acc, curr) => acc + curr, 0),
+      sales_today: res.data.sales_today,
+      total_orders: res.data.total_orders.length
+    };
+  }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
       centered: true,

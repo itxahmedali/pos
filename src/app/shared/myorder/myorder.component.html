@@ -2321,9 +2321,10 @@
               <th scope="col">Id</th>
               <th scope="col">Order No.</th>
               <th scope="col">Name</th>
-              <th scope="col">Amount</th>
               <th scope="col">Description</th>
-              <th scope="col">Tables</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Table</th>
               <th scope="col">Waiter</th>
               <th scope="col">Status</th>
             </tr>
@@ -2352,6 +2353,7 @@
                   <td>{{ item.quantity ? item.quantity : "N/A" }}</td>
                   <td>{{ detail.table?.name ? detail.table?.name : "N/A" }}</td>
                   <td>{{ detail.waiter?.name ? detail.waiter?.name : "N/A" }}</td>
+                  <td>{{ detail.order_status ? detail.order_status : "N/A" }}</td>
             </tr>
           </tbody>
         </table>
