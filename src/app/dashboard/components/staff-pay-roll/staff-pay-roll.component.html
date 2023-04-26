@@ -1,4 +1,55 @@
 <div class="container overflowScroll">
+  <div class="row">
+    <div class="col-sm-12 d-flex flex-column justify-content-end mt-3 position-relative">
+      <button id="qrCode" (click)="open(qr);" class="add-table">
+        <i class="fa fa-plus"></i> Add Payroll
+      </button>
+    </div>
+  </div>
   <app-myorder *ngIf="!staffDetail" [tables]="PayrollTable" [opt]="'staffpayrollMaster'"></app-myorder>
-    <!-- <app-myorder *ngIf="staffDetail" [tables]="Waitertables" [opt]="'staffpayrollMasterDetail'"></app-myorder> -->
+  <!-- <app-myorder *ngIf="staffDetail" [tables]="Waitertables" [opt]="'staffpayrollMasterDetail'"></app-myorder> -->
 </div>
+<!-- modals -->
+<ng-container>
+  <ng-template #qr let-modal>
+    <div class="modal-body checkoutModal completed">
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <h5 class="modal-title">Add Payroll / Edit Payroll</h5>
+      <form [formGroup]="staffpayRollForm" class="form">
+        <div class="row mt-4">
+          <div class="col-lg-6 mt-3">
+            <ng-select placeholder="Select a staff member" (change)="selectStaff($event)" [items]="staffMembers" bindLabel="user.name" bindValue="user.name" formControlName="name">
+            </ng-select>
+            <div
+              *ngIf="staffpayRollForm.controls.name.invalid && (staffpayRollForm.controls.name.dirty || staffpayRollForm.controls.name.touched)">
+              <small class="text-danger">Name is required</small>
+            </div>
+          </div>
+          <!-- <div class="col-lg-6 mt-3">
+            <input formControlName="name" type="text" placeholder="Name" class="text-light w-100" />
+          </div> -->
+          <div class="col-lg-6 mt-3">
+            <input formControlName="salary" type="text" placeholder="Salary" class="text-light w-100" />
+            <div
+              *ngIf="staffpayRollForm.controls.salary.invalid && (staffpayRollForm.controls.salary.dirty || staffpayRollForm.controls.salary.touched)">
+              <small class="text-danger">Salary is required</small>
+            </div>
+          </div>
+          <div class="col-lg-6 mt-3">
+            <input formControlName="allownces" type="text" placeholder="Allownces" class="text-light w-100" />
+            <div
+              *ngIf="staffpayRollForm.controls.allownces.invalid && (staffpayRollForm.controls.allownces.dirty || staffpayRollForm.controls.allownces.touched)">
+              <small class="text-danger">Allownces is required</small>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer d-flex justify-content-start">
+      <button class="btn add-btn" [disabled]="staffpayRollForm.invalid" (click)="save(true)">Save</button>
+      <button class="btn cancel-btn" aria-label="Close" (click)="proceed()">
+        Cancel
+      </button>
+    </div>
+  </ng-template>
+</ng-container>

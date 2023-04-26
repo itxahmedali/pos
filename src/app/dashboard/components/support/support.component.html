@@ -3,12 +3,24 @@
     <div class="col-lg-11 mx-auto">
       <h3 class="need-help">Need Some Help?</h3>
       <form [formGroup]="supportForm" class="support-form">
-        <textarea formControlName="message" mdbInput class="form-control (resize) text-light" id="textAreaExample" rows="12"
-          placeholder="Type Here..."></textarea>
-          <div
+        <div class="row">
+          <div class="col-sm-12 mb-3">
+            <textarea formControlName="subject" mdbInput class="form-control (resize) text-light" id="textAreaExample"
+              rows="1" placeholder="Type Your Subject Here..."></textarea>
+            <div
+              *ngIf="supportForm.controls.subject.invalid && (supportForm.controls.subject.dirty || supportForm.controls.subject.touched)">
+              <small class="text-danger">Subject is required</small>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <textarea formControlName="message" mdbInput class="form-control (resize) text-light" id="textAreaExample"
+              rows="12" placeholder="Type Here..."></textarea>
+            <div
               *ngIf="supportForm.controls.message.invalid && (supportForm.controls.message.dirty || supportForm.controls.message.touched)">
               <small class="text-danger">Message is required</small>
             </div>
+          </div>
+        </div>
         <button class="btn sendr-btn mt-5 mb-3" (click)="send()">Send</button>
         <h5 class="support-text mt-5 mb-3">Can't find what you need? Send us a help Request.</h5>
         <button class="btn contactr-btn mt-3 mb-3">Contact Us</button>

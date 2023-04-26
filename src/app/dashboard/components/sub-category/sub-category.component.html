@@ -1,20 +1,20 @@
 <div class="container">
   <div class="row mt-5 align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+    <div class="col-sm-12 d-flex justify-content-end align-items-center">
+      <button class="addMenuBtn" [routerLink]="['add']">
+        <i class="fa fa-plus"></i> Add Sub Category
+      </button>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
       <div class="searchField mt-1 w-100">
         <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100 white" />
         <i class="fa fa-search"></i>
       </div>
     </div>
-    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
-      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+    <div class="col-sm-6 mt-3 mb-3 cstmDropDown">
+      <ng-select class="selectAlignment" placeholder="Sort By" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
-    </div>
-    <div class="col-sm-6 d-flex justify-content-end align-items-center">
-      <button class="addMenuBtn" [routerLink]="['add']">
-        <i class="fa fa-plus"></i> Add Sub Category
-      </button>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
@@ -33,7 +33,7 @@
               <tr *ngFor="
                   let i = index;
                   let item;
-                  of: MenuSelected | filter: searchInput
+                  of: MenuSelected | filter: searchInput | sortBy:selectedSort
                     | paginate
                       : {
                           itemsPerPage: 10,
@@ -74,7 +74,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">

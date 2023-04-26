@@ -118,6 +118,9 @@ body {
     }
   }
 }
+td{
+  text-transform: capitalize;
+}
 .mainBg{
   &:after{
     opacity: 0.7;
@@ -402,13 +405,21 @@ body {
     width: 70px;
   }
 }
-.cstmDropDown {
-  .ng-select .ng-select-container,
-  .ng-select.ng-select-single .ng-select-container {
-    background: #fff0 !important;
-    border-color: transparent !important;
-    color: var(--headings-primary-color);
-  }
+// .cstmDropDown {
+//   .ng-select .ng-select-container,
+//   .ng-select.ng-select-single .ng-select-container {
+//     // background: #fff0 !important;
+//     // border-color: transparent !important;
+//     color: var(--headings-primary-color);
+//   }
+// }
+::ng-deep.ng-select .ng-select-container {
+  background-color: #3a3a3a !important;
+  border-radius: 10px !important;
+  border: none !important;
+  min-height: 40px !important;
+  color:var(--headings-primary-color);
+  height: 45px !important;
 }
 .noBg {
   background: none;
@@ -421,7 +432,10 @@ body {
 ::-webkit-scrollbar {
   width: 10px;
 }
-
+.exportFile{
+  cursor: pointer;
+  color: var(--headings-primary-color);
+}
 /* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;

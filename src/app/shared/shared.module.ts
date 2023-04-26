@@ -21,6 +21,7 @@ import { FilterPipe } from '../pipes/filter.pipe';
 import { EllipsisPipe } from '../pipes/ellipses.pipe';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { ImgComponent } from './img/img.component';
+import { SortByPipe } from '../pipes/sort.pipe';
 // import { EllipsisPipe } from '../pipes/ellipses.pipe';
 // import { FilterPipe } from '../pipes/filter.pipe';
 @NgModule({
@@ -38,6 +39,7 @@ import { ImgComponent } from './img/img.component';
     EllipsisPipe,
     FilterPipe,
     ImgComponent,
+    SortByPipe
   ],
   imports: [
     CommonModule,
@@ -68,7 +70,8 @@ import { ImgComponent } from './img/img.component';
     TableComponent,
     EllipsisPipe,
     FilterPipe,
-    ImgComponent
+    ImgComponent,
+    SortByPipe
   ]
 })
 export class SharedModule { }

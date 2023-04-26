@@ -12,7 +12,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 @NgModule({
   declarations: [
     AppComponent,
-    LoaderComponent
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,

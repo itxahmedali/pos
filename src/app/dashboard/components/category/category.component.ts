@@ -21,8 +21,8 @@ export class CategoryComponent {
   public selectedId: number;
   public total!: any;
   public sorts = [
-    { id: 1, name: 'Sort By Name' },
-    { id: 2, name: 'Sort By Date' },
+    { id: 1, name: 'name' },
+    { id: 2, name: 'date' },
   ];
   public categoryForm: any = this.fb.group({
     name: [null],
@@ -39,6 +39,9 @@ export class CategoryComponent {
   }
   ngOnInit(): void {
     this.getCategory();
+  }
+  exportToExcel(): void {
+    this.helper.exportToExcel(this.MenuSelected)
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {

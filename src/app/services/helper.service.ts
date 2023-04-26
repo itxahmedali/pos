@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { HttpService } from './http.service';
-import { Setting } from 'src/classes';
-import { LoaderService } from './loader.service';
+import { Setting, Staff } from 'src/classes';
+import { writeFile } from 'xlsx';
+import * as XLSX from 'xlsx';
 @Injectable({
   providedIn: 'root',
 })
 export class HelperService {
   public domainId: number;
   public settings: Setting;
+  public staff: Staff;
   private settingsPromise: Promise<Setting>;
+  private staffPromise: Promise<Staff[]>;
   constructor(private http: HttpService, private toastr: ToastrService) {
-    this.setSettings()
+    this.setSettings();
+    this.setStaff();
   }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -274,9 +278,9 @@ export class HelperService {
       });
     });
   }
-  async setSettings(){
+  async setSettings() {
     await this.getDomainId('wadayah');
-    this.settingsPromise = this.loadSettings()
+    this.settingsPromise = this.loadSettings();
   }
   public async loadSettings(): Promise<Setting> {
     await this.getDomainId('wadayah');
@@ -308,5 +312,58 @@ export class HelperService {
       this.settingsPromise = this.loadSettings();
     }
     return this.settingsPromise;
+  }
+  async setStaff() {
+    await this.getDomainId('wadayah');
+    this.staffPromise = this.loadStaff();
+  }
+  public async loadStaff(): Promise<Staff[]> {
+    await this.getDomainId('wadayah');
+    let id = localStorage.getItem('domainId');
+    const res: any = await this.http
+      .loaderPost('get-employee', { domain_id: id }, true)
+      .toPromise();
+    const staffList = res.data.map((data: Staff) => {
+      return new Staff(
+        data.id,
+        data.address,
+        data.domain_id,
+        data.father_name,
+        data.joining_date,
+        data.manager,
+        data.national_identity,
+        data.position,
+        data.salary,
+        data.shift,
+        data.user,
+        data.zipcode
+      );
+    });
+    return staffList;
+  }
+
+  public getStaff(): Promise<Staff[]> {
+    if (!this.staffPromise) {
+      this.staffPromise = this.loadStaff();
+    }
+    return this.staffPromise;
+  }
+  async exportToExcel(table: any[]) {
+    console.log(table);
+
+    const array = [];
+    for (const { item, ...rest } of table) {
+      if (item !== undefined) {
+        array.push(item);
+      } else {
+        array.push(rest);
+      }
+    }
+    const worksheet = XLSX.utils.json_to_sheet(array);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const date = new Date().toISOString().slice(0, 10);
+    const fileName = `table_${date}.xlsx`;
+    writeFile(workbook, fileName);
   }
 }

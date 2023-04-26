@@ -2,7 +2,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UniversalService } from './../../services/universal.service';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { FilterPipe } from 'src/app/pipes/filter.pipe'
+import { HelperService } from 'src/app/services/helper.service';
 @Component({
   selector: 'app-myorder',
   templateUrl: './myorder.component.html',
@@ -15,6 +15,7 @@ export class MyorderComponent implements OnInit {
   modalReference: any;
   selectedTable: any;
   duePage: any;
+  detail: any=[];
   total: any;
   selectedCategory: any;
   selectedCategoryName: any;
@@ -22,7 +23,7 @@ export class MyorderComponent implements OnInit {
   public CartItems:any =[{img: 'assets/menu items/soup.webp', item: 'Chicken Soup', description: 'Soup is a primarily liquid food, generally served …of meat or vegetables with stock, milk, or water.', price: 80}]
   public EmployeeDetail:any;
   @Output() employeeDetailEmitter = new EventEmitter<any>();
-  constructor(private modalService: NgbModal, private router: Router, private cd: ChangeDetectorRef) { }
+  constructor(private modalService: NgbModal, private router: Router, private cd: ChangeDetectorRef, private helper:HelperService) { }
   public image:any
   views = [
     { id: 1, name: 'Grid View' },
@@ -30,8 +31,8 @@ export class MyorderComponent implements OnInit {
   ];
   selectedView: any = this.views[0].name;
   sorts = [
-    { id: 1, name: 'Sort By Name' },
-    { id: 2, name: 'Sort By Date' },
+    { id: 1, name: 'name' },
+    { id: 2, name: 'date' },
   ];
   public Menus: any = [
 
@@ -836,15 +837,18 @@ export class MyorderComponent implements OnInit {
       price: 250,
     },
   ];
-  selectedSort: any = this.sorts[0].name;
+  selectedSort: any;
   ngOnChanges(){
-    console.log('====================================');
-    console.log(this.tables);
-    console.log('====================================');
+  }
+  exportToExcel(): void {
+    this.helper.exportToExcel(this.tables)
   }
   ngOnInit(): void {
     // UniversalService.headerHeading.next(localStorage.getItem('heading'))
     this.observe()
+  }
+  console(detail:any){
+    console.log(detail)
   }
   addTable() {
     UniversalService.TableModal.next(true);
@@ -919,6 +923,11 @@ export class MyorderComponent implements OnInit {
       value--
     }
     $(event?.target?.parentNode?.parentNode).find('.value')[0].innerHTML = value
+  }
+  parser(item:string){
+    console.log(JSON.parse(item));
+
+    return JSON.parse(item)
   }
   orderView(event:any){
     UniversalService.OrderDetailView.next(true);

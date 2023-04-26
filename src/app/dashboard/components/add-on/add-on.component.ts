@@ -30,8 +30,8 @@ export class AddOnComponent {
     price: [null],
   });
   public sorts = [
-    { id: 1, name: 'Sort By Name' },
-    { id: 2, name: 'Sort By Date' },
+    { id: 1, name: 'name' },
+    { id: 2, name: 'date' },
   ];
   constructor(
     private modalService: NgbModal,
@@ -52,6 +52,9 @@ export class AddOnComponent {
   }
   backMenu() {
     this.addMenu = false;
+  }
+  exportToExcel(): void {
+    this.helper.exportToExcel(this.MenuSelected)
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {

@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { addItem, resetCart } from 'src/app/store/actions/cart.action';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -33,7 +34,8 @@ export class CartComponent implements OnInit {
     private help: HelperService,
     private http: HttpService,
     private authService: AuthService,
-    private store: Store<{ cart: CartState }>
+    private store: Store<{ cart: CartState }>,
+    private toaster:ToastrService
   ) {}
   async ngOnInit() {
     const gstAndDiscount = await this.help.getGstDiscount();
@@ -118,6 +120,10 @@ export class CartComponent implements OnInit {
     }
     this.http.loaderPost('add-order', data, false).subscribe((res: any) => {
       this.store.dispatch(resetCart());
+      this.proceed()
+      this.modalClose()
+      this.cartshow()
+      this.toaster.success(res?.message)
     });
   }
   open(content: any, modal: string) {

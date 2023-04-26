@@ -256,10 +256,20 @@
   overflow-y: auto;
 }
 
-.ng-select {
-  min-width: 150px;
+// .ng-select {
+//   min-width: 150px;
+// }
+.selectAlignment{
+  margin-top: 5px;
 }
-
+::ng-deep.ng-select .ng-select-container {
+  background-color: #3a3a3a !important;
+  border-radius: 10px !important;
+  border: none !important;
+  min-height: 40px !important;
+  color:var(--headings-primary-color);
+  height: 45px !important;
+}
 .dateLabel {
   font-size: 10px;
 }

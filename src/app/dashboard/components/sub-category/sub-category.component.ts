@@ -21,8 +21,8 @@ export class SubCategoryComponent {
   public selectedId: number;
   public total!: any;
   public sorts = [
-    { id: 1, name: 'Sort By Name' },
-    { id: 2, name: 'Sort By Date' },
+    { id: 1, name: 'name' },
+    { id: 2, name: 'date' },
   ];
   public subCategoryForm: any = this.fb.group({
     name: [null],
@@ -48,6 +48,9 @@ export class SubCategoryComponent {
   }
   proceed() {
     this.modalReference.close();
+  }
+  exportToExcel(): void {
+    this.helper.exportToExcel(this.MenuSelected)
   }
   async stateItem(event: any, state: string, data: any) {
     this.selectedMenu = this.MenuSelected?.find((e: any) => e?.id == event.id);

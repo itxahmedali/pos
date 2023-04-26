@@ -1,12 +1,12 @@
 <div class="container overflowScroll">
   <div class="row">
-    <div class="col-sm-12 d-flex flex-column justify-content-end mt-3 position-relative">
+    <div class="col-sm-12 mb-3 d-flex align-items-center justify-content-end mt-3">
       <button id="qrCode" (click)="open(qr, 'qr');" class="add-table">
         <i class="fa fa-plus"></i> Add Employee
       </button>
-      <app-myorder class="staffTable" [tables]="Staff" [opt]="'masterstaff'"
-        (employeeDetailEmitter)="handleEmployeeDetail($event)" (id)="statusHandler($event)"></app-myorder>
     </div>
+    <app-myorder class="staffTable" [tables]="Staff" [opt]="'masterstaff'"
+      (employeeDetailEmitter)="handleEmployeeDetail($event)" (id)="statusHandler($event)"></app-myorder>
   </div>
 </div>
 <!-- modals -->

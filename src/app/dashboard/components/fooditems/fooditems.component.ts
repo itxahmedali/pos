@@ -56,8 +56,8 @@ export class FooditemsComponent {
   public searchInput!: any;
   public selectedSort!: any;
   public sorts = [
-    { id: 1, name: 'Sort By Name' },
-    { id: 2, name: 'Sort By Date' },
+    { id: 1, name: 'name' },
+    { id: 2, name: 'date' },
   ];
   public itemForm: any = this.fb.group({
     name: [null],
@@ -111,6 +111,9 @@ export class FooditemsComponent {
       backdrop: 'static',
       windowClass: 'checkoutModal',
     });
+  }
+  exportToExcel(): void {
+    this.helper.exportToExcel(this.MenuSelected)
   }
   proceed() {
     this.modalReference.close();

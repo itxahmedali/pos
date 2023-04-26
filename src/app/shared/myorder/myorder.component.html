@@ -96,7 +96,7 @@
     <ng-container *ngIf="selectedView =='List View'">
       <div class="col-sm-12 mt-3 listView">
         <div class="table-responsive">
-          <table class="table table-dark table-borderless table-sm align-middle text-center">
+          <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
             <thead>
               <tr>
                 <th scope="col">Code</th>
@@ -149,15 +149,14 @@
 <div class="container position-relative" *ngIf="opt == 'counter byWaiters'">
   <div class="row align-items-center">
     <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -168,16 +167,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
+    </div> -->
     <div class="col-sm-2 cstmDropDown">
-      <label class="dateLabel"></label>
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.No</th>
@@ -207,7 +205,7 @@
                 {{ item.no ? item.no : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.amount ? (item.amount | currency :'USD') : "N/A" }}</td>
               <td>{{ item.items ? item.items : "N/A" }}</td>
               <td>{{ item.tables ? item.tables : "N/A" }}</td>
               <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
@@ -216,7 +214,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -234,15 +232,14 @@
 <div class="container position-relative" *ngIf="opt == 'counter cancelOrders'">
   <div class="row align-items-center">
     <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -253,16 +250,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
+    </div> -->
     <div class="col-sm-2 cstmDropDown">
-      <label class="dateLabel"></label>
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.No</th>
@@ -292,7 +288,7 @@
                 {{ item.no ? item.no : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.amount ? (item.amount | currency :'USD') : "N/A" }}</td>
               <td>{{ item.items ? item.items : "N/A" }}</td>
               <td>{{ item.tables ? item.tables : "N/A" }}</td>
               <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
@@ -301,7 +297,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -318,20 +314,20 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'master orderStatus'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div class="searchField mt-1 w-100">
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <div class="searchField  w-100">
         <input type="text" placeholder="Search Item" class="w-100" />
         <i class="fa fa-search"></i>
       </div>
     </div>
-    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+    <div class="col-sm-6 d-flex justify-content-end align-items-center cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Order No.</th>
@@ -359,7 +355,7 @@
                 {{ item.id ? item.id : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.amount ? (item.amount | currency :'USD') : "N/A" }}</td>
               <td>{{ item.items ? item.items : "N/A" }}</td>
               <td>{{ item.tables ? item.tables : "N/A" }}</td>
               <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
@@ -368,7 +364,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -385,13 +381,13 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'menu'">
   <div class="row mt-5 align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div class="searchField mt-1 w-100">
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <div class="searchField w-100">
         <input type="text" placeholder="Search Item" class="w-100" />
         <i class="fa fa-search"></i>
       </div>
     </div>
-    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+    <div class="col-sm-6 d-flex justify-content-end align-items-center cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
@@ -403,7 +399,7 @@
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Code</th>
@@ -428,7 +424,7 @@
               <th scope="row">{{ i }}</th>
               <td>{{ item.itemName ? item.itemName : "N/A" }}</td>
               <td>{{ item.category ? item.category : "N/A" }}</td>
-              <td>{{ item.price ? item.price : "N/A" }}</td>
+              <td>{{ item.price ? (item.price | currency :'USD') : "N/A" }}</td>
               <td class="d-flex justify-content-center align-items-center">
                 <button class="actionbtn">
                   <i class="fa fa-eye mlicon"></i>
@@ -444,7 +440,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -461,25 +457,25 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'menuMaster'">
   <div class="row mt-5 align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div class="searchField mt-1 w-100">
-        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
-        <i class="fa fa-search"></i>
-      </div>
-    </div>
-    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
-      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
-        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
-      </ng-select>
-    </div>
-    <div class="col-sm-6 d-flex justify-content-end align-items-center">
+    <div class="col-sm-12 d-flex justify-content-end align-items-center">
       <button class="addMenuBtn" (click)="addMenuMasterCategory({id:null,condition:'add'})">
         <i class="fa fa-plus"></i> Add Items
       </button>
     </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <div class="searchField w-100">
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
+      </div>
+    </div>
+    <div class="col-sm-6 d-flex justify-content-end align-items-center cstmDropDown">
+      <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -510,7 +506,7 @@
                     item?.item?.description ?
                     (item?.item?.description) : "N/A" }} </span></td>
                 <td>{{ item?.item?.category ? item?.item?.category : "N/A" }}</td>
-                <td>{{ item?.item?.price ? item?.item?.price : "N/A" }}</td>
+                <td>{{ item?.item?.price ? (item?.item?.price | currency :'USD') : "N/A" }}</td>
                 <td>
                   <div class="toggle d-flex align-items-center w-100 justify-content-center">
                     <input class="checkBox" type="checkbox" [checked]="item?.item?.out_of_stock =='0' ? false: true"
@@ -541,7 +537,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -558,13 +554,13 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'menuMasterCateogry'">
   <div class="row mt-5 align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div class="searchField mt-1 w-100">
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <div class="searchField w-100">
         <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100 white" />
         <i class="fa fa-search"></i>
       </div>
     </div>
-    <div class="col-sm-2 d-flex justify-content-end align-items-center cstmDropDown">
+    <div class="col-sm-6 d-flex justify-content-end align-items-center cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
@@ -576,7 +572,7 @@
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -633,7 +629,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -652,7 +648,7 @@
   <div class="row">
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Employee Id</th>
@@ -684,7 +680,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile staff" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -701,15 +697,20 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'masterstaff'">
   <div class="row">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
       <div class="searchField mt-1 w-100">
         <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
         <i class="fa fa-search"></i>
       </div>
     </div>
+    <div class="col-sm-6 cstmDropDown d-flex justify-content-end align-items-center">
+      <ng-select class="w-100" placeholder="Sort by" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -728,6 +729,7 @@
                     let item;
                     of: tables
                     | filter: searchInput
+                    | sortBy:selectedSort
                       | paginate
                         : {
                             itemsPerPage: 8,
@@ -760,7 +762,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile staff" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -777,15 +779,20 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'mastercustomerdata'">
   <div class="row">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
       <div class="searchField mt-3 w-100">
         <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
         <i class="fa fa-search"></i>
       </div>
     </div>
+    <div class="col-sm-6 mt-3 cstmDropDown d-flex justify-content-end align-items-center">
+      <ng-select class="w-100" placeholder="Sort by" [(ngModel)]="selectedSort">
+        <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
+      </ng-select>
+    </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -800,6 +807,7 @@
                     let i = index;
                     let item;
                     of: tables
+                    | sortBy : selectedSort
                     | filter: searchInput
                       | paginate
                         : {
@@ -822,7 +830,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile staff"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile staff" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -839,16 +847,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'reports'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -859,16 +866,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
+    </div> -->
     <div class="col-sm-2 cstmDropDown">
-      <label class="dateLabel"></label>
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.No</th>
@@ -898,7 +904,7 @@
                 {{ item.no ? item.no : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.amount ? (item.amount | currency :'USD') : "N/A" }}</td>
               <td>{{ item.items ? item.items : "N/A" }}</td>
               <td>{{ item.tables ? item.tables : "N/A" }}</td>
               <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
@@ -907,7 +913,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -924,16 +930,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'masterreports'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -944,16 +949,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.Nos</th>
@@ -983,7 +987,7 @@
                 {{ item.no ? item.no : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
+              <td>{{ item.amount ? (item.amount | currency :'USD') : "N/A" }}</td>
               <td>{{ item.items ? item.items : "N/A" }}</td>
               <td>{{ item.tables ? item.tables : "N/A" }}</td>
               <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
@@ -992,7 +996,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1007,18 +1011,17 @@
     </div>
   </div>
 </div>
-<div class="container position-relative" *ngIf="opt == 'staffpayrollMaster'">
+<div class="container position-relative mt-5" *ngIf="opt == 'staffpayrollMaster'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" [(ngModel)]="searchInput" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" [(ngModel)]="searchInput" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1029,24 +1032,21 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Name</th>
-              <th scope="col">Joining Date</th>
               <th scope="col">Salary</th>
               <th scope="col">Allownces</th>
-              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -1056,6 +1056,7 @@
                     let item;
                     of: tables
                     | filter: searchInput
+                  | sortBy : selectedSort
                       | paginate
                         : {
                             itemsPerPage: 10,
@@ -1065,20 +1066,8 @@
                   ">
                 <th scope="row">{{ item?.id }}</th>
                 <td>{{ item.name ? item.name : "N/A" }}</td>
-                <td>{{ item.joining ? item.joining : "N/A" }}</td>
-                <td>{{ item.salary ? item.salary : "N/A" }}</td>
-                <td>{{ item.allownces ? item.allownces : "N/A" }}</td>
-                <td class="d-flex justify-content-center align-items-center">
-                  <button class="actionbtn" (click)="staffDetailView(true)">
-                    <i class="fa fa-eye mlicon"></i>
-                  </button>
-                  <button class="actionbtn">
-                    <i class="fa fa-trash mlicon"></i>
-                  </button>
-                  <button class="actionbtn">
-                    <i class="fa fa-edit mlicon"></i>
-                  </button>
-                </td>
+                <td>{{ item.salary ? (item.salary | currency:'USD') : "N/A" }}</td>
+                <td>{{ item.allownces ? (item.allownces | currency:'USD') : "N/A" }}</td>
               </tr>
             </ng-container>
             <ng-template #noData>
@@ -1089,7 +1078,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1104,7 +1093,7 @@
     </div>
   </div>
 </div>
-<div class="container position-relative" *ngIf="opt == 'staffpayrollMasterDetail'">
+<!-- <div class="container position-relative" *ngIf="opt == 'staffpayrollMasterDetail'">
   <div class="row align-items-center">
     <div class="col-sm-12 mt-3">
       <button class="backBtn mb-3" (click)="staffDetailView(false)">
@@ -1140,7 +1129,7 @@
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.No</th>
@@ -1173,7 +1162,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1187,12 +1176,12 @@
       </div>
     </div>
   </div>
-</div>
-<div class="container position-relative" *ngIf="opt == 'inventoryMaster'">
+</div> -->
+<!-- <div class="container position-relative" *ngIf="opt == 'inventoryMaster'">
   <div class="row align-items-center">
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S.No</th>
@@ -1225,7 +1214,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1239,19 +1228,19 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <div class="container position-relative" *ngIf="opt == 'pendingSale'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <!-- <label class="dateLabel"></label> -->
+      <div class="searchField w-100">
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1262,16 +1251,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -1282,6 +1270,7 @@
               <th scope="col">Table</th>
               <th scope="col">Waiter</th>
               <th scope="col">Status</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -1290,6 +1279,8 @@
                     let i = index;
                     let item;
                     of: tables
+                    | filter: searchInput
+                  | sortBy : selectedSort
                       | paginate
                         : {
                             itemsPerPage: 7,
@@ -1299,23 +1290,30 @@
                   ">
                 <td scope="row">{{ item?.id }}</td>
                 <td>{{ item?.id }}</td>
-                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ? item?.customer?.customer_id : "N/A"  }}</td>
+                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ?
+                  item?.customer?.customer_id : "N/A" }}</td>
                 <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
                 <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
                 <td>{{ item.table?.name ? item.table?.name : "N/A" }}</td>
                 <td>{{ item?.waiter?.name ? item?.waiter?.name : "N/A" }}</td>
                 <td>{{ item?.order_status ? item?.order_status : "N/A" }}</td>
+                <td>
+                  <button class="actionbtn"
+                    (click)="open(orderStatutsDetails, 'orderStatutsDetails'); detail=item;">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
               </tr>
             </ng-container>
             <ng-template #noData>
               <tr>
-                <td colspan="8" class="text-center white">No Data Available</td>
+                <td colspan="9" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1332,16 +1330,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'allSale'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1352,16 +1349,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -1372,6 +1368,7 @@
               <th scope="col">Table</th>
               <th scope="col">Waiter</th>
               <th scope="col">Status</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -1380,6 +1377,8 @@
                     let i = index;
                     let item;
                     of: tables
+                    | filter: searchInput
+                  | sortBy : selectedSort
                       | paginate
                         : {
                             itemsPerPage: 7,
@@ -1389,23 +1388,30 @@
                   ">
                 <td scope="row">{{ item?.id }}</td>
                 <td>{{ item?.id }}</td>
-                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ? item?.customer?.customer_id : "N/A"  }}</td>
+                <td>{{ item?.customer?.name ? item?.customer?.name : item?.customer?.customer_id ?
+                  item?.customer?.customer_id : "N/A" }}</td>
                 <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
                 <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
                 <td>{{ item.table?.name ? item.table?.name : "N/A" }}</td>
                 <td>{{ item?.waiter?.name ? item?.waiter?.name : "N/A" }}</td>
                 <td>{{ item?.order_status ? item?.order_status : "N/A" }}</td>
+                <td>
+                  <button class="actionbtn"
+                    (click)="open(orderStatutsDetails, 'orderStatutsDetails'); detail=item;">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
               </tr>
             </ng-container>
             <ng-template #noData>
               <tr>
-                <td colspan="8" class="text-center white">No Data Available</td>
+                <td colspan="9" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1422,16 +1428,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'sale'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField mt-1 w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1442,23 +1447,23 @@
       <div class="searchField mt-1 dateForm">
         <input [(ngModel)]="selectedSort" type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Date</th>
               <th scope="col">No. Of Items</th>
-              <th scope="col">No. Of Customers</th>
+              <th scope="col">Order Status</th>
               <th scope="col">Total Sales</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -1467,7 +1472,8 @@
                     let i = index;
                     let item;
                     of: tables
-                      | paginate
+                    | filter: searchInput
+                    | sortBy : selectedSort | paginate
                         : {
                             itemsPerPage: 7,
                             currentPage: duePage,
@@ -1478,20 +1484,25 @@
                 <td>
                   {{ item.updated_at ? (item.updated_at | date : 'longDate') : "N/A" }}
                 </td>
-                <td>{{ item.items?.length ? item.items?.length : "N/A" }}</td>
-                <td>{{ item?.table?.person_count ? item?.table?.person_count : "N/A" }}</td>
+                <td>{{ parser(item.items)?.length ? parser(item.items)?.length : "N/A" }}</td>
+                <td>{{ item?.order_status ? item?.order_status : "N/A" }}</td>
                 <td>{{ item.total ? (item.total | currency:'USD') : "N/A" }}</td>
+                <td>
+                  <button class="actionbtn" (click)="open(saledetail, 'saledetail'); detail = item; console(detail)">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
               </tr>
             </ng-container>
             <ng-template #noData>
               <tr>
-                <td colspan="5" class="text-center white">No Data Available</td>
+                <td colspan="6" class="text-center white">No Data Available</td>
               </tr>
             </ng-template>
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1508,16 +1519,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'countersale'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1528,16 +1538,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S No.</th>
@@ -1576,7 +1585,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1593,16 +1602,15 @@
 </div>
 <div class="container position-relative" *ngIf="opt == 'saledetails'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1613,16 +1621,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">S No.</th>
@@ -1661,7 +1668,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -1678,16 +1685,15 @@
 </div>
 <div class="container position-relative expenseTable" *ngIf="opt == 'expenses'">
   <div class="row align-items-center">
-    <div class="col-sm-4 d-flex justify-content-start align-items-center">
-      <div>
-        <label class="dateLabel"></label>
-        <div class="searchField mt-1 w-100">
-          <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
-          <i class="fa fa-search"></i>
-        </div>
+    <div class="col-sm-6 d-flex justify-content-start align-items-center">
+      <!-- <div> -->
+      <div class="searchField w-100">
+        <input type="text" [(ngModel)]="searchInput" placeholder="Search Item" class="w-100" />
+        <i class="fa fa-search"></i>
       </div>
+      <!-- </div> -->
     </div>
-    <div class="col-sm-3">
+    <!-- <div class="col-sm-3">
       <label class="dateLabel">Date Range</label>
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="From" />
@@ -1698,16 +1704,15 @@
       <div class="searchField mt-1 dateForm">
         <input type="text" placeholder="To" />
       </div>
-    </div>
-    <div class="col-sm-2 mt-3 cstmDropDown">
-      <label class="dateLabel"></label>
+    </div> -->
+    <div class="col-sm-6 cstmDropDown">
       <ng-select placeholder="Sort" [(ngModel)]="selectedSort">
         <ng-option *ngFor="let sort of sorts" [value]="sort.name">{{sort.name}}</ng-option>
       </ng-select>
     </div>
     <div class="col-sm-12 mt-1 listView">
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
               <th scope="col">Id</th>
@@ -1722,7 +1727,7 @@
               <tr *ngFor="
                     let i = index;
                     let item;
-                    of: tables | filter: searchInput
+                    of: tables | filter: searchInput | sortBy: selectedSort
                       | paginate
                         : {
                             itemsPerPage: 3,
@@ -1747,7 +1752,7 @@
           </tbody>
         </table>
       </div>
-      <p class="exportFile"> <i class="fa fa-file"></i> Export File</p>
+      <p class="exportFile" (click)="exportToExcel()"> <i class="fa fa-file"></i> Export File</p>
     </div>
     <div class="container">
       <div class="row align-items-center">
@@ -2310,14 +2315,14 @@
       <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
       <h3 class="text-center white">Sale details</h3>
       <div class="table-responsive">
-        <table class="table table-dark table-borderless table-sm align-middle text-center">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
           <thead>
             <tr>
-              <th scope="col">S.No</th>
+              <th scope="col">Id</th>
               <th scope="col">Order No.</th>
               <th scope="col">Name</th>
               <th scope="col">Amount</th>
-              <th scope="col">Items</th>
+              <th scope="col">Description</th>
               <th scope="col">Tables</th>
               <th scope="col">Waiter</th>
               <th scope="col">Status</th>
@@ -2327,7 +2332,7 @@
             <tr *ngFor="
                     let i = index;
                     let item;
-                    of: tables
+                    of: parser(detail.items)
                       | paginate
                         : {
                             itemsPerPage: 5,
@@ -2335,16 +2340,70 @@
                             totalItems: total
                           }
                   ">
-              <th scope="row">{{ i }}</th>
+                  <th scope="row">{{ item?.id }}</th>
+                  <td>
+                    {{ item?.id ? item?.id : "N/A" }}
+                  </td>
+                  <td>{{ item.name ? item.name : "N/A" }}</td>
+                  <td> <span class="pointer" placement="top" [ngbTooltip]="item?.description"> {{
+                      item?.description ?
+                      (item?.description | ellipsis:20) : "N/A" }} </span></td>
+                  <td>{{ item.price ? (item.price | currency :'USD') : "N/A" }}</td>
+                  <td>{{ item.quantity ? item.quantity : "N/A" }}</td>
+                  <td>{{ detail.table?.name ? detail.table?.name : "N/A" }}</td>
+                  <td>{{ detail.waiter?.name ? detail.waiter?.name : "N/A" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<!-- sale details -->
+<ng-container>
+  <ng-template #orderStatutsDetails let-modal>
+    <div class="modal-body saledetail completed">
+      <button class="btn-close" id="checkoutClose" aria-label="Close" (click)="proceed()"></button>
+      <!-- <button class="backBtn mt-3"><i class="fa fa-arrow-left"></i></button> -->
+      <h3 class="text-center white">Order details</h3>
+      <div class="table-responsive">
+        <table id="dataTable" class="table table-dark table-borderless table-sm align-middle text-center">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Order No.</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Table</th>
+              <th scope="col">Waiter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                    let i = index;
+                    let item;
+                    of: detail.items
+                      | paginate
+                        : {
+                            itemsPerPage: 5,
+                            currentPage: duePage,
+                            totalItems: total
+                          }
+                  ">
+              <th scope="row">{{ item?.id }}</th>
               <td>
-                {{ item.no ? item.no : "N/A" }}
+                {{ item?.id ? item?.id : "N/A" }}
               </td>
               <td>{{ item.name ? item.name : "N/A" }}</td>
-              <td>{{ item.amount ? item.amount : "N/A" }}</td>
-              <td>{{ item.items ? item.items : "N/A" }}</td>
-              <td>{{ item.tables ? item.tables : "N/A" }}</td>
-              <td>{{ item.waiter ? item.waiter : "N/A" }}</td>
-              <td>{{ item.payment ? item.payment : "N/A" }}</td>
+              <td> <span class="pointer" placement="top" [ngbTooltip]="item?.description"> {{
+                  item?.description ?
+                  (item?.description | ellipsis:20) : "N/A" }} </span></td>
+              <td>{{ item.price ? (item.price | currency :'USD') : "N/A" }}</td>
+              <td>{{ item.quantity ? item.quantity : "N/A" }}</td>
+              <td>{{ detail.table?.name ? detail.table?.name : "N/A" }}</td>
+              <td>{{ detail.waiter?.name ? detail.waiter?.name : "N/A" }}</td>
             </tr>
           </tbody>
         </table>

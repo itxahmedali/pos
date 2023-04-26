@@ -55,6 +55,10 @@ export class OverviewComponent implements OnInit {
         },
         {
           name: 'series2',
+          data: [32, 34, 52, 41,11, 32, 45],
+        },
+        {
+          name: 'series3',
           data: [11, 32, 45, 32, 34, 52, 41],
         },
       ],

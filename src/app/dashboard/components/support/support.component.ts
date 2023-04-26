@@ -15,6 +15,7 @@ export class SupportComponent implements OnInit {
   public supportForm: any = this.fb.group({
     domain_id: [localStorage.getItem('domainId'), Validators.required],
     user_id: [JSON.parse(this.myData)?.id, Validators.required],
+    subject: [null, Validators.required],
     message: [null, Validators.required]
   });
 

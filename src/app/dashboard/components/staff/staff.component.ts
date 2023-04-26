@@ -7,6 +7,7 @@ import { HelperService } from 'src/app/services/helper.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { tap } from 'rxjs';
+import { Staff } from 'src/classes';
 
 @Component({
   selector: 'app-staff',
@@ -16,7 +17,7 @@ import { tap } from 'rxjs';
 export class StaffComponent implements OnInit {
   modalReference: any;
   public image: any;
-  public Staff: any;
+  public Staff: Staff[];
   public id: number;
   public staffForm: any = this.fb.group({
     image: [null, Validators.required],
@@ -66,11 +67,9 @@ export class StaffComponent implements OnInit {
     } else return;
   }
   async getStaff() {
-    await this.http
-      .loaderPost('get-employee', { domain_id: this.id }, true)
-      .subscribe((res: any) => {
-        this.Staff = res?.data;
-      });
+    await this.helper.getStaff()?.then((staffList: Staff[]) => {
+      this.Staff = staffList;
+    })
   }
   upload(event: any) {
     this.helper
@@ -101,6 +100,7 @@ export class StaffComponent implements OnInit {
             if (modal) {
               this.proceed();
             }
+            this.helper.setStaff()
             this.getStaff();
           })
         )
@@ -127,7 +127,7 @@ export class StaffComponent implements OnInit {
   }
   async statusHandler(stateHandler: any) {
     const employeeDetail = await this.Staff.filter(
-      (staff: any) => staff.id === stateHandler.id
+      (staff: Staff) => staff.id === stateHandler.id
     );
     await this.staffForm.removeControl('active_status');
     await this.staffForm.patchValue({
@@ -155,7 +155,6 @@ export class StaffComponent implements OnInit {
     await this.staffForm.addControl('id', new FormControl(stateHandler.id));
     await this.save(false);
   }
-
   createStaffFormGroup(employeeDetail: any) {
     return this.fb.group({
       image: [employeeDetail.user.image, Validators.required],
