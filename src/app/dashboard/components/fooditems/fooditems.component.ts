@@ -103,7 +103,7 @@ export class FooditemsComponent {
     private helper: HelperService
   ) {}
   ngOnInit(): void {
-    this.getCategory();
+    this.getFoodItems();
   }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
@@ -118,7 +118,7 @@ export class FooditemsComponent {
   proceed() {
     this.modalReference.close();
   }
-  async getCategory() {
+  async getFoodItems() {
     let foodItems: any = [];
     let categories: any = [];
     let subCategories: any = [];
@@ -180,7 +180,7 @@ export class FooditemsComponent {
       .subscribe((res: any) => {
         if (res?.status != 400) {
           this.toastr.success(res?.message);
-          this.getCategory();
+          this.getFoodItems();
         } else {
           this.toastr.error(res?.message);
         }

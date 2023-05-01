@@ -37,7 +37,7 @@ export class AddOnComponent {
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private helper: HelperService
   ) {
     this.addOnForm = this.fb.group({
@@ -94,7 +94,7 @@ export class AddOnComponent {
   async getData() {
     let data = localStorage.getItem('domainId');
     if (data) {
-      await this.getCategory(JSON.parse(data)?.id);
+      await this.getAddOns();
     } else return;
   }
   handleID(data: any) {
@@ -126,15 +126,15 @@ export class AddOnComponent {
       .loaderPost('add-addon', this.addOnForm.value, true)
       .subscribe((res: any) => {
         if (res?.status != 400) {
-          this.toastr.success(res?.message);
+          this.toaster.success(res?.message);
         } else {
-          this.toastr.error(res?.message);
+          this.toaster.error(res?.message);
         }
         this.getData();
         this.addMenu = false;
       });
   }
-  async getCategory(id: number) {
+  async getAddOns() {
     this.MenuSelected = await this.helper.getAddOns();
   }
   combineArray(originalArray: any) {

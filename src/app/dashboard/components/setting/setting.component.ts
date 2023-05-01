@@ -120,10 +120,10 @@ export class SettingComponent implements OnInit {
     this.settingsForm.addControl('domain_id', new FormControl(this.id));
     await this.http
       .loaderPost('add-setting', this.settingsForm.value, true)
-      .subscribe((res: any) => {
-        this.settingsForm.removeControl('domain_id');
-        this.helper.setSettings()
-        this.getSettings()
+      .subscribe(async(res: any) => {
+        await this.settingsForm.removeControl('domain_id');
+        await this.helper.setSettings()
+        await this.getSettings()
         UniversalService.logoUpdated.next(this.settingsForm.controls['logo'].value)
       });
   }

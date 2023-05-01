@@ -28,13 +28,14 @@ export class ItemComponent implements OnInit {
   public CartItems:any = [];
   public PreviousCartItems:any = [];
   public previousItems:any;
-  cartItems: any[];
+  public cartItems: any[];
   public url!:string;
   constructor(private cd:ChangeDetectorRef, private store: Store<{ cart: CartState }>,private route:Router) {
   }
   ngOnChanges(changes: any) {
     const url = window.location.pathname.split('/')[2];
     changes.data.currentValue?.map((e:any)=>{
+      console.log(e);
       if (e?.name?.toLowerCase()?.replace(/ /g, '') == url) {
         this.MenuItems = e.items;
       }

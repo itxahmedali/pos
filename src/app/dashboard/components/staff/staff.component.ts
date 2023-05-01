@@ -92,16 +92,16 @@ export class StaffComponent implements OnInit {
       this.http
         .loaderPost('add-employee', this.staffForm.value, true)
         .pipe(
-          tap(() => {
-            this.staffForm.controls.password.setValidators([Validators.required]);
-            this.staffForm.get('password')?.updateValueAndValidity();
-            this.staffForm.reset();
+          tap(async() => {
+            await this.staffForm.controls.password.setValidators([Validators.required]);
+            await this.staffForm.get('password')?.updateValueAndValidity();
+            await this.staffForm.reset();
             this.image = null;
             if (modal) {
               this.proceed();
             }
-            this.helper.setStaff()
-            this.getStaff();
+            await this.helper.setStaff()
+            await this.getStaff();
           })
         )
         .subscribe((res: any) => {

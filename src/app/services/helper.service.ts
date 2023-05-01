@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { HttpService } from './http.service';
-import { Setting, Staff } from 'src/classes';
+import { Category, Setting, Staff } from 'src/classes';
 import { writeFile } from 'xlsx';
 import * as XLSX from 'xlsx';
 @Injectable({
@@ -13,9 +13,15 @@ export class HelperService {
   public staff: Staff;
   private settingsPromise: Promise<Setting>;
   private staffPromise: Promise<Staff[]>;
+  private CategoryPromise: Promise<Category[]>;
   constructor(private http: HttpService, private toastr: ToastrService) {
     this.setSettings();
-    this.setStaff();
+    if (localStorage.getItem('access_token')) {
+      if (localStorage.getItem('access_token') != 'skipped') {
+        this.setStaff();
+        this.setCategory();
+      }
+    }
   }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -261,7 +267,11 @@ export class HelperService {
     });
   }
   async getFoodItems(categories: any, foodItems: any, subCategories: any) {
-    const menu = await this.getCategory();
+    let menu:any;
+    await this.getCategories()?.then((category: any) => {
+      menu = category;
+    });
+    // const menu = await this.getCategory();
     menu?.map((item: any, index: number) => {
       categories.push({ name: item?.name, id: menu?.[index]?.id });
       foodItems.push({ item: item?.items, category: item?.name });
@@ -347,6 +357,43 @@ export class HelperService {
       this.staffPromise = this.loadStaff();
     }
     return this.staffPromise;
+  }
+  async setCategory() {
+    await this.getDomainId('wadayah');
+    this.CategoryPromise = this.loadCategory();
+  }
+  public async loadCategory(): Promise<Category[]> {
+    await this.getDomainId('wadayah');
+    let id = localStorage.getItem('domainId');
+    const res: any = await this.http
+      .loaderPost('get-category', {
+        domain_id: this.domainId
+          ? this.domainId
+          : localStorage.getItem('domainId'),
+        type: 'main',
+      }, true)
+      .toPromise();
+    const CategoryList = res.data.map((data: any) => {
+      return new Category(
+        data.id,
+        data.domain_id,
+        data.description,
+        data.image,
+        data.name,
+        data.out_of_stock,
+        data.parent_id,
+        data.sub_category,
+        data.items
+      );
+    });
+    return CategoryList;
+  }
+
+  public getCategories(): Promise<Category[]> {
+    if (!this.CategoryPromise) {
+      this.CategoryPromise = this.loadCategory();
+    }
+    return this.CategoryPromise;
   }
   async exportToExcel(table: any[]) {
     console.log(table);

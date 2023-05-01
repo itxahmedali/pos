@@ -87,10 +87,11 @@ export class SubCategoryComponent {
   async saveCategory() {
     await this.http
       .loaderPost('add-category', this.subCategoryForm.value, true)
-      .subscribe((res: any) => {
+      .subscribe(async(res: any) => {
         if (res?.status != 400) {
-          this.toastr.success(res?.message);
-          this.getCategory();
+          await this.toastr.success(res?.message);
+          await this.helper.setCategory();
+          await this.getCategory()
         } else {
           this.toastr.error(res?.message);
         }
@@ -101,7 +102,11 @@ export class SubCategoryComponent {
       });
   }
   async getCategory() {
-    const subCategories = await this.helper.getCategory();
+    let subCategories:any;
+    await this.helper.getCategories()?.then((category: any) => {
+      subCategories = category;
+    });
+    // const subCategories = await this.helper.getCategory();
     // returning subcaegoris of categories by using flatmap
     this.MenuSelected = subCategories?.flatMap(
       (item: any) => item?.sub_category ?? []

@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
+import { Category } from 'src/classes';
 
 @Component({
   selector: 'app-category',
@@ -33,12 +34,12 @@ export class CategoryComponent {
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private helper:HelperService
   ) {
   }
   ngOnInit(): void {
-    this.getCategory();
+    this.getCategories();
   }
   exportToExcel(): void {
     this.helper.exportToExcel(this.MenuSelected)
@@ -84,12 +85,13 @@ export class CategoryComponent {
   async saveCategory() {
     await this.http
       .loaderPost('add-category', this.categoryForm.value, true)
-      .subscribe((res: any) => {
+      .subscribe(async(res: any) => {
         if (res?.status != 400) {
-          this.toastr.success(res?.message);
-          this.getCategory();
+          await this.toaster.success(res?.message);
+          await this.helper.setCategory();
+          await this.getCategories()
         } else {
-          this.toastr.error(res?.message);
+          this.toaster.error(res?.message);
         }
         this.categoryForm.removeControl('id');
         this.categoryForm.removeControl('domain_id');
@@ -97,7 +99,10 @@ export class CategoryComponent {
         this.categoryForm.removeControl('out_of_stock');
       });
   }
-  async getCategory() {
-    this.MenuSelected = await this.helper.getCategory();
+  async getCategories() {
+    await this.helper.getCategories()?.then((category: any) => {
+      this.MenuSelected = category;
+      console.log(category);
+    });
   }
 }

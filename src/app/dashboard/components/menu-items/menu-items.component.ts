@@ -986,8 +986,11 @@ export class MenuItemsComponent {
 
 
   }
+
   async getCategories() {
-    this.categories = await this.helper.getCategory();
+    await this.helper.getCategories()?.then((category: any) => {
+      this.categories = category;
+    });
     let categories: any = [];
     let foodItems: any = [];
     let subCategories: any = [];

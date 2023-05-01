@@ -72,7 +72,7 @@ export class Staff implements Staff {
     public salary: string,
     public shift: string,
     public user: User,
-    public zipcode: string,
+    public zipcode: string
   ) {}
 }
 
@@ -86,6 +86,87 @@ export class User implements User {
     public domain_id: number,
     public image: string,
     public position: string,
-    public user_id: number,
+    public user_id: number
+  ) {}
+}
+export interface Category {
+  id: number;
+  domain_id: any;
+  description: string;
+  image: string;
+  name: string;
+  out_of_stock: string;
+  parent_id: string;
+  sub_category: Category;
+  items: Items;
+}
+export class Category implements Category {
+  constructor(
+    public id: number,
+    public domain_id: any,
+    public description: string,
+    public image: string,
+    public name: string,
+    public out_of_stock: string,
+    public parent_id: string,
+    public sub_category: Category,
+    public items: Items
+  ) {}
+}
+export interface Items {
+  active_status: string;
+  addons_id: string;
+  addons_id_list: AddOns;
+  category_id: string;
+  created_at: string;
+  description: string;
+  id: number;
+  image: string;
+  name: string;
+  out_of_stock: string;
+  price: string;
+  suggested: string;
+  suggested_list: Items;
+}
+export class Items implements Items {
+  constructor(
+    public active_status: string,
+    public addons_id: string,
+    public addons_id_list: AddOns,
+    public category_id: string,
+    public created_at: string,
+    public description: string,
+    public id: number,
+    public image: string,
+    public name: string,
+    public out_of_stock: string,
+    public price: string,
+    public suggested: string,
+    public suggested_list: Items
+  ) {}
+}
+
+export interface AddOns {
+  active_status: string;
+  created_at: string;
+  description: string;
+  domain_id: string;
+  id: number;
+  image: string;
+  name: string;
+  out_of_stock: string;
+  price: string;
+}
+export class AddOns implements AddOns {
+  constructor(
+    public active_status: string,
+    public created_at: string,
+    public description: string,
+    public domain_id: string,
+    public id: number,
+    public image: string,
+    public name: string,
+    public out_of_stock: string,
+    public price: string
   ) {}
 }

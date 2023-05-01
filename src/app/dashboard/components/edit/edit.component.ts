@@ -145,15 +145,19 @@ export class EditComponent {
   async getData() {
     let id = localStorage.getItem('domainId');
     if (id) {
-      await this.getCategory(JSON.parse(id));
+      await this.getCategory();
     } else return;
   }
-  async getCategory(id: number) {
+  async getCategory() {
     let foodItems: any = [];
     let categories: any = [];
     let subCategories: any = [];
     if (this.url != 'add-ons') {
-      const menu = await this.helper.getCategory();
+      // const menu = await this.helper.getCategory();
+      let menu;
+      await this.helper.getCategories()?.then(async (category: any) => {
+        menu = await category;
+      });
       await this.helper.getFoodItems(categories, foodItems, subCategories);
       foodItems = this.combineArray(foodItems);
       this.Categories = categories;
@@ -185,6 +189,7 @@ export class EditComponent {
       await this.handleResponse(addOn);
     }
   }
+
   async handleResponse(res: any) {
     if (this.pageCondition == 'edit' || this.pageCondition == 'add') {
       this.addOns = res;
