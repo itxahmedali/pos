@@ -57,7 +57,6 @@ export class DashboardComponent {
   }
 
   ngOnInit(): void {
-    this.getSubDomain();
     if (window.innerWidth < 415) {
       this.expanded = false;
       this.expandedBody = false;
@@ -172,19 +171,5 @@ export class DashboardComponent {
       document.body.classList.remove('expand');
     }
     UniversalService.expand.next(this.expanded);
-  }
-  getSubDomain() {
-    localStorage.removeItem('subDomain');
-    const domain = window.location.hostname;
-    if (
-      domain.indexOf('.') < 0 ||
-      domain.split('.')[0] === 'example' ||
-      domain.split('.')[0] === 'lvh' ||
-      domain.split('.')[0] === 'www'
-    ) {
-      localStorage.removeItem('subDomain');
-    } else {
-      localStorage.setItem('subDomain', domain.split('.')[0]);
-    }
   }
 }

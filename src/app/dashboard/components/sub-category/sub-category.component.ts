@@ -90,7 +90,7 @@ export class SubCategoryComponent {
       .subscribe(async(res: any) => {
         if (res?.status != 400) {
           await this.toastr.success(res?.message);
-          await this.helper.setCategory();
+          // await this.helper.setCategory();
           await this.getCategory()
         } else {
           this.toastr.error(res?.message);

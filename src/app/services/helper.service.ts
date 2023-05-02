@@ -4,24 +4,26 @@ import { HttpService } from './http.service';
 import { Category, Setting, Staff } from 'src/classes';
 import { writeFile } from 'xlsx';
 import * as XLSX from 'xlsx';
+import { UniversalService } from './universal.service';
 @Injectable({
   providedIn: 'root',
 })
 export class HelperService {
-  public domainId: number;
+  public domainId: any;
   public settings: Setting;
   public staff: Staff;
   private settingsPromise: Promise<Setting>;
   private staffPromise: Promise<Staff[]>;
   private CategoryPromise: Promise<Category[]>;
   constructor(private http: HttpService, private toastr: ToastrService) {
+    // this.getDomainId('wadayah');
     this.setSettings();
-    if (localStorage.getItem('access_token')) {
-      if (localStorage.getItem('access_token') != 'skipped') {
-        this.setStaff();
-        this.setCategory();
-      }
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken || accessToken === 'skipped') {
+      return;
     }
+    this.setStaff();
+    this.setCategory();
   }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -131,25 +133,11 @@ export class HelperService {
         .toPromise();
       this.domainId = res?.data?.id;
       localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
+      UniversalService.domainId.next(true);
       return res.data?.id;
     }
   }
-  async getCategory(): Promise<any> {
-    const res: any = await this.http
-      .loaderPost(
-        'get-category',
-        {
-          domain_id: this.domainId
-            ? this.domainId
-            : localStorage.getItem('domainId'),
-          type: 'main',
-        },
-        false
-      )
-      .toPromise();
-    localStorage.setItem('categories', JSON.stringify(res?.data));
-    return res.data;
-  }
+
   async getAddOns(): Promise<any> {
     if (localStorage.getItem('domainId')) {
       const res: any = await this.http
@@ -255,7 +243,7 @@ export class HelperService {
     // localStorage.setItem('subDomain', domain.split('.')[0]);
     // return await this.getDomainId(domain.split('.')[0]);
     localStorage.setItem('subDomain', 'wadayah');
-    return await this.getDomainId('wadayah');
+    // return await this.getDomainId('wadayah');
     // }
   }
   subItemRessurect(array: any, item: any) {
@@ -267,7 +255,7 @@ export class HelperService {
     });
   }
   async getFoodItems(categories: any, foodItems: any, subCategories: any) {
-    let menu:any;
+    let menu: any;
     await this.getCategories()?.then((category: any) => {
       menu = category;
     });
@@ -293,10 +281,18 @@ export class HelperService {
     this.settingsPromise = this.loadSettings();
   }
   public async loadSettings(): Promise<Setting> {
-    await this.getDomainId('wadayah');
+    // await this.getDomainId('wadayah');
     let id = localStorage.getItem('domainId');
     const res: any = await this.http
-      .loaderPost('get-setting', { domain_id: id }, true)
+      .loaderPost(
+        'get-setting',
+        {
+          domain_id: this.domainId
+            ? this.domainId
+            : localStorage.getItem('domainId'),
+        },
+        true
+      )
       .toPromise();
     this.settings = new Setting(
       res.data.address,
@@ -324,12 +320,11 @@ export class HelperService {
     return this.settingsPromise;
   }
   async setStaff() {
-    await this.getDomainId('wadayah');
     this.staffPromise = this.loadStaff();
   }
-  public async loadStaff(): Promise<Staff[]> {
-    await this.getDomainId('wadayah');
-    let id = localStorage.getItem('domainId');
+
+  async loadStaff(): Promise<Staff[]> {
+    const id = localStorage.getItem('domainId');
     const res: any = await this.http
       .loaderPost('get-employee', { domain_id: id }, true)
       .toPromise();
@@ -352,27 +347,30 @@ export class HelperService {
     return staffList;
   }
 
-  public getStaff(): Promise<Staff[]> {
+  getStaff(): Promise<Staff[]> {
     if (!this.staffPromise) {
       this.staffPromise = this.loadStaff();
     }
     return this.staffPromise;
   }
   async setCategory() {
-    await this.getDomainId('wadayah');
+    // await this.getDomainId('wadayah');
     this.CategoryPromise = this.loadCategory();
   }
   public async loadCategory(): Promise<Category[]> {
-    await this.getDomainId('wadayah');
+    // await this.getDomainId('wadayah');
     let id = localStorage.getItem('domainId');
     const res: any = await this.http
-      .loaderPost('get-category', {
-        domain_id: this.domainId
-          ? this.domainId
-          : localStorage.getItem('domainId'),
-        type: 'main',
-      }, true)
+      .loaderPost(
+        'get-category',
+        {
+          domain_id: this.domainId ? this.domainId : id,
+          type: 'main',
+        },
+        true
+      )
       .toPromise();
+    localStorage.setItem('categories', JSON.stringify(res?.data));
     const CategoryList = res.data.map((data: any) => {
       return new Category(
         data.id,
@@ -394,6 +392,9 @@ export class HelperService {
       this.CategoryPromise = this.loadCategory();
     }
     return this.CategoryPromise;
+  }
+  public async getCategory(): Promise<Category[]> {
+    return await this.getCategories();
   }
   async exportToExcel(table: any[]) {
     console.log(table);

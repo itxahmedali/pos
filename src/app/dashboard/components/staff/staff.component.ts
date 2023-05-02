@@ -100,7 +100,7 @@ export class StaffComponent implements OnInit {
             if (modal) {
               this.proceed();
             }
-            await this.helper.setStaff()
+            // await this.helper.setStaff()
             await this.getStaff();
           })
         )

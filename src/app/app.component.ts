@@ -276,7 +276,7 @@ export class AppComponent {
       }
     } else this.sidebarEnable = true;
     await this.observe();
-    await this.getSettings();
+      await this.getSettings();
   }
   async getSettings() {
     this.helper.getSettings()?.then((settings: Setting) => {

@@ -88,7 +88,7 @@ export class CategoryComponent {
       .subscribe(async(res: any) => {
         if (res?.status != 400) {
           await this.toaster.success(res?.message);
-          await this.helper.setCategory();
+          // await this.helper.setCategory();
           await this.getCategories()
         } else {
           this.toaster.error(res?.message);
