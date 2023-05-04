@@ -33,7 +33,7 @@ export class SubCategoryComponent {
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private helper: HelperService
   ) {}
   ngOnInit(): void {
@@ -89,11 +89,11 @@ export class SubCategoryComponent {
       .loaderPost('add-category', this.subCategoryForm.value, true)
       .subscribe(async(res: any) => {
         if (res?.status != 400) {
-          await this.toastr.success(res?.message);
+          await this.toaster.success(res?.message);
           // await this.helper.setCategory();
           await this.getCategory()
         } else {
-          this.toastr.error(res?.message);
+          this.toaster.error(res?.message);
         }
         this.subCategoryForm.removeControl('id');
         this.subCategoryForm.removeControl('domain_id');

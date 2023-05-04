@@ -22,6 +22,7 @@ import { EllipsisPipe } from '../pipes/ellipses.pipe';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { ImgComponent } from './img/img.component';
 import { SortByPipe } from '../pipes/sort.pipe';
+import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
 // import { EllipsisPipe } from '../pipes/ellipses.pipe';
 // import { FilterPipe } from '../pipes/filter.pipe';
 @NgModule({
@@ -39,7 +40,8 @@ import { SortByPipe } from '../pipes/sort.pipe';
     EllipsisPipe,
     FilterPipe,
     ImgComponent,
-    SortByPipe
+    SortByPipe,
+    DateRangePickerComponent
   ],
   imports: [
     CommonModule,
@@ -71,7 +73,8 @@ import { SortByPipe } from '../pipes/sort.pipe';
     EllipsisPipe,
     FilterPipe,
     ImgComponent,
-    SortByPipe
+    SortByPipe,
+    DateRangePickerComponent
   ]
 })
 export class SharedModule { }

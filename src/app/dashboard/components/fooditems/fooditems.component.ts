@@ -99,7 +99,7 @@ export class FooditemsComponent {
     private modalService: NgbModal,
     private http: HttpService,
     private fb: FormBuilder,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private helper: HelperService
   ) {}
   ngOnInit(): void {
@@ -179,10 +179,10 @@ export class FooditemsComponent {
       .loaderPost('add-item', this.itemForm.value, true)
       .subscribe((res: any) => {
         if (res?.status != 400) {
-          this.toastr.success(res?.message);
+          this.toaster.success(res?.message);
           this.getFoodItems();
         } else {
-          this.toastr.error(res?.message);
+          this.toaster.error(res?.message);
         }
         this.itemForm.removeControl('id');
         this.itemForm.removeControl('active_status');

@@ -7,7 +7,7 @@
     </div>
     <div class="col-sm-2 totalOrder">
       <h6 class="realOrderText josefinRegular">Table Occupied</h6>
-      <h1 class="realOrderSpan josefinRegular">09</h1>
+      <h1 class="realOrderSpan josefinRegular">{{overViewDetails?.total_table_occupied}}</h1>
       <p class="realOrderPara josefinRegular">09/27</p>
     </div>
     <div class="col-sm-5 totalOrder">
@@ -17,10 +17,13 @@
     </div>
     <div class="col-sm-2 totalOrder">
       <h6 class="realOrderText josefinRegular">Total Order</h6>
-      <h1 class="realOrderSpan josefinRegular">105</h1>
+      <h1 class="realOrderSpan josefinRegular">{{overViewDetails?.total_orders}}</h1>
       <p class="realOrderPara josefinRegular">{{date | date : 'shortDate'}}</p>
     </div>
-    <div class="col-lg-12 mt-5">
+    <div class="col-sm-12 d-flex justify-content-start  mt-5">
+      <app-date-range-picker (dateRangeSelected)="dates($event)"></app-date-range-picker>
+    </div>
+    <div class="col-lg-12">
             <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
               [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
               [dataLabels]="chartOptions.dataLabels"></apx-chart>

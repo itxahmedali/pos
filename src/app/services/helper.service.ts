@@ -15,7 +15,7 @@ export class HelperService {
   private settingsPromise: Promise<Setting>;
   private staffPromise: Promise<Staff[]>;
   private CategoryPromise: Promise<Category[]>;
-  constructor(private http: HttpService, private toastr: ToastrService) {
+  constructor(private http: HttpService, private toaster: ToastrService) {
     // this.getDomainId('wadayah');
     this.setSettings();
     const accessToken = localStorage.getItem('access_token');
@@ -65,7 +65,7 @@ export class HelperService {
                 .subscribe(
                   (response: any) => {
                     resolve(response);
-                    this.toastr.success(response.message);
+                    this.toaster.success(response.message);
                   },
                   (error) => {
                     reject(error);

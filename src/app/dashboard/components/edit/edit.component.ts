@@ -110,7 +110,7 @@ export class EditComponent {
     private fb: FormBuilder,
     private helper: HelperService,
     private http: HttpService,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private activatedRouter: ActivatedRoute
   ) {
     this.id = this.activatedRouter.snapshot.paramMap.get('id');
@@ -218,10 +218,10 @@ export class EditComponent {
         .loaderPost('add-item', this.itemForm.value, true)
         .subscribe((res: any) => {
           if (res.status != 400) {
-            this.toastr.success(res.message);
+            this.toaster.success(res.message);
             this.router.navigate(['/dashboard/foodItems']);
           } else {
-            this.toastr.error(res.message);
+            this.toaster.error(res.message);
           }
           this.itemForm.removeControl('id');
           this.itemForm.removeControl('active_status');
@@ -240,10 +240,10 @@ export class EditComponent {
         .loaderPost('add-addon', this.addOnForm.value, true)
         .subscribe((res: any) => {
           if (res.status != 400) {
-            this.toastr.success(res.message);
+            this.toaster.success(res.message);
             this.router.navigate(['/dashboard/add-ons']);
           } else {
-            this.toastr.error(res.message);
+            this.toaster.error(res.message);
           }
           this.addOnForm.removeControl('id');
           this.addOnForm.removeControl('active_status');
@@ -261,10 +261,10 @@ export class EditComponent {
         .loaderPost('add-category', this.categoryForm.value, true)
         .subscribe((res: any) => {
           if (res.status != 400) {
-            this.toastr.success(res.message);
+            this.toaster.success(res.message);
             this.router.navigate(['/dashboard/category']);
           } else {
-            this.toastr.error(res.message);
+            this.toaster.error(res.message);
           }
           this.categoryForm.removeControl('id');
           this.categoryForm.removeControl('domain_id');
@@ -288,10 +288,10 @@ export class EditComponent {
         .loaderPost('add-category', this.subCategoryForm.value, true)
         .subscribe((res: any) => {
           if (res.status != 400) {
-            this.toastr.success(res.message);
+            this.toaster.success(res.message);
             this.router.navigate(['/dashboard/sub-category']);
           } else {
-            this.toastr.error(res.message);
+            this.toaster.error(res.message);
           }
           this.subCategoryForm.removeControl('id');
           this.subCategoryForm.removeControl('domain_id');

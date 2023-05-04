@@ -17,7 +17,7 @@ import { LoaderService } from './loader.service';
 export class HttpService {
   constructor(
     private http: HttpClient,
-    private toastr: ToastrService,
+    private toaster: ToastrService,
     private authService: AuthService
   ) {}
   header = {
@@ -75,13 +75,12 @@ export class HttpService {
         catchError(this.handleError)
       );
   }
-  private handleError(error: HttpErrorResponse) {
-    console.log(error);
+  handleError(error: HttpErrorResponse) {
     if (error.status === 401) {
       // this.authService.logout();
     } else {
-      this.toastr.error(error?.error?.message || 'Server error');
+      this.toaster.error(error.message);
     }
-    return throwError(error);
+    return throwError(error.message || 'Server error');
   }
 }

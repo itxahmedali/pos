@@ -90,7 +90,8 @@ export class OverviewComponent implements OnInit {
       realTimeOrders: res.data.realtime_orders.length,
       realTimeOrdersItems: realtimeOrdersItems.reduce((acc, curr) => acc + curr, 0),
       sales_today: res.data.sales_today,
-      total_orders: res.data.total_orders.length
+      total_orders: res.data.total_orders.length,
+      total_table_occupied: res.data.total_table_occupied.length
     };
   }
   open(content: any, modal: string) {
@@ -121,5 +122,16 @@ export class OverviewComponent implements OnInit {
   orderStatus(){
     UniversalService.headerHeading.next('Order Status');
     UniversalService.routePath.next('orderstatus')
+  }
+  dates(event:any){
+    console.log(event,"hello dates");
+    const data = {
+      domain_id:localStorage.getItem('domainId'),
+      to:event?.toDate,
+      from:event?.fromDate
+    }
+    this.http.loaderPost('sales-graph',data,true).subscribe((res:any)=>{
+      console.log(res);
+    })
   }
 }
