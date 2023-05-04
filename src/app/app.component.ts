@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { LoaderService } from './services/loader.service';
 import Swal from 'sweetalert2';
 import { Setting } from 'src/classes';
+import { HttpService } from './services/http.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -217,8 +218,10 @@ export class AppComponent {
     @Inject(DOCUMENT) private document: Document,
     private cd: ChangeDetectorRef,
     private router: Router,
-    private helper: HelperService
+    private helper: HelperService,
+    private http:HttpService,
   ) {
+
     this.init();
   }
   private async init() {
@@ -279,12 +282,18 @@ export class AppComponent {
       await this.getSettings();
   }
   async getSettings() {
+    if(localStorage.getItem('domainId')){
     this.helper.getSettings()?.then((settings: Setting) => {
       this.colorTheme(settings.theme);
       this.colorBanner(settings.banner_shade);
     });
   }
+  }
   async observe() {
+    UniversalService.settingLoad.subscribe((res: boolean) => {
+      this.getSettings();
+      this.cd.detectChanges();
+    });
     AuthService.signin.subscribe((res: boolean) => {
       this.login = res;
       this.cd.detectChanges();

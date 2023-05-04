@@ -3,7 +3,7 @@ import { HelperService } from './../../services/helper.service';
 import { UniversalService } from './../../services/universal.service';
 import { AuthService } from './../../services/auth.service';
 import { Router } from '@angular/router';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormComponent } from '../form/form.component';
 import { ToastrService } from 'ngx-toastr';
@@ -32,9 +32,11 @@ export class WelcomeComponent implements OnInit {
     private authGuardService: AuthGuardService,
     private fb: FormBuilder,
     private toaster: ToastrService,
-    private http: HttpService
+    private http: HttpService,
+    private cd:ChangeDetectorRef
   ) {}
   async ngOnInit() {
+    await this.observe();
     this.href = await this.router.url;
     if (this.helper.urlSplit(this.href) == 'welcome-waiters') {
       this.skip = this.helper.urlCheck(this.href, 'welcome-waiters', 'waiters');
@@ -161,8 +163,16 @@ export class WelcomeComponent implements OnInit {
     } else return;
   }
   async getSettings() {
-    this.helper.getSettings().then((settings: Setting) => {
-      this.setting = settings;
+    if(localStorage.getItem('domainId')){
+      this.helper.getSettings().then((settings: Setting) => {
+        this.setting = settings;
+      });
+    }
+  }
+  async observe(){
+    UniversalService.settingLoad.subscribe((res: boolean) => {
+      this.getSettings();
+      this.cd.detectChanges();
     });
   }
 }

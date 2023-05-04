@@ -51,9 +51,11 @@ export class SidebarComponent implements OnInit {
     } else return;
   }
   async getSettings() {
+    if(localStorage.getItem('domainId')){
     await this.helper.getSettings()?.then((settings: Setting) => {
       this.logo = settings?.logo
     })
+  }
   }
   // Click Toggle menu
   routerHead(event: any, heading: any) {
@@ -95,6 +97,10 @@ export class SidebarComponent implements OnInit {
     item.active = !item.active;
   }
   async observe() {
+    UniversalService.settingLoad.subscribe((res: boolean) => {
+      this.getSettings();
+      this.cd.detectChanges();
+    });
     UniversalService.SideBar.subscribe(
       (res: boolean) => {
         if (res) {

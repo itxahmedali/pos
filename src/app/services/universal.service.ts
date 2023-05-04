@@ -28,5 +28,6 @@ export class UniversalService {
   public static editModal: Subject<any> = new Subject<any>();
   public static logoUpdated: Subject<any> = new Subject<any>();
   public static domainId: Subject<any> = new Subject<any>();
+  public static settingLoad: Subject<any> = new Subject<any>();
   constructor() { }
 }

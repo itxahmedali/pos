@@ -131,10 +131,11 @@ export class HelperService {
       const res: any = await this.http
         .loaderPost('get-domain-id', { name: name }, false)
         .toPromise();
-      this.domainId = res?.data?.id;
-      localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
-      UniversalService.domainId.next(true);
-      return res.data?.id;
+          this.domainId = res?.data?.id;
+          localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
+          this.settingsPromise = this.loadSettings();
+          UniversalService.domainId.next(true);
+          return res.data?.id;
     }
   }
 
@@ -278,18 +279,14 @@ export class HelperService {
   }
   async setSettings() {
     await this.getDomainId('wadayah');
-    this.settingsPromise = this.loadSettings();
   }
   public async loadSettings(): Promise<Setting> {
-    // await this.getDomainId('wadayah');
     let id = localStorage.getItem('domainId');
     const res: any = await this.http
       .loaderPost(
         'get-setting',
         {
-          domain_id: this.domainId
-            ? this.domainId
-            : localStorage.getItem('domainId'),
+          domain_id: id,
         },
         true
       )
@@ -310,11 +307,12 @@ export class HelperService {
       res.data.restaurant_name,
       res.data.theme
     );
+    UniversalService.settingLoad.next(true)
     return this.settings;
   }
 
   public getSettings(): Promise<Setting> {
-    if (!this.settingsPromise) {
+    if (!this.settingsPromise && localStorage.getItem('domainId')) {
       this.settingsPromise = this.loadSettings();
     }
     return this.settingsPromise;

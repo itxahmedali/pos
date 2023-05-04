@@ -36,6 +36,7 @@ export class SettingComponent implements OnInit {
     private helper: HelperService
   ) {}
   async ngOnInit() {
+    await this.observe();
     await this.getData();
     await this.getSettings();
   }
@@ -45,7 +46,14 @@ export class SettingComponent implements OnInit {
       this.id = await JSON.parse(data);
     } else return;
   }
+  async observe(){
+    UniversalService.settingLoad.subscribe((res: boolean) => {
+      this.getSettings();
+      this.cd.detectChanges();
+    });
+  }
   async getSettings() {
+    if(localStorage.getItem('domainId')){
     await this.helper.getSettings()?.then((settings: Setting) => {
       this.settingsForm.patchValue({
         logo: settings?.logo,
@@ -62,6 +70,7 @@ export class SettingComponent implements OnInit {
         banner_shade: settings?.banner_shade,
       });
     })
+  }
   }
   upload(event: any, type: any) {
     this.helper

@@ -23,7 +23,7 @@ export class HttpService {
   header = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
-      "Access-Control-Allow-Origin" : '*',
+      'Access-Control-Allow-Origin': '*',
     }),
   };
 
@@ -32,7 +32,7 @@ export class HttpService {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        "Access-Control-Allow-Origin" : '*',
+        'Access-Control-Allow-Origin': '*',
         Authorization: `Bearer ${token}`,
       }),
     };
@@ -45,20 +45,9 @@ export class HttpService {
         data,
         token ? this.headerToken : this.header
       )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          LoaderService.loader.next(false);
-          console.log(error);
-          if (error.status === 401) {
-            // this.authService.logout();
-          } else {
-            this.toastr.error(error?.error?.message);
-          }
-          return throwError(error.message || 'Server error');
-        })
-      );
+      .pipe(catchError(this.handleError));
   }
-  loaderPost(link:string, data:any, token:boolean) {
+  loaderPost(link: string, data: any, token: boolean) {
     LoaderService.loader.next(true);
     return this.http
       .post(
@@ -68,31 +57,14 @@ export class HttpService {
       )
       .pipe(
         finalize(() => LoaderService.loader.next(false)),
-        catchError((error: HttpErrorResponse) => {
-          console.log(error);
-          if (error.status === 401) {
-            // this.authService.logout();
-          } else {
-            this.toastr.error(error?.error?.message);
-          }
-          return throwError(error.message || 'Server error');
-        })
+        catchError(this.handleError)
       );
   }
 
   get(url: string, token: boolean) {
     return this.http
       .get(environment.baseUrl + url, token ? this.headerToken : this.header)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            // this.authService.logout();
-          } else {
-            this.toastr.error(error.message);
-          }
-          return throwError(error.message || 'Server error');
-        })
-      );
+      .pipe(catchError(this.handleError));
   }
   loaderGet(url: string, token: boolean) {
     LoaderService.loader.next(true);
@@ -100,14 +72,16 @@ export class HttpService {
       .get(environment.baseUrl + url, token ? this.headerToken : this.header)
       .pipe(
         finalize(() => LoaderService.loader.next(false)),
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401) {
-            // this.authService.logout();
-          } else {
-            this.toastr.error(error.message);
-          }
-          return throwError(error.message || 'Server error');
-        })
+        catchError(this.handleError)
       );
+  }
+  private handleError(error: HttpErrorResponse) {
+    console.log(error);
+    if (error.status === 401) {
+      // this.authService.logout();
+    } else {
+      this.toastr.error(error?.error?.message || 'Server error');
+    }
+    return throwError(error);
   }
 }
