@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HelperService } from 'src/app/services/helper.service';
 import { UniversalService } from 'src/app/services/universal.service';
 
 @Component({
@@ -355,8 +357,21 @@ export class CreatedDiscountComponent {
   public theBoundCallback: Function;
   public modalReference: any;
   public image: any;
-  constructor(private cd: ChangeDetectorRef, private router: Router, private modalService: NgbModal) { }
-  ngOnInit(): void {
+  public discountForm: any = this.fb.group({
+    domain_id: [localStorage.getItem('domainId'), Validators.required],
+    type_id: [null, Validators.required],
+    type: [null, Validators.required],
+    discount: [null, Validators.required],
+    from: [null, [Validators.required, Validators.email]],
+    to: [null, [Validators.required]]
+  });
+  public types:any=[
+    {name:'category'},
+    {name:'item'}
+  ]
+  public items:any=[]
+  constructor(private helper:HelperService, private cd: ChangeDetectorRef, private router: Router, private modalService: NgbModal, private fb:FormBuilder) { }
+  async ngOnInit() {
     this.Menus.map((e: any) => {
       const head: any = localStorage.getItem('heading')
       let word: any = head?.replace(/ /g, '_')
@@ -375,34 +390,11 @@ export class CreatedDiscountComponent {
       }
     });
     this.observe();
-    this.observePath();
   }
   backMenu(){
     UniversalService.headerHeading.next(localStorage.getItem('beforeAddMenu'))
   }
   async observe() {
-    // UniversalService.headerHeading.subscribe((res: string) => {
-    //   const word = res.replace(/ /g, '_');
-    //   if (word == 'Add_Item') {
-    //     this.addMenu = true;
-    //     this.addCategory = false;
-    //   }
-    //   if (word == 'Category') {
-    //     this.addCategory = true;
-    //     this.addMenu = false;
-
-    //   } else {
-    //     this.Menus.map((e: any) => {
-    //       if (e.hasOwnProperty(word)) {
-    //         this.MenuSelected = e[word];
-    //         this.addMenu = false;
-    //         this.addCategory = false;
-    //       }
-    //     });
-    //   }
-    //   this.cd.detectChanges();
-    // }),
-      // (err: any) => console.log(err);
     UniversalService.cartShow.subscribe((res) => {
       if (res) {
         const word = JSON.stringify(localStorage.getItem('heading')).replace(
@@ -437,17 +429,6 @@ export class CreatedDiscountComponent {
     }),
       (err: any) => console.log(err);
   }
-  async observePath() {
-    // if (path) {
-    //   this.router.navigate([`counter/${path}`]);
-    // }
-    // UniversalService.routePath.subscribe((res: string) => {
-    //   let path = res.toLowerCase();
-    //   this.router.navigate([`master/${path}`]);
-    //   this.cd.detectChanges();
-    // }),
-    //   (err: any) => console.log(err);
-  }
   open(content: any, modal: string) {
     this.modalReference = this.modalService.open(content, {
       centered: true,
@@ -457,5 +438,37 @@ export class CreatedDiscountComponent {
   }
   proceed() {
     this.modalReference.close();
+  }
+  setGraph(event: any) {
+    this.discountForm.patchValue({
+      to: event?.toDate,
+      from: event?.fromDate
+    });
+  }
+  async typeSelect(event:any){
+    this.discountForm.get('type_id').reset();
+    let foodItems: any = [];
+    let categories: any = [];
+    let subCategories: any = [];
+    await this.helper.getFoodItems(categories, foodItems, subCategories)
+    if(event.name == 'category'){
+      this.items = categories
+    }
+    else if(event.name == 'item'){
+      this.items = this.modifyArray(foodItems)
+    }
+    else return;
+  }
+  modifyArray(array:any){
+    let result:any = []
+    array?.map((foodItem:any)=>{
+      foodItem?.item?.map((item:any)=>{
+        result.push({id:item.id, name:item.name})
+      })
+    })
+    return result;
+  }
+  save(){
+    console.log(this.discountForm.value)
   }
 }

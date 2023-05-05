@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { HttpService } from './http.service';
-import { Category, Setting, Staff } from 'src/classes';
+import { Category, DiscountGst, Graph, Setting, Staff } from 'src/classes';
 import { writeFile } from 'xlsx';
 import * as XLSX from 'xlsx';
 import { UniversalService } from './universal.service';
+import {
+  NgbCalendar,
+  NgbDateParserFormatter,
+} from '@ng-bootstrap/ng-bootstrap';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,8 +18,15 @@ export class HelperService {
   public staff: Staff;
   private settingsPromise: Promise<Setting>;
   private staffPromise: Promise<Staff[]>;
+  private DiscountGstPromise: Promise<DiscountGst>;
+  private GraphPromise: Promise<Graph>;
   private CategoryPromise: Promise<Category[]>;
-  constructor(private http: HttpService, private toaster: ToastrService) {
+  constructor(
+    private http: HttpService,
+    private toaster: ToastrService,
+    private calendar: NgbCalendar,
+    public formatter: NgbDateParserFormatter
+  ) {
     // this.getDomainId('wadayah');
     this.setSettings();
     const accessToken = localStorage.getItem('access_token');
@@ -24,6 +35,8 @@ export class HelperService {
     }
     this.setStaff();
     this.setCategory();
+    this.setGraph();
+    this.setDiscountGst();
   }
   fileUploadHttp(event: any): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -126,16 +139,17 @@ export class HelperService {
   }
   async getDomainId(name: any): Promise<any> {
     if (localStorage.getItem('domainId')) {
+      this.settingsPromise = this.loadSettings();
       return localStorage.getItem('domainId');
     } else {
       const res: any = await this.http
         .loaderPost('get-domain-id', { name: name }, false)
         .toPromise();
-          this.domainId = res?.data?.id;
-          localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
-          this.settingsPromise = this.loadSettings();
-          UniversalService.domainId.next(true);
-          return res.data?.id;
+      this.domainId = res?.data?.id;
+      localStorage.setItem('domainId', JSON.stringify(res?.data?.id));
+      this.settingsPromise = this.loadSettings();
+      UniversalService.domainId.next(true);
+      return res.data?.id;
     }
   }
 
@@ -307,7 +321,7 @@ export class HelperService {
       res.data.restaurant_name,
       res.data.theme
     );
-    UniversalService.settingLoad.next(true)
+    UniversalService.settingLoad.next(true);
     return this.settings;
   }
 
@@ -350,6 +364,61 @@ export class HelperService {
       this.staffPromise = this.loadStaff();
     }
     return this.staffPromise;
+  }
+  async setGraph() {
+    this.GraphPromise = this.loadGraph();
+  }
+
+  async loadGraph(): Promise<Graph> {
+    const id = localStorage.getItem('domainId');
+    const toDate = this.calendar.getToday();
+    const fromDate = this.calendar.getPrev(toDate, 'd', 7);
+    const data = {
+      domain_id: id,
+      to: this.formatter.format(toDate),
+      from: this.formatter.format(fromDate),
+    };
+    const res: any = await this.http
+      .loaderPost('sales-graph', data, true)
+      .toPromise();
+    const GraphList = {
+      dates: res.data.dates,
+      expense_array: res.data.expense_array,
+      revenue_array: res.data.revenue_array,
+      sales_array: res.data.sales_array,
+    };
+    return GraphList;
+  }
+
+  getGraph(): Promise<Graph> {
+    if (!this.GraphPromise) {
+      this.GraphPromise = this.loadGraph();
+    }
+    return this.GraphPromise;
+  }
+  async setDiscountGst() {
+    this.DiscountGstPromise = this.loadDiscountGst();
+  }
+
+  async loadDiscountGst(): Promise<DiscountGst> {
+    const id = localStorage.getItem('domainId');
+    const res: any = await this.http
+      .loaderPost('get-gst-charges', { domain_id: id }, true)
+      .toPromise();
+    const DiscountGstList = {
+      GST: res.data.GST,
+      discount: res.data.discount,
+      all_menu_discount: res.data.all_menu_discount,
+      domain_id: res.data.domain_id,
+    };
+    return DiscountGstList;
+  }
+
+  getDiscountGst(): Promise<DiscountGst> {
+    if (!this.DiscountGstPromise) {
+      this.DiscountGstPromise = this.loadDiscountGst();
+    }
+    return this.DiscountGstPromise;
   }
   async setCategory() {
     // await this.getDomainId('wadayah');

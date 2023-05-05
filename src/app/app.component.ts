@@ -207,12 +207,12 @@ export class AppComponent {
       icon: 'assets/sidebarIcons/dessert.webp',
       type: 'link',
     },
-    {
-      path: 'reporting',
-      title: 'Reporting',
-      icon: 'assets/sidebarIcons/dessert.webp',
-      type: 'link',
-    },
+    // {
+    //   path: 'reporting',
+    //   title: 'Reporting',
+    //   icon: 'assets/sidebarIcons/dessert.webp',
+    //   type: 'link',
+    // },
   ];
   constructor(
     @Inject(DOCUMENT) private document: Document,

@@ -3,111 +3,331 @@
     <div class="col-lg-10">
       <h3 class="need-help mt-3">Settings</h3>
       <div class=".row d-flex align-items-center justify-content-between">
-        <div class="col-lg-2 d-flex justify-content-center align-items-center flex-column ">
-          <input type="file" name="" id="uploadLogo" (change)="upload($event,'logo')" accept="image/*" hidden>
+        <div
+          class="col-lg-2 d-flex justify-content-center align-items-center flex-column"
+        >
+          <input
+            type="file"
+            name=""
+            id="uploadLogo"
+            (change)="upload($event, 'logo')"
+            accept="image/*"
+            hidden
+          />
           <div class="imgBox imgUploadedBox">
-            <ng-container class="d-flex flex-column" *ngIf="settingsForm.get('logo').invalid">
-              <label for="uploadLogo" class="d-flex justify-content-center align-items-center">
-                <span class="addImage">+ Upload
-                  Your Logo</span>
+            <ng-container
+              class="d-flex flex-column"
+              *ngIf="settingsForm.get('logo').invalid"
+            >
+              <label
+                for="uploadLogo"
+                class="d-flex justify-content-center align-items-center"
+              >
+                <span class="addImage">+ Upload Your Logo</span>
               </label>
             </ng-container>
-            <label *ngIf="settingsForm.get('logo').valid" for="uploadLogo"
-              class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <app-img src="{{settingsForm.controls['logo'].value}}"
-                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
+            <label
+              *ngIf="settingsForm.get('logo').valid"
+              for="uploadLogo"
+              class="d-flex justify-content-center align-items-center imgUploadedBox"
+            >
+              <app-img
+                src="{{ settingsForm.controls['logo'].value }}"
+                [styles]="{
+                  width: '100%',
+                  height: '100%',
+                  'object-fit': 'contain'
+                }"
+              ></app-img>
             </label>
           </div>
-          <small *ngIf="settingsForm.get('logo').invalid" class="text-danger">Logo is required</small>
+          <small *ngIf="settingsForm.get('logo').invalid" class="text-danger"
+            >Logo is required</small
+          >
         </div>
-        <div class="col-lg-7 d-flex justify-content-center align-items-center flex-column">
-          <input type="file" name="" id="uploadBanner" (change)="upload($event,'banner')" accept="image/*" hidden>
+        <div
+          class="col-lg-7 d-flex justify-content-center align-items-center flex-column"
+        >
+          <input
+            type="file"
+            name=""
+            id="uploadBanner"
+            (change)="upload($event, 'banner')"
+            accept="image/*"
+            hidden
+          />
           <div class="imgBox imgUploadedBox">
-            <ng-container class="d-flex flex-column" *ngIf="settingsForm.get('banner').invalid">
-              <label for="uploadBanner" class="d-flex justify-content-center align-items-center">
-                <span class="addImage">+ Upload
-                  Your Sign In Banner</span>
+            <ng-container
+              class="d-flex flex-column"
+              *ngIf="settingsForm.get('banner').invalid"
+            >
+              <label
+                for="uploadBanner"
+                class="d-flex justify-content-center align-items-center"
+              >
+                <span class="addImage">+ Upload Your Sign In Banner</span>
               </label>
             </ng-container>
-            <label *ngIf="settingsForm.get('banner').valid" for="uploadBanner"
-              class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <app-img src="{{settingsForm.controls['banner'].value}}"
-                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
+            <label
+              *ngIf="settingsForm.get('banner').valid"
+              for="uploadBanner"
+              class="d-flex justify-content-center align-items-center imgUploadedBox"
+            >
+              <app-img
+                src="{{ settingsForm.controls['banner'].value }}"
+                [styles]="{
+                  width: '100%',
+                  height: '100%',
+                  'object-fit': 'contain'
+                }"
+              ></app-img>
             </label>
           </div>
-          <small *ngIf="settingsForm.get('banner').invalid" class="text-danger">Banner is required</small>
+          <small *ngIf="settingsForm.get('banner').invalid" class="text-danger"
+            >Banner is required</small
+          >
         </div>
-        <div class="col-lg-2 d-flex justify-content-center align-items-center flex-column">
-          <input type="file" name="" id="uploadProfile" (change)="upload($event,'profile')" accept="image/*" hidden>
+        <div
+          class="col-lg-2 d-flex justify-content-center align-items-center flex-column"
+        >
+          <input
+            type="file"
+            name=""
+            id="uploadProfile"
+            (change)="upload($event, 'profile')"
+            accept="image/*"
+            hidden
+          />
           <div class="imgBox imgUploadedBox">
-            <ng-container class="d-flex flex-column" *ngIf="settingsForm.get('profile').invalid">
-              <label for="uploadProfile" class="d-flex justify-content-center align-items-center">
-                <span class="addImage">+ Upload
-                  Your Profile Picture</span>
+            <ng-container
+              class="d-flex flex-column"
+              *ngIf="settingsForm.get('profile').invalid"
+            >
+              <label
+                for="uploadProfile"
+                class="d-flex justify-content-center align-items-center"
+              >
+                <span class="addImage">+ Upload Your Profile Picture</span>
               </label>
             </ng-container>
-            <label *ngIf="settingsForm.get('profile').valid" for="uploadProfile"
-              class="d-flex justify-content-center align-items-center imgUploadedBox">
-              <app-img src="{{settingsForm.controls['profile'].value}}"
-                [styles]="{ 'width': '100%', 'height': '100%', 'object-fit': 'contain' }"></app-img>
+            <label
+              *ngIf="settingsForm.get('profile').valid"
+              for="uploadProfile"
+              class="d-flex justify-content-center align-items-center imgUploadedBox"
+            >
+              <app-img
+                src="{{ settingsForm.controls['profile'].value }}"
+                [styles]="{
+                  width: '100%',
+                  height: '100%',
+                  'object-fit': 'contain'
+                }"
+              ></app-img>
             </label>
           </div>
-          <small *ngIf="settingsForm.get('profile').invalid" class="text-danger">Profile is required</small>
+          <small *ngIf="settingsForm.get('profile').invalid" class="text-danger"
+            >Profile is required</small
+          >
         </div>
       </div>
       <form [formGroup]="settingsForm" class="form">
         <div class="row mt-4">
           <div class="col-lg-6 mt-3">
-            <input formControlName="restaurant_name" type="text" placeholder="Restaurant Name"
-              class="text-light w-100" />
+            <input
+              formControlName="restaurant_name"
+              type="text"
+              placeholder="Restaurant Name"
+              class="text-light w-100"
+            />
             <div
-              *ngIf="settingsForm.controls.restaurant_name.invalid && (settingsForm.controls.restaurant_name.dirty || settingsForm.controls.restaurant_name.touched)">
+              *ngIf="
+                settingsForm.controls.restaurant_name.invalid &&
+                (settingsForm.controls.restaurant_name.dirty ||
+                  settingsForm.controls.restaurant_name.touched)
+              "
+            >
               <small class="text-danger">Restaurant Name is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <input formControlName="city" type="text" placeholder="City" class="text-light w-100" />
+            <input
+              formControlName="city"
+              type="text"
+              placeholder="City"
+              class="text-light w-100"
+            />
             <div
-              *ngIf="settingsForm.controls.city.invalid && (settingsForm.controls.city.dirty || settingsForm.controls.city.touched)">
+              *ngIf="
+                settingsForm.controls.city.invalid &&
+                (settingsForm.controls.city.dirty ||
+                  settingsForm.controls.city.touched)
+              "
+            >
               <small class="text-danger">City is required</small>
             </div>
           </div>
           <div class="col-lg-12 mt-3">
-            <input formControlName="address" type="text" placeholder="Location" class="text-light w-100" />
+            <input
+              formControlName="address"
+              type="text"
+              placeholder="Location"
+              class="text-light w-100"
+            />
             <div
-              *ngIf="settingsForm.controls.address.invalid && (settingsForm.controls.address.dirty || settingsForm.controls.address.touched)">
+              *ngIf="
+                settingsForm.controls.address.invalid &&
+                (settingsForm.controls.address.dirty ||
+                  settingsForm.controls.address.touched)
+              "
+            >
               <small class="text-danger">Location is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <input formControlName="phone" type="tel" placeholder="Contact No." class="text-light w-100" />
+            <input
+              formControlName="phone"
+              type="tel"
+              placeholder="Contact No."
+              class="text-light w-100"
+            />
             <div
-              *ngIf="settingsForm.controls.phone.invalid && (settingsForm.controls.phone.dirty || settingsForm.controls.phone.touched)">
+              *ngIf="
+                settingsForm.controls.phone.invalid &&
+                (settingsForm.controls.phone.dirty ||
+                  settingsForm.controls.phone.touched)
+              "
+            >
               <small class="text-danger">Contact No. is required</small>
             </div>
           </div>
           <div class="col-lg-6 mt-3">
-            <input formControlName="email" type="email" placeholder="Email" class="text-light w-100" />
+            <input
+              formControlName="email"
+              type="email"
+              placeholder="Email"
+              class="text-light w-100"
+            />
             <div
-              *ngIf="settingsForm.controls.email.invalid && (settingsForm.controls.email.dirty || settingsForm.controls.email.touched)">
+              *ngIf="
+                settingsForm.controls.email.invalid &&
+                (settingsForm.controls.email.dirty ||
+                  settingsForm.controls.email.touched)
+              "
+            >
               <small class="text-danger">Email is required</small>
             </div>
           </div>
           <div class="col-lg-12 mt-3">
-            <textarea formControlName="slogan" mdbInput class="form-control (resize) text-light" id="textAreaExample"
-              rows="10" placeholder="Slogan"></textarea>
+            <textarea
+              formControlName="slogan"
+              mdbInput
+              class="form-control (resize) text-light"
+              id="textAreaExample"
+              rows="10"
+              placeholder="Slogan"
+            ></textarea>
             <div
-              *ngIf="settingsForm.controls.slogan.invalid && (settingsForm.controls.slogan.dirty || settingsForm.controls.slogan.touched)">
+              *ngIf="
+                settingsForm.controls.slogan.invalid &&
+                (settingsForm.controls.slogan.dirty ||
+                  settingsForm.controls.slogan.touched)
+              "
+            >
               <small class="text-danger">Slogan is required</small>
             </div>
           </div>
           <div class="col-lg-12 mt-3">
-            <textarea formControlName="description" mdbInput class="form-control (resize) text-light"
-              id="textAreaExample" rows="10" placeholder="Description"></textarea>
+            <textarea
+              formControlName="description"
+              mdbInput
+              class="form-control (resize) text-light"
+              id="textAreaExample"
+              rows="10"
+              placeholder="Description"
+            ></textarea>
             <div
-              *ngIf="settingsForm.controls.description.invalid && (settingsForm.controls.description.dirty || settingsForm.controls.description.touched)">
+              *ngIf="
+                settingsForm.controls.description.invalid &&
+                (settingsForm.controls.description.dirty ||
+                  settingsForm.controls.description.touched)
+              "
+            >
               <small class="text-danger">Description is required</small>
             </div>
+          </div>
+        </div>
+      </form>
+      <form [formGroup]="discountGstForm" class="form">
+        <div class="row">
+          <div class="col-lg-12 mt-3">
+            <h5 class="white">GST And Discount Section</h5>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <input
+              formControlName="GST"
+              type="number"
+              placeholder="GST"
+              class="text-light w-100"
+            />
+            <div
+              *ngIf="
+                discountGstForm.controls.GST.invalid &&
+                (discountGstForm.controls.GST.dirty ||
+                  discountGstForm.controls.GST.touched)
+              "
+            >
+              <small class="text-danger">GST is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12 mt-3">
+            <div
+              class="d-flex w-100 align-items-center justify-content-between"
+            >
+              <h6
+                class="white"
+                *ngIf="discountGstForm.controls['all_menu_discount'].value != 1"
+              >
+                Do you want to apply a discount to the entire menu?
+              </h6>
+              <input
+                *ngIf="discountGstForm.controls['all_menu_discount'].value == 1"
+                formControlName="discount"
+                type="number"
+                placeholder="Discount"
+                class="text-light w-100 me-3"
+              />
+              <div class="toggle d-flex align-items-center">
+                <input
+                  class="checkBox"
+                  type="checkbox"
+                  (change)="stateItem($event)"
+                  [checked]="
+                    discountGstForm.controls['all_menu_discount'].value == 1
+                      ? true
+                      : false
+                  "
+                  id="dsicountBtn"
+                /><label for="dsicountBtn"></label>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                discountGstForm.controls.discount.invalid &&
+                (discountGstForm.controls.discount.dirty ||
+                  discountGstForm.controls.discount.touched)
+              "
+            >
+              <small class="text-danger">Discount is required</small>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <button
+              class="btn saveBtn mt-4"
+              (click)="saveDiscount()"
+              [disabled]="discountGstForm.invalid"
+            >
+              Update Discount & Gst
+            </button>
           </div>
         </div>
       </form>
@@ -117,37 +337,73 @@
           <h5>Themes</h5>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color3 position-relative" style="background: linear-gradient(#37e3d9, #f79888);"
-            value="#37e3d9, #f79888" (click)="colorTheme($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['theme'].value?.includes('#37e3d9') && settingsForm.controls['theme'].value?.includes('#f79888')">
+          <button
+            class="btn1 color3 position-relative"
+            style="background: linear-gradient(#37e3d9, #f79888)"
+            value="#37e3d9, #f79888"
+            (click)="colorTheme($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['theme'].value?.includes('#37e3d9') &&
+                settingsForm.controls['theme'].value?.includes('#f79888')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color1 position-relative" style="background: linear-gradient(black, red);"
-            value="black, red" (click)="colorTheme($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['theme'].value?.includes('black') && settingsForm.controls['theme'].value?.includes('red')">
+          <button
+            class="btn1 color1 position-relative"
+            style="background: linear-gradient(black, red)"
+            value="black, red"
+            (click)="colorTheme($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['theme'].value?.includes('black') &&
+                settingsForm.controls['theme'].value?.includes('red')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color2 position-relative" style="background: linear-gradient(#20968E, #FA15AC);"
-            value="#20968E, #FA15AC" (click)="colorTheme($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['theme'].value?.includes('#20968E') && settingsForm.controls['theme'].value?.includes('#FA15AC')">
+          <button
+            class="btn1 color2 position-relative"
+            style="background: linear-gradient(#20968e, #fa15ac)"
+            value="#20968E, #FA15AC"
+            (click)="colorTheme($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['theme'].value?.includes('#20968E') &&
+                settingsForm.controls['theme'].value?.includes('#FA15AC')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color3 position-relative" style="background: linear-gradient(#FAFF00, #037178);"
-            value="#FAFF00, #037178" (click)="colorTheme($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['theme'].value?.includes('#FAFF00') && settingsForm.controls['theme'].value?.includes('#037178')">
+          <button
+            class="btn1 color3 position-relative"
+            style="background: linear-gradient(#faff00, #037178)"
+            value="#FAFF00, #037178"
+            (click)="colorTheme($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['theme'].value?.includes('#FAFF00') &&
+                settingsForm.controls['theme'].value?.includes('#037178')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
@@ -158,42 +414,93 @@
           <h5>Banner Shade</h5>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color3 position-relative" style="background: linear-gradient(#37e3d9, #f79888);"
-            value="#37e3d9, #f79888" (click)="colorBanner($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['banner_shade'].value?.includes('#37e3d9') && settingsForm.controls['banner_shade'].value?.includes('#f79888')">
+          <button
+            class="btn1 color3 position-relative"
+            style="background: linear-gradient(#37e3d9, #f79888)"
+            value="#37e3d9, #f79888"
+            (click)="colorBanner($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['banner_shade'].value?.includes(
+                  '#37e3d9'
+                ) &&
+                settingsForm.controls['banner_shade'].value?.includes('#f79888')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color1 position-relative" style="background: linear-gradient(black, red);"
-            value="black, red" (click)="colorBanner($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['banner_shade'].value?.includes('black') && settingsForm.controls['banner_shade'].value?.includes('red')">
+          <button
+            class="btn1 color1 position-relative"
+            style="background: linear-gradient(black, red)"
+            value="black, red"
+            (click)="colorBanner($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['banner_shade'].value?.includes(
+                  'black'
+                ) &&
+                settingsForm.controls['banner_shade'].value?.includes('red')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color2 position-relative" style="background: linear-gradient(#20968E, #FA15AC);"
-            value="#20968E, #FA15AC" (click)="colorBanner($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['banner_shade'].value?.includes('#20968E') && settingsForm.controls['banner_shade'].value?.includes('#FA15AC')">
+          <button
+            class="btn1 color2 position-relative"
+            style="background: linear-gradient(#20968e, #fa15ac)"
+            value="#20968E, #FA15AC"
+            (click)="colorBanner($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['banner_shade'].value?.includes(
+                  '#20968E'
+                ) &&
+                settingsForm.controls['banner_shade'].value?.includes('#FA15AC')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
         <div class="col-lg-1 ms-3">
-          <button class="btn1 color3 position-relative" style="background: linear-gradient(#FAFF00, #037178);"
-            value="#FAFF00, #037178" (click)="colorBanner($event)">
-            <div class="bannerCheck"
-              *ngIf="settingsForm.controls['banner_shade'].value?.includes('#FAFF00') && settingsForm.controls['banner_shade'].value?.includes('#037178')">
+          <button
+            class="btn1 color3 position-relative"
+            style="background: linear-gradient(#faff00, #037178)"
+            value="#FAFF00, #037178"
+            (click)="colorBanner($event)"
+          >
+            <div
+              class="bannerCheck"
+              *ngIf="
+                settingsForm.controls['banner_shade'].value?.includes(
+                  '#FAFF00'
+                ) &&
+                settingsForm.controls['banner_shade'].value?.includes('#037178')
+              "
+            >
               <i class="fa fa-check"></i>
             </div>
           </button>
         </div>
       </div>
-      <button class="btn saveBtn mt-4" (click)="save()" [disabled]="settingsForm.invalid">Save</button>
+      <button
+        class="btn saveBtn mt-4"
+        (click)="save()"
+        [disabled]="settingsForm.invalid"
+      >
+        Save
+      </button>
     </div>
   </div>
+</div>

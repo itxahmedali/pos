@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HelperService } from 'src/app/services/helper.service';
 import { HttpService } from 'src/app/services/http.service';
 import { UniversalService } from 'src/app/services/universal.service';
-import { Setting } from 'src/classes';
+import { DiscountGst, Setting } from 'src/classes';
 
 @Component({
   selector: 'app-setting',
@@ -26,7 +26,12 @@ export class SettingComponent implements OnInit {
     description: [null, Validators.required],
     slogan: [null, Validators.required],
     theme: [null, Validators.required],
-    banner_shade: [null, Validators.required],
+    banner_shade: [null, Validators.required]
+  });
+  public discountGstForm: any = this.fb.group({
+    GST: [null, Validators.required],
+    discount: [null, Validators.required],
+    all_menu_discount: [null, Validators.required]
   });
   constructor(
     private router: Router,
@@ -39,6 +44,7 @@ export class SettingComponent implements OnInit {
     await this.observe();
     await this.getData();
     await this.getSettings();
+    await this.getDiscountGst()
   }
   async getData() {
     let data = localStorage.getItem('domainId');
@@ -67,10 +73,21 @@ export class SettingComponent implements OnInit {
         description: settings?.description,
         slogan:settings?.slogan,
         theme: settings?.theme,
-        banner_shade: settings?.banner_shade,
+        banner_shade: settings?.banner_shade
       });
     })
   }
+  }
+  async getDiscountGst(){
+    await this.helper.getDiscountGst()?.then((gstDiscount: DiscountGst) => {
+      console.log(gstDiscount);
+      this.discountGstForm.patchValue({
+        GST: gstDiscount?.GST,
+        discount: gstDiscount?.discount,
+        all_menu_discount: gstDiscount?.all_menu_discount,
+      });
+
+    })
   }
   upload(event: any, type: any) {
     this.helper
@@ -131,9 +148,27 @@ export class SettingComponent implements OnInit {
       .loaderPost('add-setting', this.settingsForm.value, true)
       .subscribe(async(res: any) => {
         await this.settingsForm.removeControl('domain_id');
-        // await this.helper.setSettings()
+        await this.helper.setSettings()
         await this.getSettings()
         UniversalService.logoUpdated.next(this.settingsForm.controls['logo'].value)
+      });
+  }
+  async stateItem(event: any) {
+    this.discountGstForm.patchValue({
+      all_menu_discount: event.target.checked ? 1 : 0
+    })
+    if(event.target.checked == 0){
+      this.saveDiscount();
+    }
+  }
+  async saveDiscount() {
+    this.discountGstForm.addControl('domain_id', new FormControl(this.id));
+    await this.http
+      .loaderPost('add-gst-charges', this.discountGstForm.value, true)
+      .subscribe(async(res: any) => {
+        await this.discountGstForm.removeControl('domain_id');
+        await this.helper.setDiscountGst()
+        await this.getDiscountGst()
       });
   }
 }

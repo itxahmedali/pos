@@ -170,3 +170,32 @@ export class AddOns implements AddOns {
     public price: string
   ) {}
 }
+export interface Graph {
+  dates: string[];
+  sales_array: (number | string)[];
+  expense_array: (number | string)[];
+  revenue_array: (number | string)[];
+}
+export class Graph implements Graph {
+  constructor(
+    public dates: string[],
+    public sales_array: (number | string)[],
+    public expense_array: (number | string)[],
+    public revenue_array: (number | string)[]
+  ) {}
+}
+export interface DiscountGst {
+  GST: string;
+  discount: string;
+  all_menu_discount: string;
+  domain_id: string;
+}
+
+export class DiscountGst implements DiscountGst {
+  constructor(
+    public GST: string,
+    public discount: string,
+    public all_menu_discount: string,
+    public domain_id: string
+  ) {}
+}

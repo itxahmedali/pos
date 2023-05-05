@@ -21,10 +21,10 @@
       <p class="realOrderPara josefinRegular">{{date | date : 'shortDate'}}</p>
     </div>
     <div class="col-sm-12 d-flex justify-content-start  mt-5">
-      <app-date-range-picker (dateRangeSelected)="dates($event)"></app-date-range-picker>
+      <app-date-range-picker (dateRangeSelected)="setGraph($event)"></app-date-range-picker>
     </div>
     <div class="col-lg-12">
-            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+            <apx-chart #chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
               [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
               [dataLabels]="chartOptions.dataLabels"></apx-chart>
     </div>

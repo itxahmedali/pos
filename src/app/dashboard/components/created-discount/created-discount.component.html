@@ -1,24 +1,38 @@
 <div class="container overflowScroll">
-  <div class="row">
-      <div class="col-lg-6 mx-auto">
+  <div class="row justify-content-center">
+      <div class="col-lg-12 mx-auto">
               <div class="centerDiv">
-              <form action="" class="form">
-                  <div class="row mt-4">
-                      <div class="col-lg-12 mt-3">
-                          <input mdbInput class="form-control  text-light textarea1 " id="textAreaExample" placeholder="%" />
+                <form [formGroup]="discountForm" class="form">
+                  <div class="row mt-4 justify-content-center">
+                    <div class="col-lg-12 mt-3">
+                      <app-date-range-picker (dateRangeSelected)="setGraph($event)"></app-date-range-picker>
+                    </div>
+                      <div class="col-lg-7 mt-3">
+                        <input formControlName="discount" mdbInput class="form-control  text-light textarea1 " id="textAreaExample" placeholder="%" />
+                        <div
+                          *ngIf="discountForm.controls.discount.invalid && (discountForm.controls.discount.dirty || discountForm.controls.discount.touched)">
+                          <small class="text-danger">Discount is required</small>
+                        </div>
                       </div>
-                      <div class="col-lg-6 mt-3">
-                          <input type="text" placeholder="Start Date" class="text-light" />
+                      <div class="col-lg-7 mt-3">
+                        <ng-select placeholder="Select Type" (change)="typeSelect($event)"  [items]="types" bindLabel="name" bindValue="name" formControlName="type">
+                        </ng-select>
+                        <div
+                          *ngIf="discountForm.controls.type.invalid && (discountForm.controls.type.dirty || discountForm.controls.type.touched)">
+                          <small class="text-danger">Type is required</small>
+                        </div>
                       </div>
-                      <div class="col-lg-6 mt-3">
-                          <input type="text" placeholder="End Date" class="text-light" />
-                      </div>
-                      <div class="col-lg-6 mt-3">
-                          <input type="text" placeholder="Min" class="text-light" />
+                      <div class="col-lg-7 mt-3">
+                        <ng-select placeholder="Select Item" [items]="items" bindLabel="name" bindValue="name" formControlName="type_id">
+                        </ng-select>
+                        <div
+                          *ngIf="discountForm.controls.discount.invalid && (discountForm.controls.discount.dirty || discountForm.controls.discount.touched)">
+                          <small class="text-danger">Item is required</small>
+                        </div>
                       </div>
                   </div>
                   <div class="text-center">
-                      <button  class="btn createBtn mt-4 text-center">Create</button>
+                      <button  class="btn createBtn mt-4 text-center" [disabled]="discountForm?.invalid" (click)="save()">Create</button>
                   </div>
               </form>
           </div>

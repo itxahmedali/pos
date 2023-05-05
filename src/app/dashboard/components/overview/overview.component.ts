@@ -1,11 +1,15 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { UniversalService } from 'src/app/services/universal.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
-  ChartComponent
-} from 'ng-apexcharts';
+  NgbCalendar,
+  NgbDateParserFormatter,
+  NgbModal,
+} from '@ng-bootstrap/ng-bootstrap';
+import { ChartComponent } from 'ng-apexcharts';
 import { HttpService } from 'src/app/services/http.service';
+import { HelperService } from 'src/app/services/helper.service';
+import { Graph } from 'src/classes';
 export type ChartOptions = {
   series: any;
   chart: any;
@@ -25,13 +29,16 @@ export class OverviewComponent implements OnInit {
   public chartOptions: Partial<ChartOptions>;
   active = 1;
   modalReference: any;
-  overViewDetails:any = {};
+  overViewDetails: any = {};
   date = new Date();
   constructor(
+    private calendar: NgbCalendar,
+    public formatter: NgbDateParserFormatter,
     private router: Router,
     private cd: ChangeDetectorRef,
     private modalService: NgbModal,
-    private http:HttpService
+    private http: HttpService,
+    private helper: HelperService
   ) {
     this.chartOptions = {
       series: [
@@ -41,7 +48,7 @@ export class OverviewComponent implements OnInit {
         },
         {
           name: 'Revenue',
-          data: [32, 34, 52, 41,11, 32, 45],
+          data: [32, 34, 52, 41, 11, 32, 45],
         },
         {
           name: 'Expenses',
@@ -77,21 +84,33 @@ export class OverviewComponent implements OnInit {
       },
     };
   }
-  ngOnInit(): void {
-    this.getOverView()
+  async ngOnInit() {
+    await this.getOverView();
+    await this.dates();
   }
   async getOverView() {
-    const res:any = await this.http.loaderPost('overview', { domain_id: localStorage.getItem('domainId') }, true).toPromise();
-    const realtimeOrdersItems = await Promise.all(res.data.realtime_orders.map(async (item:any) => {
-      const items = JSON.parse(item.items);
-      return items.length;
-    }));
+    const res: any = await this.http
+      .loaderPost(
+        'overview',
+        { domain_id: localStorage.getItem('domainId') },
+        true
+      )
+      .toPromise();
+    const realtimeOrdersItems = await Promise.all(
+      res.data.realtime_orders.map(async (item: any) => {
+        const items = JSON.parse(item.items);
+        return items.length;
+      })
+    );
     this.overViewDetails = {
       realTimeOrders: res.data.realtime_orders.length,
-      realTimeOrdersItems: realtimeOrdersItems.reduce((acc, curr) => acc + curr, 0),
+      realTimeOrdersItems: realtimeOrdersItems.reduce(
+        (acc, curr) => acc + curr,
+        0
+      ),
       sales_today: res.data.sales_today,
       total_orders: res.data.total_orders.length,
-      total_table_occupied: res.data.total_table_occupied.length
+      total_table_occupied: res.data.total_table_occupied.length,
     };
   }
   open(content: any, modal: string) {
@@ -104,7 +123,7 @@ export class OverviewComponent implements OnInit {
   proceed() {
     this.modalReference.close();
   }
-  public generateData(baseval:any, count:any, yrange:any) {
+  public generateData(baseval: any, count: any, yrange: any) {
     var i = 0;
     var series = [];
     while (i < count) {
@@ -119,19 +138,61 @@ export class OverviewComponent implements OnInit {
     }
     return series;
   }
-  orderStatus(){
+  orderStatus() {
     UniversalService.headerHeading.next('Order Status');
-    UniversalService.routePath.next('orderstatus')
+    UniversalService.routePath.next('orderstatus');
   }
-  dates(event:any){
-    console.log(event,"hello dates");
+  dates() {
+    this.helper.getGraph()?.then((graph: any) => {
+      console.log(graph);
+      this.chartOptions.series = [
+        {
+          name: 'Sale',
+          data: graph?.sales_array,
+        },
+        {
+          name: 'Revenue',
+          data: graph?.revenue_array,
+        },
+        {
+          name: 'Expenses',
+          data: graph?.expense_array,
+        },
+      ];
+      this.chartOptions.xaxis.categories = graph?.dates;
+      this.chart.updateOptions(this.chartOptions);
+    });
+  }
+  setGraph(event: any) {
     const data = {
-      domain_id:localStorage.getItem('domainId'),
-      to:event?.toDate,
-      from:event?.fromDate
-    }
-    this.http.loaderPost('sales-graph',data,true).subscribe((res:any)=>{
-      console.log(res);
-    })
+      domain_id: localStorage.getItem('domainId'),
+      to: event?.toDate,
+      from: event?.fromDate,
+    };
+    this.http.loaderPost('sales-graph', data, true).subscribe((res: any) => {
+      const GraphList =  {
+        dates : res.data.dates,
+        expense_array :res.data.expense_array,
+        revenue_array: res.data.revenue_array,
+        sales_array:  res.data.sales_array
+      };
+      this.chartOptions.series = [
+        {
+          name: 'Sale',
+          data: GraphList?.sales_array,
+        },
+        {
+          name: 'Revenue',
+          data: GraphList?.revenue_array,
+        },
+        {
+          name: 'Expenses',
+          data: GraphList?.expense_array,
+        },
+      ];
+
+      this.chartOptions.xaxis.categories = GraphList?.dates;
+      this.chart.updateOptions(this.chartOptions);
+    });
   }
 }

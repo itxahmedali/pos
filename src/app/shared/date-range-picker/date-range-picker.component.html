@@ -1,4 +1,4 @@
-<form class="row row-cols-sm-auto">
+<form class="row row-cols-sm-auto justify-content-center">
   <div class="col-12">
     <div class="dp-hidden position-absolute">
       <div class="input-group">
@@ -13,6 +13,7 @@
           [dayTemplate]="t"
           outsideDays="hidden"
           [startDate]="fromDate!"
+          [maxDate]="maxDate"
           tabindex="-1"
         />
         <ng-template #t let-date let-focused="focused">
@@ -23,6 +24,7 @@
             [class.faded]="isHovered(date) || isInside(date)"
             (mouseenter)="hoveredDate = date"
             (mouseleave)="hoveredDate = null"
+            [class.disabled]="isDisabled(date)"
           >
             {{ date.day }}
           </span>
@@ -37,6 +39,7 @@
         name="dpFromDate"
         [value]="formatter.format(fromDate)"
         (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+        [max]="formatter.format(maxDate)"
       />
       <button class="btn btn-dark bi bi-calendar3" (click)="datepicker.toggle()" type="button">
         <i class="fa fa-calendar"></i>
@@ -52,6 +55,8 @@
         name="dpToDate"
         [value]="formatter.format(toDate)"
         (input)="toDate = validateInput(toDate, dpToDate.value)"
+        [max]="formatter.format(maxDate)"
+        [disabled]="!fromDate"
       />
       <button class="btn btn-dark bi bi-calendar3" (click)="datepicker.toggle()" type="button">
         <i class="fa fa-calendar"></i>

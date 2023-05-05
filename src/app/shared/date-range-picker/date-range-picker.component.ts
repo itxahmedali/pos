@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,12 +11,19 @@ export class DateRangePickerComponent {
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
-
+  maxDate: NgbDate;
   @Output() dateRangeSelected: EventEmitter<{fromDate: string, toDate: string}> = new EventEmitter<{fromDate: string, toDate: string}>();
 
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private route: ActivatedRoute) {
+    const today = calendar.getToday();
+    this.maxDate = today;
+    this.fromDate = calendar.getPrev(today, 'd', 7);
+    if (this.route?.snapshot?.routeConfig?.path === 'createDiscount') {
+      this.toDate = null;
+    }
+    else {
+      this.toDate = today;
+    }
   }
 
   ngOnInit(): void {
@@ -34,7 +42,10 @@ export class DateRangePickerComponent {
       this.dateRangeSelected.emit({fromDate: this.formatter.format(this.fromDate), toDate: this.formatter.format(this.toDate)});
     }
   }
-
+  isDisabled(date: NgbDate) {
+    const today = this.calendar.getToday();
+    return date.after(today);
+  }
   isHovered(date: NgbDate) {
     return (
       this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
