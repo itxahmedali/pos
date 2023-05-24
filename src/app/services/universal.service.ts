@@ -29,5 +29,6 @@ export class UniversalService {
   public static logoUpdated: Subject<any> = new Subject<any>();
   public static domainId: Subject<any> = new Subject<any>();
   public static settingLoad: Subject<any> = new Subject<any>();
+  public static gstDiscountAdd: Subject<any> = new Subject<any>();
   constructor() { }
 }

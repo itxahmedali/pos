@@ -13,6 +13,7 @@ import { addItem, resetCart } from 'src/app/store/actions/cart.action';
 import { HttpService } from 'src/app/services/http.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { DiscountGst } from 'src/classes';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -35,12 +36,11 @@ export class CartComponent implements OnInit {
     private http: HttpService,
     private authService: AuthService,
     private store: Store<{ cart: CartState }>,
-    private toaster:ToastrService
+    private toaster:ToastrService,
+    private helper:HelperService
   ) {}
   async ngOnInit() {
-    const gstAndDiscount = await this.help.getGstDiscount();
-    this.gst = await gstAndDiscount.GST;
-    this.discount = await gstAndDiscount.discount;
+    await this.getGstAndDiscount()
     await this.store
       .select((state) => state.cart.items)
       .subscribe(async(items: any) => {
@@ -83,6 +83,17 @@ export class CartComponent implements OnInit {
       }
     }
     await this.getOrders();
+  }
+  async getGstAndDiscount(){
+    await this.helper.getDiscountGst()?.then(async(gstDiscount: DiscountGst) => {
+      this.gst = gstDiscount?.GST;
+      if(gstDiscount?.all_menu_discount == '1'){
+        this.discount = await gstDiscount?.discount;
+      }
+      else{
+        this.discount = '0';
+      }
+    })
   }
   cartshow() {
     UniversalService.cartShow.next(false);

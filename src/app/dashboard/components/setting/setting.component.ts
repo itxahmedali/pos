@@ -168,6 +168,7 @@ export class SettingComponent implements OnInit {
       .subscribe(async(res: any) => {
         await this.discountGstForm.removeControl('domain_id');
         await this.helper.setDiscountGst()
+        console.log('hello3')
         await this.getDiscountGst()
       });
   }

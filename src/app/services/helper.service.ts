@@ -424,14 +424,16 @@ export class HelperService {
     // await this.getDomainId('wadayah');
     this.CategoryPromise = this.loadCategory();
   }
-  public async loadCategory(): Promise<Category[]> {
-    // await this.getDomainId('wadayah');
+  public async loadCategory(): Promise<any> {
     let id = localStorage.getItem('domainId');
+    if(!id){
+      return
+    }
     const res: any = await this.http
       .loaderPost(
         'get-category',
         {
-          domain_id: this.domainId ? this.domainId : id,
+          domain_id: id,
           type: 'main',
         },
         true

@@ -226,13 +226,11 @@ export class AppComponent {
   }
   private async init() {
     await this.helper.getSubDomain();
-
     if (this.helper.getRole(window.location.href)) {
       this.role = this.helper.getRole(window.location.href);
     } else {
       this.role = localStorage.getItem('role');
     }
-
     if (this.role == 'customers') {
       await this.getCategories();
     } else {
@@ -279,7 +277,7 @@ export class AppComponent {
       }
     } else this.sidebarEnable = true;
     await this.observe();
-      await this.getSettings();
+    await this.getSettings();
   }
   async getSettings() {
     if(localStorage.getItem('domainId')){
@@ -292,6 +290,11 @@ export class AppComponent {
   async observe() {
     UniversalService.settingLoad.subscribe((res: boolean) => {
       this.getSettings();
+      this.cd.detectChanges();
+    });
+    UniversalService.domainId.subscribe((res: boolean) => {
+      this.helper.setCategory()
+      this.getCategories();
       this.cd.detectChanges();
     });
     AuthService.signin.subscribe((res: boolean) => {
